@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>청소 리포트</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #F2F3EE;
+    color: #1a1a1a;
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  /* 헤더 */
+  .header {
+    background: #1E293B;
+    color: white;
+    padding: 20px 16px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .company-name {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(239,68,68,0.15);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #EF4444;
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    background: #EF4444;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  .completed-badge {
+    background: rgba(74,157,91,0.15);
+    color: #4A9D5B;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .customer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .customer-name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .customer-date {
+    font-size: 12px;
+    opacity: 0.6;
+  }
+  .progress-bar-bg {
+    background: rgba(255,255,255,0.15);
+    border-radius: 6px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: #4A9D5B;
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.5s ease;
+  }
+  .progress-text {
+    font-size: 11px;
+    opacity: 0.6;
+    margin-top: 4px;
+    text-align: right;
+  }
+
+  /* 메인 탭 */
+  .main-tabs {
+    display: flex;
+    background: white;
+    border-bottom: 1px solid #E5E5DC;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+  }
+  .main-tab {
+    flex: 1;
+    padding: 14px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.2s;
+  }
+  .main-tab.active {
+    color: #1a1a1a;
+    border-bottom-color: #4A7C59;
+  }
+  .main-tab .tab-count {
+    display: inline-block;
+    background: #4A7C59;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 8px;
+    margin-left: 4px;
+  }
+  .main-tab .defect-count {
+    background: #E65100;
+  }
+
+  /* 콘텐츠 */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* 아코디언 */
+  .accordion-list {
+    padding: 10px 12px;
+  }
+  .accordion-item {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid #E5E5DC;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .accordion-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .accordion-icon {
+    font-size: 22px;
+    margin-right: 10px;
+  }
+  .accordion-title {
+    font-size: 14px;
+    font-weight: 700;
+    flex: 1;
+  }
+  .accordion-count {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-right: 8px;
+  }
+  .accordion-status {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 8px;
+    margin-right: 8px;
+  }
+  .status-waiting { background: #F1F3EE; color: #94a3b8; }
+  .status-progress { background: #FEF0E0; color: #E67E22; }
+  .status-done { background: #E4F3E6; color: #4A9D5B; }
+  .accordion-arrow {
+    font-size: 12px;
+    color: #94a3b8;
+    transition: transform 0.2s;
+  }
+  .accordion-item.open .accordion-arrow {
+    transform: rotate(180deg);
+  }
+  .accordion-body {
+    display: none;
+    border-top: 1px solid #F1F3EE;
+  }
+  .accordion-item.open .accordion-body {
+    display: block;
+  }
+
+  /* 카테고리 내부 탭 */
+  .sub-tabs {
+    display: flex;
+    border-bottom: 1px solid #F1F3EE;
+  }
+  .sub-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  .sub-tab.active {
+    color: #C47F17;
+    border-bottom-color: #C47F17;
+  }
+  .sub-tab.after-active {
+    color: #4A9D5B;
+    border-bottom-color: #4A9D5B;
+  }
+  .sub-tab .count {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    padding: 0 5px;
+    border-radius: 8px;
+    margin-left: 3px;
+  }
+  .sub-tab .count.before { background: #C47F17; }
+  .sub-tab .count.after { background: #4A9D5B; }
+
+  .sub-content { display: none; padding: 10px; }
+  .sub-content.active { display: block; }
+
+  /* 피드 카드 */
+  .feed-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #E5E5DC;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .feed-card.defect {
+    background: #FFF8E1;
+    border-color: #FFD54F;
+  }
+  .feed-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    gap: 6px;
+  }
+  .feed-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .feed-dot.before { background: #C47F17; }
+  .feed-dot.after { background: #4A9D5B; }
+  .feed-time {
+    font-size: 11px;
+    color: #94a3b8;
+  }
+  .defect-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #E65100;
+  }
+  .feed-memo {
+    padding: 0 12px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .feed-memo.defect-memo {
+    background: #FFF3CD;
+    margin: 0 12px 8px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: #E65100;
+  }
+  .feed-photos {
+    display: grid;
+    gap: 2px;
+  }
+  .feed-photos.one { grid-template-columns: 1fr; }
+  .feed-photos.two { grid-template-columns: 1fr 1fr; }
+  .feed-photos.three-plus { grid-template-columns: 1fr 1fr; }
+  .feed-photos img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  .feed-photos.one img { height: 200px; }
+
+  /* 하자 탭 */
+  .defect-section {
+    padding: 10px 12px;
+  }
+  .defect-group-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #E65100;
+    padding: 12px 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .defect-card {
+    background: #FFF8E1;
+    border: 1px solid #FFD54F;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .defect-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  .defect-info {
+    padding: 10px 12px;
+  }
+  .defect-location {
+    font-size: 13px;
+    font-weight: 700;
+    color: #E65100;
+  }
+  .defect-desc {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 2px;
+  }
+
+  /* 빈 상태 */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 8px; }
+  .empty-state .text { font-size: 14px; }
+
+  /* 전체화면 뷰어 */
+  .photo-viewer {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 1000;
+    flex-direction: column;
+  }
+  .photo-viewer.active { display: flex; }
+  .viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    color: white;
+  }
+  .viewer-close {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .viewer-counter { font-size: 13px; opacity: 0.7; }
+  .viewer-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .viewer-body img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  /* 로딩 */
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    flex-direction: column;
+    gap: 12px;
+    color: #94a3b8;
+  }
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #E5E5DC;
+    border-top-color: #4A7C59;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="loading">
+    <div class="spinner"></div>
+    <div>리포트를 불러오는 중...</div>
+  </div>
+</div>
+
+<!-- 사진 뷰어 -->
+<div class="photo-viewer" id="photoViewer">
+  <div class="viewer-header">
+    <div class="viewer-close" onclick="closeViewer()">✕</div>
+    <div class="viewer-counter" id="viewerCounter"></div>
+    <div style="width:28px"></div>
+  </div>
+  <div class="viewer-body" id="viewerBody"
+    ontouchstart="handleTouchStart(event)"
+    ontouchmove="handleTouchMove(event)"
+    ontouchend="handleTouchEnd(event)">
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ===== 설정 =====
+const SUPABASE_URL = 'https://iucicugxihxilcqtzrbk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1Y2ljdWd4aWh4aWxjcXR6cmJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2OTc0ODAsImV4cCI6MjA4NjI3MzQ4MH0.5_7_vNc7x2kU68ynssGhf2jPCevkE-OMfSfgmyrkZDA';
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const CATEGORIES = [
+  { key: '주방', icon: '🍳' },
+  { key: '화장실', icon: '🚿' },
+  { key: '거실', icon: '🛋️' },
+  { key: '안방', icon: '🛏️' },
+  { key: '방1', icon: '🛏️' },
+  { key: '방2', icon: '🛏️' },
+  { key: '방3', icon: '🛏️' },
+  { key: '베란다', icon: '🌿' },
+  { key: '현관', icon: '🚪' },
+];
+
+let reportData = null;
+let entries = [];
+let defects = [];
+let currentTab = 'status'; // status | defects
+
+// ===== 초기화 =====
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const reportId = params.get('id');
+
+  if (!reportId) {
+    document.getElementById('app').innerHTML = `
+      <div class="empty-state" style="margin-top:100px">
+        <div class="icon">❌</div>
+        <div class="text">유효하지 않은 링크입니다</div>
+      </div>`;
+    return;
+  }
+
+  try {
+    // 리포트 기본 정보
+    const { data: report } = await sb
+      .from('cleaning_reports')
+      .select('*, bookings(*, customers(*))')
+      .eq('id', reportId)
+      .single();
+
+    if (!report) throw new Error('리포트를 찾을 수 없습니다');
+    reportData = report;
+
+    // 엔트리 + 사진
+    const { data: entryData } = await sb
+      .from('report_entries')
+      .select('*, report_photos(*)')
+      .eq('report_id', reportId)
+      .order('created_at');
+
+    entries = entryData || [];
+
+    // 하자
+    const { data: defectData } = await sb
+      .from('report_defects')
+      .select()
+      .eq('report_id', reportId)
+      .order('created_at');
+
+    defects = defectData || [];
+
+    // 하자에 entry 사진 연결
+    for (const d of defects) {
+      if (d.entry_id) {
+        const { data: photos } = await sb
+          .from('report_photos')
+          .select()
+          .eq('entry_id', d.entry_id)
+          .order('sort_order');
+        d.all_photos = photos || [];
+      } else {
+        d.all_photos = d.photo_url ? [{ photo_url: d.photo_url }] : [];
+      }
+    }
+
+    render();
+    setupRealtime(reportId);
+  } catch (e) {
+    document.getElementById('app').innerHTML = `
+      <div class="empty-state" style="margin-top:100px">
+        <div class="icon">😢</div>
+        <div class="text">${e.message}</div>
+      </div>`;
+  }
+}
+
+// ===== 실시간 업데이트 =====
+function setupRealtime(reportId) {
+  sb.channel('report-' + reportId)
+    .on('postgres_changes',
+      { event: '*', schema: 'public', table: 'report_entries', filter: `report_id=eq.${reportId}` },
+      () => refreshData(reportId))
+    .on('postgres_changes',
+      { event: '*', schema: 'public', table: 'report_photos', filter: `report_id=eq.${reportId}` },
+      () => refreshData(reportId))
+    .on('postgres_changes',
+      { event: '*', schema: 'public', table: 'report_defects', filter: `report_id=eq.${reportId}` },
+      () => refreshData(reportId))
+    .subscribe();
+}
+
+async function refreshData(reportId) {
+  const { data: entryData } = await sb
+    .from('report_entries')
+    .select('*, report_photos(*)')
+    .eq('report_id', reportId)
+    .order('created_at');
+  entries = entryData || [];
+
+  const { data: defectData } = await sb
+    .from('report_defects')
+    .select()
+    .eq('report_id', reportId)
+    .order('created_at');
+  defects = defectData || [];
+
+  for (const d of defects) {
+    if (d.entry_id) {
+      const { data: photos } = await sb
+        .from('report_photos')
+        .select()
+        .eq('entry_id', d.entry_id)
+        .order('sort_order');
+      d.all_photos = photos || [];
+    } else {
+      d.all_photos = d.photo_url ? [{ photo_url: d.photo_url }] : [];
+    }
+  }
+
+  render();
+}
+
+// ===== 렌더링 =====
+function render() {
+  const booking = reportData.bookings;
+  const customer = booking?.customers;
+  const isCompleted = reportData.status === 'completed';
+
+  const categoriesWithData = CATEGORIES.map(cat => {
+    const catEntries = entries.filter(e => e.category === cat.key);
+    const beforeEntries = catEntries.filter(e => e.photo_type === 'before');
+    const afterEntries = catEntries.filter(e => e.photo_type === 'after');
+    const beforeCount = beforeEntries.reduce((s, e) => s + (e.report_photos?.length || 0), 0);
+    const afterCount = afterEntries.reduce((s, e) => s + (e.report_photos?.length || 0), 0);
+    const totalCount = beforeCount + afterCount;
+
+    let status = 'waiting';
+    if (afterCount > 0) status = 'done';
+    else if (beforeCount > 0) status = 'progress';
+
+    return { ...cat, beforeEntries, afterEntries, beforeCount, afterCount, totalCount, status };
+  });
+
+  const activeCats = categoriesWithData.filter(c => c.totalCount > 0);
+  const totalPhotos = categoriesWithData.reduce((s, c) => s + c.totalCount, 0);
+  const doneCats = categoriesWithData.filter(c => c.status === 'done').length;
+  const progress = activeCats.length > 0 ? Math.round((doneCats / activeCats.length) * 100) : 0;
+
+  document.getElementById('app').innerHTML = `
+    <!-- 헤더 -->
+    <div class="header">
+      <div class="header-top">
+        <div class="company-name">${booking?.company_id ? '청소 리포트' : '청소 리포트'}</div>
+        <div class="live-badge ${isCompleted ? 'completed-badge' : ''}">
+          ${isCompleted
+            ? '✓ 완료'
+            : '<div class="live-dot"></div> LIVE'}
+        </div>
+      </div>
+      <div class="customer-info">
+        <div class="customer-name">${customer?.name || '고객'}님</div>
+        <div class="customer-date">${booking?.scheduled_date || ''}</div>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" style="width:${progress}%"></div>
+      </div>
+      <div class="progress-text">사진 ${totalPhotos}장 · ${progress}% 완료</div>
+    </div>
+
+    <!-- 메인 탭 -->
+    <div class="main-tabs">
+      <div class="main-tab ${currentTab === 'status' ? 'active' : ''}" onclick="switchTab('status')">
+        청소 현황
+      </div>
+      <div class="main-tab ${currentTab === 'defects' ? 'active' : ''}" onclick="switchTab('defects')">
+        하자 체크 <span class="tab-count defect-count">${defects.length}</span>
+      </div>
+    </div>
+
+    <!-- 청소 현황 탭 -->
+    <div class="tab-content ${currentTab === 'status' ? 'active' : ''}" id="statusTab">
+      <div class="accordion-list">
+        ${categoriesWithData.map((cat, i) => renderAccordion(cat, i)).join('')}
+      </div>
+    </div>
+
+    <!-- 하자 체크 탭 -->
+    <div class="tab-content ${currentTab === 'defects' ? 'active' : ''}" id="defectsTab">
+      ${renderDefectsTab()}
+    </div>
+  `;
+}
+
+function renderAccordion(cat, index) {
+  const statusClass = cat.status === 'done' ? 'status-done' :
+                       cat.status === 'progress' ? 'status-progress' : 'status-waiting';
+  const statusText = cat.status === 'done' ? '✓ 완료' :
+                     cat.status === 'progress' ? '진행중' : '대기';
+
+  if (cat.totalCount === 0) {
+    return `
+      <div class="accordion-item">
+        <div class="accordion-header" style="opacity:0.5">
+          <span class="accordion-icon">${cat.icon}</span>
+          <span class="accordion-title">${cat.key}</span>
+          <span class="accordion-status ${statusClass}">${statusText}</span>
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="accordion-item" id="acc-${index}">
+      <div class="accordion-header" onclick="toggleAccordion(${index})">
+        <span class="accordion-icon">${cat.icon}</span>
+        <span class="accordion-title">${cat.key}</span>
+        <span class="accordion-count">${cat.totalCount}장</span>
+        <span class="accordion-status ${statusClass}">${statusText}</span>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="sub-tabs">
+          <div class="sub-tab active" id="sub-before-${index}" onclick="switchSubTab(${index}, 'before')">
+            청소 전 <span class="count before">${cat.beforeCount}</span>
+          </div>
+          <div class="sub-tab" id="sub-after-${index}" onclick="switchSubTab(${index}, 'after')">
+            청소 후 <span class="count after">${cat.afterCount}</span>
+          </div>
+        </div>
+        <div class="sub-content active" id="sub-content-before-${index}">
+          ${cat.beforeEntries.length > 0
+            ? cat.beforeEntries.map(e => renderFeedCard(e, 'before')).join('')
+            : '<div class="empty-state"><div class="icon">📷</div><div class="text">아직 사진이 없습니다</div></div>'}
+        </div>
+        <div class="sub-content" id="sub-content-after-${index}">
+          ${cat.afterEntries.length > 0
+            ? cat.afterEntries.map(e => renderFeedCard(e, 'after')).join('')
+            : '<div class="empty-state"><div class="icon">✨</div><div class="text">아직 사진이 없습니다</div></div>'}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderFeedCard(entry, type) {
+  const photos = entry.report_photos || [];
+  const isDefect = entry.is_defect === true;
+  const time = entry.created_at ? new Date(entry.created_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '';
+  const photoUrls = photos.map(p => p.photo_url);
+
+  const gridClass = photos.length === 1 ? 'one' : photos.length === 2 ? 'two' : 'three-plus';
+  const displayPhotos = photos.slice(0, 4);
+  const remaining = photos.length - 4;
+
+  return `
+    <div class="feed-card ${isDefect ? 'defect' : ''}">
+      <div class="feed-header">
+        ${isDefect
+          ? '<span style="font-size:12px">⚠️</span><span class="defect-label">하자</span>'
+          : `<div class="feed-dot ${type}"></div>`}
+        <span class="feed-time">${time}</span>
+      </div>
+      ${entry.memo ? `<div class="${isDefect ? 'feed-memo defect-memo' : 'feed-memo'}">${entry.memo}</div>` : ''}
+      ${photos.length > 0 ? `
+        <div class="feed-photos ${gridClass}">
+          ${displayPhotos.map((p, i) => `
+            <img src="${p.photo_url}" onclick="openViewer(${JSON.stringify(photoUrls).replace(/"/g, '&quot;')}, ${i})" loading="lazy">
+          `).join('')}
+        </div>
+      ` : ''}
+    </div>`;
+}
+
+function renderDefectsTab() {
+  if (defects.length === 0) {
+    return `
+      <div class="empty-state" style="margin-top:40px">
+        <div class="icon">✅</div>
+        <div class="text">발견된 하자가 없습니다</div>
+      </div>`;
+  }
+
+  // 구역별 그룹핑
+  const grouped = {};
+  for (const d of defects) {
+    const cat = d.category || d.location || '기타';
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(d);
+  }
+
+  let html = '<div class="defect-section">';
+
+  for (const [category, items] of Object.entries(grouped)) {
+    const catInfo = CATEGORIES.find(c => c.key === category);
+    const icon = catInfo ? catInfo.icon : '📍';
+
+    html += `
+      <div class="defect-group-title">
+        <span>${icon}</span>
+        <span>${category}</span>
+        <span style="font-size:11px;color:#94a3b8;font-weight:400">${items.length}건</span>
+      </div>`;
+
+    for (const d of items) {
+      const photoUrls = d.all_photos.map(p => p.photo_url);
+      const mainPhoto = photoUrls[0] || '';
+
+      html += `
+        <div class="defect-card">
+          ${mainPhoto ? `<img src="${mainPhoto}" onclick="openViewer(${JSON.stringify(photoUrls).replace(/"/g, '&quot;')}, 0)" loading="lazy">` : ''}
+          <div class="defect-info">
+            <div class="defect-location">⚠️ ${d.location || category}${photoUrls.length > 1 ? ` · ${photoUrls.length}장` : ''}</div>
+            ${d.description ? `<div class="defect-desc">${d.description}</div>` : ''}
+          </div>
+        </div>`;
+    }
+  }
+
+  html += '</div>';
+  return html;
+}
+
+// ===== 인터랙션 =====
+function switchTab(tab) {
+  currentTab = tab;
+  render();
+}
+
+function toggleAccordion(index) {
+  const el = document.getElementById('acc-' + index);
+  if (el) el.classList.toggle('open');
+}
+
+function switchSubTab(index, type) {
+  const beforeTab = document.getElementById('sub-before-' + index);
+  const afterTab = document.getElementById('sub-after-' + index);
+  const beforeContent = document.getElementById('sub-content-before-' + index);
+  const afterContent = document.getElementById('sub-content-after-' + index);
+
+  if (type === 'before') {
+    beforeTab.className = 'sub-tab active';
+    afterTab.className = 'sub-tab';
+    beforeContent.className = 'sub-content active';
+    afterContent.className = 'sub-content';
+  } else {
+    beforeTab.className = 'sub-tab';
+    afterTab.className = 'sub-tab after-active';
+    beforeContent.className = 'sub-content';
+    afterContent.className = 'sub-content active';
+  }
+}
+
+// ===== 사진 뷰어 =====
+let viewerPhotos = [];
+let viewerIndex = 0;
+let touchStartX = 0;
+
+function openViewer(urls, index) {
+  viewerPhotos = urls;
+  viewerIndex = index;
+  updateViewer();
+  document.getElementById('photoViewer').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeViewer() {
+  document.getElementById('photoViewer').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function updateViewer() {
+  document.getElementById('viewerCounter').textContent =
+    `${viewerIndex + 1} / ${viewerPhotos.length}`;
+  document.getElementById('viewerBody').innerHTML =
+    `<img src="${viewerPhotos[viewerIndex]}">`;
+}
+
+function handleTouchStart(e) {
+  touchStartX = e.touches[0].clientX;
+}
+function handleTouchMove(e) {
+  e.preventDefault();
+}
+function handleTouchEnd(e) {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) {
+    if (diff > 0 && viewerIndex < viewerPhotos.length - 1) {
+      viewerIndex++;
+      updateViewer();
+    } else if (diff < 0 && viewerIndex > 0) {
+      viewerIndex--;
+      updateViewer();
+    }
+  }
+}
+
+// 시작
+init();
+</script>
+</body>
+</html>
