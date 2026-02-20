@@ -465,7 +465,7 @@ async function init() {
     // 리포트 기본 정보
     const { data: report } = await sb
       .from('cleaning_reports')
-      .select('*, bookings(*, customers(*))')
+      .select('*, bookings(*)')
       .eq('id', reportId)
       .single();
 
@@ -564,7 +564,7 @@ async function refreshData(reportId) {
 // ===== 렌더링 =====
 function render() {
   const booking = reportData.bookings;
-  const customer = booking?.customers;
+  const customer = booking;
   const isCompleted = reportData.status === 'completed';
 
   const categoriesWithData = CATEGORIES.map(cat => {
@@ -599,7 +599,7 @@ function render() {
         </div>
       </div>
       <div class="customer-info">
-        <div class="customer-name">${customer?.name || '고객'}님</div>
+        <div class="customer-name">${booking?.customer_name || '고객'}님</div>
         <div class="customer-date">${booking?.scheduled_date || ''}</div>
       </div>
       <div class="progress-bar-bg">
