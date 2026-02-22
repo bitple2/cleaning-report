@@ -523,25 +523,16 @@ async function init() {
   }
 
   try {
-    // 리포트 기본 정보
+    // 리포트 기본 정보 (bookings → customers, companies 조인)
     const { data: report } = await sb
       .from('cleaning_reports')
-      .select('*, bookings(*)')
+      .select('*, bookings(*, customers(name), companies(name, logo_url))')
       .eq('id', reportId)
       .single();
 
     if (!report) throw new Error('리포트를 찾을 수 없습니다');
     reportData = report;
-
-    // 회사 정보 조회 (로고 포함)
-    if (report.bookings?.company_id) {
-      const { data: company } = await sb
-        .from('companies')
-        .select('name, logo_url')
-        .eq('id', report.bookings.company_id)
-        .single();
-      companyData = company;
-    }
+    companyData = report.bookings?.companies || null;
 
     // 엔트리 + 사진
     const { data: entryData } = await sb
@@ -679,7 +670,7 @@ function render() {
         </div>
       </div>
       <div class="customer-info-row">
-        <div class="customer-name">${booking?.customer_name || '고객'}님</div>
+        <div class="customer-name">${booking?.customer_name || booking?.customers?.name || '고객'}님</div>
         <div class="customer-date">${booking?.scheduled_date || ''}</div>
       </div>
       <div class="progress-bar-bg">
