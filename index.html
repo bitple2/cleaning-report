@@ -449,9 +449,9 @@
     .photo-viewer { display: none !important; }
     #statusTab { display: none !important; }
     #defectsTab { display: block !important; }
-    .defect-card { break-inside: avoid; }
-    .defect-photos img { height: auto !important; max-height: 260px; object-fit: contain !important; }
-    .defect-photos { gap: 4px; }
+    .defect-card { break-inside: avoid; margin-bottom: 16px !important; }
+    .defect-photos { grid-template-columns: 1fr !important; gap: 6px !important; }
+    .defect-photos img { height: auto !important; max-height: 350px; object-fit: contain !important; background: #f5f5f0; border-radius: 8px; }
     .defect-group-title { break-after: avoid; }
     .live-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .progress-bar-bg, .progress-bar-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -708,13 +708,13 @@ function render() {
     <!-- 하자 체크 탭 -->
     <div class="tab-content ${currentTab === 'defects' ? 'active' : ''}" id="defectsTab">
       ${renderDefectsTab()}
-    </div>
-
-    <!-- PDF 저장 -->
-    <div class="pdf-save-bar">
-      <button class="pdf-save-btn" onclick="savePdf()">
-        📄 PDF로 저장
-      </button>
+      ${defects.length > 0 ? `
+        <div class="pdf-save-bar">
+          <button class="pdf-save-btn" onclick="savePdf()">
+            📄 하자 리포트 PDF 저장
+          </button>
+        </div>
+      ` : ''}
     </div>
   `;
 }
