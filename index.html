@@ -324,11 +324,20 @@
     margin-bottom: 8px;
     overflow: hidden;
   }
-  .defect-card img {
+  .defect-photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .defect-photos img {
     width: 100%;
     height: 140px;
     object-fit: cover;
     cursor: pointer;
+  }
+  .defect-photos img:only-child {
+    grid-column: 1 / -1;
+    height: 180px;
   }
   .defect-info {
     padding: 10px 12px;
@@ -433,20 +442,20 @@
 
   /* 프린트용 CSS */
   @media print {
-    body { background: white; max-width: 100%; }
+    body { background: white !important; max-width: 100%; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .header { position: static; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .main-tabs { position: static; }
+    .main-tabs { display: none !important; }
     .pdf-save-bar { display: none !important; }
     .photo-viewer { display: none !important; }
-    .accordion-item { break-inside: avoid; }
-    .accordion-item.open .accordion-body { display: block; }
-    .feed-photos img { height: auto; max-height: 200px; }
+    #statusTab { display: none !important; }
+    #defectsTab { display: block !important; }
+    .defect-card { break-inside: avoid; }
+    .defect-photos img { height: auto !important; max-height: 260px; object-fit: contain !important; }
+    .defect-photos { gap: 4px; }
+    .defect-group-title { break-after: avoid; }
     .live-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .progress-bar-bg, .progress-bar-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .accordion-status { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .feed-dot { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .sub-tab .count { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .main-tab .tab-count { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .defect-card, .defect-info, .defect-group-title { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
 </head>
@@ -820,11 +829,16 @@ function renderDefectsTab() {
 
     for (const d of items) {
       const photoUrls = d.all_photos.map(p => p.photo_url);
-      const mainPhoto = photoUrls[0] || '';
 
       html += `
         <div class="defect-card">
-          ${mainPhoto ? `<img src="${mainPhoto}" onclick="openViewer(${JSON.stringify(photoUrls).replace(/"/g, '&quot;')}, 0)" loading="lazy">` : ''}
+          ${photoUrls.length > 0 ? `
+            <div class="defect-photos">
+              ${photoUrls.map((url, i) => `
+                <img src="${url}" onclick="openViewer(${JSON.stringify(photoUrls).replace(/"/g, '&quot;')}, ${i})" loading="lazy">
+              `).join('')}
+            </div>
+          ` : ''}
           <div class="defect-info">
             <div class="defect-location">⚠️ ${d.location || category}${photoUrls.length > 1 ? ` · ${photoUrls.length}장` : ''}</div>
             ${d.description ? `<div class="defect-desc">${d.description}</div>` : ''}
@@ -869,11 +883,27 @@ function switchSubTab(index, type) {
 
 // ===== PDF 저장 =====
 function savePdf() {
-  // 아코디언 모두 열기
-  document.querySelectorAll('.accordion-item').forEach(el => {
-    if (el.querySelector('.accordion-body')) el.classList.add('open');
+  // 하자 탭으로 전환
+  if (currentTab !== 'defects') {
+    currentTab = 'defects';
+    render();
+  }
+
+  // lazy 이미지 모두 프리로드 후 인쇄
+  const images = document.querySelectorAll('#defectsTab img[loading="lazy"]');
+  images.forEach(img => img.removeAttribute('loading'));
+
+  const allLoaded = Array.from(images).map(img => {
+    if (img.complete) return Promise.resolve();
+    return new Promise(resolve => {
+      img.onload = resolve;
+      img.onerror = resolve;
+    });
   });
-  setTimeout(() => window.print(), 300);
+
+  Promise.all(allLoaded).then(() => {
+    setTimeout(() => window.print(), 200);
+  });
 }
 
 // ===== 사진 뷰어 =====
