@@ -30,6 +30,17 @@
     align-items: center;
     margin-bottom: 12px;
   }
+  .company-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .company-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
   .company-name {
     font-size: 15px;
     font-weight: 700;
@@ -60,7 +71,7 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.3; }
   }
-  .customer-info {
+  .customer-info-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -397,6 +408,46 @@
     animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* PDF 저장 버튼 */
+  .pdf-save-bar {
+    padding: 16px 12px 24px;
+    text-align: center;
+  }
+  .pdf-save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #1E293B;
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.2s;
+  }
+  .pdf-save-btn:active { opacity: 0.8; }
+
+  /* 프린트용 CSS */
+  @media print {
+    body { background: white; max-width: 100%; }
+    .header { position: static; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .main-tabs { position: static; }
+    .pdf-save-bar { display: none !important; }
+    .photo-viewer { display: none !important; }
+    .accordion-item { break-inside: avoid; }
+    .accordion-item.open .accordion-body { display: block; }
+    .feed-photos img { height: auto; max-height: 200px; }
+    .live-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .progress-bar-bg, .progress-bar-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .accordion-status { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .feed-dot { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .sub-tab .count { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .main-tab .tab-count { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
 </style>
 </head>
 <body>
@@ -443,6 +494,7 @@ const CATEGORIES = [
 ];
 
 let reportData = null;
+let companyData = null;
 let entries = [];
 let defects = [];
 let currentTab = 'status'; // status | defects
@@ -471,6 +523,16 @@ async function init() {
 
     if (!report) throw new Error('리포트를 찾을 수 없습니다');
     reportData = report;
+
+    // 회사 정보 조회 (로고 포함)
+    if (report.bookings?.company_id) {
+      const { data: company } = await sb
+        .from('companies')
+        .select('name, logo_url')
+        .eq('id', report.bookings.company_id)
+        .single();
+      companyData = company;
+    }
 
     // 엔트리 + 사진
     const { data: entryData } = await sb
@@ -567,6 +629,12 @@ function render() {
   const customer = booking;
   const isCompleted = reportData.status === 'completed';
 
+  // 회사 로고 HTML
+  const logoHtml = companyData?.logo_url
+    ? `<img class="company-logo" src="${companyData.logo_url}" alt="logo">`
+    : '';
+  const companyName = companyData?.name || '청소 리포트';
+
   const categoriesWithData = CATEGORIES.map(cat => {
     const catEntries = entries.filter(e => e.category === cat.key);
     const beforeEntries = catEntries.filter(e => e.photo_type === 'before');
@@ -591,14 +659,17 @@ function render() {
     <!-- 헤더 -->
     <div class="header">
       <div class="header-top">
-        <div class="company-name">${booking?.company_id ? '청소 리포트' : '청소 리포트'}</div>
+        <div class="company-info">
+          ${logoHtml}
+          <div class="company-name">${companyName}</div>
+        </div>
         <div class="live-badge ${isCompleted ? 'completed-badge' : ''}">
           ${isCompleted
             ? '✓ 완료'
             : '<div class="live-dot"></div> LIVE'}
         </div>
       </div>
-      <div class="customer-info">
+      <div class="customer-info-row">
         <div class="customer-name">${booking?.customer_name || '고객'}님</div>
         <div class="customer-date">${booking?.scheduled_date || ''}</div>
       </div>
@@ -628,6 +699,13 @@ function render() {
     <!-- 하자 체크 탭 -->
     <div class="tab-content ${currentTab === 'defects' ? 'active' : ''}" id="defectsTab">
       ${renderDefectsTab()}
+    </div>
+
+    <!-- PDF 저장 -->
+    <div class="pdf-save-bar">
+      <button class="pdf-save-btn" onclick="savePdf()">
+        📄 PDF로 저장
+      </button>
     </div>
   `;
 }
@@ -787,6 +865,15 @@ function switchSubTab(index, type) {
     beforeContent.className = 'sub-content';
     afterContent.className = 'sub-content active';
   }
+}
+
+// ===== PDF 저장 =====
+function savePdf() {
+  // 아코디언 모두 열기
+  document.querySelectorAll('.accordion-item').forEach(el => {
+    if (el.querySelector('.accordion-body')) el.classList.add('open');
+  });
+  setTimeout(() => window.print(), 300);
 }
 
 // ===== 사진 뷰어 =====
