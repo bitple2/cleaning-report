@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>서비스 옵션</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #F2F3EE;
+    color: #1a1a1a;
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: #1E293B;
+    color: white;
+    padding: 20px 16px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .company-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  .company-name {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .header-subtitle {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-top: 8px;
+  }
+
+  .content { padding: 12px; }
+
+  .option-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #E5E5DC;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  /* 전/후 사진 섹션 */
+  .photo-section {
+    padding: 12px 16px 0;
+  }
+  .photo-section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .photo-section-label.before { color: #3B82F6; }
+  .photo-section-label.after { color: #4A7C59; }
+
+  .photo-carousel {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #F1F3EE;
+    overflow: hidden;
+    touch-action: pan-y;
+    border-radius: 12px;
+  }
+  .photo-carousel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .photo-carousel img.active { opacity: 1; }
+  .photo-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+  }
+  .photo-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    transition: background 0.3s;
+  }
+  .photo-dot.active { background: white; }
+  .photo-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 10px;
+  }
+
+  /* 영상 */
+  .video-section {
+    padding: 0 16px;
+    margin-top: 12px;
+  }
+  .video-player {
+    width: 100%;
+    border-radius: 12px;
+    background: #000;
+  }
+
+  .option-body { padding: 16px; }
+  .option-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+  }
+  .option-desc {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    white-space: pre-line;
+  }
+  .option-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: #4A7C59;
+  }
+
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    color: #94a3b8;
+  }
+  .spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #E5E5DC;
+    border-top-color: #4A7C59;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #94a3b8;
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-text { font-size: 15px; font-weight: 600; }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #94a3b8;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="loading" id="loadingView">
+    <div class="spinner"></div>
+    <div>불러오는 중...</div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://veuosamzlkxgenznaadr.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZldW9zYW16bGt4Z2Vuem5hYWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NzYxMDQsImV4cCI6MjA2MzE1MjEwNH0.DxANR2pBpBCoF-mCbhsfs9RQdkUFqLVltrJkx0jjSPk';
+
+const params = new URLSearchParams(location.search);
+const optionId = params.get('id');
+const companyId = params.get('company');
+
+let companyData = null;
+let options = [];
+let carouselIdx = 0;
+
+async function fetchApi(path) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    }
+  });
+  return res.json();
+}
+
+async function loadData() {
+  try {
+    if (optionId) {
+      const data = await fetchApi(`service_options?id=eq.${optionId}&is_active=eq.true&select=*,service_option_photos(*),companies:company_id(name,logo_url)`);
+      if (data.length > 0) {
+        options = data;
+        companyData = data[0].companies || null;
+      }
+    } else if (companyId) {
+      const data = await fetchApi(`service_options?company_id=eq.${companyId}&is_active=eq.true&order=sort_order,created_at.desc&select=*,service_option_photos(*),companies:company_id(name,logo_url)`);
+      options = data || [];
+      if (options.length > 0) companyData = options[0].companies || null;
+    }
+
+    if (!companyData && companyId) {
+      const cData = await fetchApi(`companies?id=eq.${companyId}&select=name,logo_url`);
+      if (cData.length > 0) companyData = cData[0];
+    }
+
+    render();
+  } catch (e) {
+    console.error(e);
+    document.getElementById('app').innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">데이터를 불러올 수 없습니다</div></div>';
+  }
+}
+
+function render() {
+  const app = document.getElementById('app');
+  let html = '';
+
+  // 헤더
+  html += '<div class="header"><div class="header-top">';
+  if (companyData?.logo_url) {
+    html += `<img class="company-logo" src="${companyData.logo_url}" alt="로고">`;
+  }
+  html += `<span class="company-name">${companyData?.name || '서비스 옵션'}</span>`;
+  html += '</div>';
+  html += `<div class="header-subtitle">서비스 옵션 카탈로그 · ${options.length}개</div>`;
+  html += '</div>';
+
+  html += '<div class="content">';
+
+  if (options.length === 0) {
+    html += '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">등록된 옵션이 없습니다</div></div>';
+  } else {
+    options.forEach((opt) => {
+      const allPhotos = (opt.service_option_photos || []).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+      const beforePhotos = allPhotos.filter(p => (p.photo_type || 'before') === 'before');
+      const afterPhotos = allPhotos.filter(p => p.photo_type === 'after');
+
+      html += '<div class="option-card">';
+
+      // 본문 (제목, 설명, 가격) 상단에 배치
+      html += '<div class="option-body">';
+      html += `<div class="option-title">${opt.title || ''}</div>`;
+      if (opt.description) {
+        html += `<div class="option-desc">${opt.description}</div>`;
+      }
+      html += `<div class="option-price">${formatPrice(opt)}</div>`;
+      html += '</div>';
+
+      // Before 사진
+      if (beforePhotos.length > 0) {
+        html += '<div class="photo-section">';
+        html += '<div class="photo-section-label before">Before</div>';
+        html += buildCarousel(beforePhotos);
+        html += '</div>';
+      }
+
+      // After 사진
+      if (afterPhotos.length > 0) {
+        html += '<div class="photo-section">';
+        html += '<div class="photo-section-label after">After</div>';
+        html += buildCarousel(afterPhotos);
+        html += '</div>';
+      }
+
+      // 영상
+      if (opt.video_url) {
+        html += '<div class="video-section">';
+        html += `<video class="video-player" controls preload="metadata" playsinline><source src="${opt.video_url}">영상을 재생할 수 없습니다</video>`;
+        html += '</div>';
+      }
+
+      // 카드 하단 여백
+      html += '<div style="height:16px"></div>';
+      html += '</div>';
+    });
+  }
+
+  html += '</div>';
+  html += '<div class="footer">Powered by CleanOps</div>';
+
+  app.innerHTML = html;
+  initCarousels();
+}
+
+function buildCarousel(photos) {
+  const id = carouselIdx++;
+  let h = `<div class="photo-carousel" data-carousel="${id}">`;
+  photos.forEach((p, pi) => {
+    h += `<img src="${p.photo_url}" alt="사진 ${pi + 1}" class="${pi === 0 ? 'active' : ''}" loading="lazy">`;
+  });
+  if (photos.length > 1) {
+    h += `<div class="photo-counter">1 / ${photos.length}</div>`;
+    h += '<div class="photo-dots">';
+    photos.forEach((_, pi) => {
+      h += `<div class="photo-dot ${pi === 0 ? 'active' : ''}"></div>`;
+    });
+    h += '</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function formatPrice(opt) {
+  const perPyeong = opt.price_per_pyeong || 0;
+  if (perPyeong === 0) return '가격 문의';
+  const man = perPyeong / 10000;
+  const manStr = man === Math.floor(man) ? Math.floor(man).toString() : man.toFixed(1);
+  return `평당 ${manStr}만원`;
+}
+
+function initCarousels() {
+  document.querySelectorAll('.photo-carousel').forEach(carousel => {
+    const imgs = carousel.querySelectorAll('img');
+    const dots = carousel.querySelectorAll('.photo-dot');
+    const counter = carousel.querySelector('.photo-counter');
+    if (imgs.length <= 1) return;
+
+    let current = 0;
+    let startX = 0;
+    let isDragging = false;
+
+    function goTo(idx) {
+      if (idx < 0 || idx >= imgs.length) return;
+      imgs[current].classList.remove('active');
+      dots[current]?.classList.remove('active');
+      current = idx;
+      imgs[current].classList.add('active');
+      dots[current]?.classList.add('active');
+      if (counter) counter.textContent = `${current + 1} / ${imgs.length}`;
+    }
+
+    carousel.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) {
+        if (diff > 0) goTo(current + 1);
+        else goTo(current - 1);
+      }
+    }, { passive: true });
+  });
+}
+
+loadData();
+</script>
+</body>
+</html>
