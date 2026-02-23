@@ -217,20 +217,22 @@ async function fetchApi(path) {
 async function loadData() {
   try {
     if (optionId) {
-      const data = await fetchApi(`service_options?id=eq.${optionId}&is_active=eq.true&select=*,service_option_photos(*),companies:company_id(name,logo_url)`);
-      if (data.length > 0) {
+      const data = await fetchApi(`service_options?id=eq.${optionId}&is_active=eq.true&select=*,service_option_photos(*)`);
+      if (Array.isArray(data) && data.length > 0) {
         options = data;
-        companyData = data[0].companies || null;
       }
     } else if (companyId) {
-      const data = await fetchApi(`service_options?company_id=eq.${companyId}&is_active=eq.true&order=sort_order,created_at.desc&select=*,service_option_photos(*),companies:company_id(name,logo_url)`);
-      options = data || [];
-      if (options.length > 0) companyData = options[0].companies || null;
+      const data = await fetchApi(`service_options?company_id=eq.${companyId}&is_active=eq.true&order=sort_order,created_at.desc&select=*,service_option_photos(*)`);
+      if (Array.isArray(data)) options = data;
     }
 
-    if (!companyData && companyId) {
-      const cData = await fetchApi(`companies?id=eq.${companyId}&select=name,logo_url`);
-      if (cData.length > 0) companyData = cData[0];
+    // 회사 정보 별도 조회
+    const cid = companyId || (options.length > 0 ? options[0].company_id : null);
+    if (cid) {
+      try {
+        const cData = await fetchApi(`companies?id=eq.${cid}&select=name,logo_url`);
+        if (Array.isArray(cData) && cData.length > 0) companyData = cData[0];
+      } catch (e) { /* 회사 정보 없어도 진행 */ }
     }
 
     render();
