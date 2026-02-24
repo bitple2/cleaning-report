@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>서비스 옵션</title>
+<meta property="og:title" content="서비스 옵션 카탈로그">
+<meta property="og:description" content="전문 청소 서비스 옵션을 확인해보세요">
+<meta property="og:type" content="website">
+<meta name="description" content="전문 청소 서비스 옵션을 확인해보세요">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -16,9 +20,9 @@
   }
 
   .header {
-    background: #1E293B;
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
     color: white;
-    padding: 20px 16px 16px;
+    padding: 28px 20px 22px;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -26,22 +30,39 @@
   .header-top {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 14px;
   }
   .company-logo {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
     object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.15);
+  }
+  .company-initial {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
   }
   .company-name {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
+    letter-spacing: -0.3px;
   }
   .header-subtitle {
-    font-size: 12px;
-    opacity: 0.6;
-    margin-top: 8px;
+    font-size: 11px;
+    opacity: 0.45;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
   }
 
   .content { padding: 12px; }
@@ -59,15 +80,15 @@
     padding: 12px 16px 0;
   }
   .photo-section-label {
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
     color: #94a3b8;
     margin-bottom: 8px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 2px;
   }
-  .photo-section-label.before { color: #3B82F6; }
-  .photo-section-label.after { color: #4A7C59; }
+  .photo-section-label.before { color: #94a3b8; }
+  .photo-section-label.after { color: #1a1a1a; }
 
   .photo-carousel {
     position: relative;
@@ -143,9 +164,14 @@
     white-space: pre-line;
   }
   .option-price {
-    font-size: 18px;
-    font-weight: 800;
-    color: #4A7C59;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+    border: 1px solid #E5E5DC;
+    border-radius: 6px;
+    padding: 4px 10px;
+    letter-spacing: 0.3px;
   }
 
   .loading {
@@ -175,11 +201,120 @@
   .empty-icon { font-size: 48px; margin-bottom: 12px; }
   .empty-text { font-size: 15px; font-weight: 600; }
 
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    padding: 12px 12px 4px;
+    background: #F2F3EE;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s;
+    background: transparent;
+    color: #94a3b8;
+  }
+  .tab-btn.active {
+    background: white;
+    color: #1a1a1a;
+    font-weight: 700;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .tab-count {
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 4px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    background: #E5E5DC;
+    color: #64748b;
+  }
+  .tab-btn.active .tab-count {
+    background: #EDF7F0;
+    color: #4A7C59;
+  }
+  .tab-btn.surcharge.active .tab-count {
+    background: #FFF3E0;
+    color: #E65100;
+  }
+
   .footer {
     text-align: center;
     padding: 20px;
     font-size: 11px;
     color: #94a3b8;
+  }
+
+  /* 전체화면 뷰어 */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.2s;
+    touch-action: none;
+  }
+  .lightbox.show { opacity: 1; }
+  .lightbox-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    padding-top: max(12px, env(safe-area-inset-top));
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .lightbox-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .lightbox-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 1.5px;
+  }
+  .lightbox-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .lightbox-body img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: opacity 0.15s;
+  }
+  .lightbox-counter {
+    text-align: center;
+    padding: 12px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
   }
 </style>
 </head>
@@ -203,6 +338,7 @@ const companyId = params.get('company');
 let companyData = null;
 let options = [];
 let carouselIdx = 0;
+let currentTab = 'service';
 
 async function fetchApi(path) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
@@ -247,63 +383,44 @@ function render() {
   let html = '';
 
   // 헤더
+  const cName = companyData?.name || '서비스 옵션';
   html += '<div class="header"><div class="header-top">';
   if (companyData?.logo_url) {
     html += `<img class="company-logo" src="${companyData.logo_url}" alt="로고">`;
+  } else {
+    html += `<div class="company-initial">${cName[0]}</div>`;
   }
-  html += `<span class="company-name">${companyData?.name || '서비스 옵션'}</span>`;
+  html += `<span class="company-name">${cName}</span>`;
   html += '</div>';
-  html += `<div class="header-subtitle">서비스 옵션 카탈로그 · ${options.length}개</div>`;
+  const serviceCount = options.filter(o => (o.type || 'service') === 'service').length;
+  const surchargeCount = options.filter(o => o.type === 'surcharge').length;
+  const subtitle = surchargeCount > 0
+    ? `부가서비스 ${serviceCount}개 · 현장변수 ${surchargeCount}개`
+    : `SERVICE CATALOG · ${options.length}`;
+  html += `<div class="header-subtitle">${subtitle}</div>`;
   html += '</div>';
+
+  const serviceOptions = options.filter(o => (o.type || 'service') === 'service');
+  const surchargeOptions = options.filter(o => o.type === 'surcharge');
+  const hasBothTypes = serviceOptions.length > 0 && surchargeOptions.length > 0;
+
+  // 탭 바 (두 타입 모두 있을 때만)
+  if (hasBothTypes) {
+    html += '<div class="tab-bar">';
+    html += `<button class="tab-btn ${currentTab === 'service' ? 'active' : ''}" onclick="switchTab('service')">부가서비스<span class="tab-count">${serviceOptions.length}</span></button>`;
+    html += `<button class="tab-btn surcharge ${currentTab === 'surcharge' ? 'active' : ''}" onclick="switchTab('surcharge')">현장변수<span class="tab-count">${surchargeOptions.length}</span></button>`;
+    html += '</div>';
+  }
 
   html += '<div class="content">';
 
   if (options.length === 0) {
     html += '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">등록된 옵션이 없습니다</div></div>';
   } else {
-    options.forEach((opt) => {
-      const allPhotos = (opt.service_option_photos || []).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-      const beforePhotos = allPhotos.filter(p => (p.photo_type || 'before') === 'before');
-      const afterPhotos = allPhotos.filter(p => p.photo_type === 'after');
-
-      html += '<div class="option-card">';
-
-      // 본문 (제목, 설명, 가격) 상단에 배치
-      html += '<div class="option-body">';
-      html += `<div class="option-title">${opt.title || ''}</div>`;
-      if (opt.description) {
-        html += `<div class="option-desc">${opt.description}</div>`;
-      }
-      html += `<div class="option-price">${formatPrice(opt)}</div>`;
-      html += '</div>';
-
-      // Before 사진
-      if (beforePhotos.length > 0) {
-        html += '<div class="photo-section">';
-        html += '<div class="photo-section-label before">Before</div>';
-        html += buildCarousel(beforePhotos);
-        html += '</div>';
-      }
-
-      // After 사진
-      if (afterPhotos.length > 0) {
-        html += '<div class="photo-section">';
-        html += '<div class="photo-section-label after">After</div>';
-        html += buildCarousel(afterPhotos);
-        html += '</div>';
-      }
-
-      // 영상
-      if (opt.video_url) {
-        html += '<div class="video-section">';
-        html += `<video class="video-player" controls preload="metadata" playsinline><source src="${opt.video_url}">영상을 재생할 수 없습니다</video>`;
-        html += '</div>';
-      }
-
-      // 카드 하단 여백
-      html += '<div style="height:16px"></div>';
-      html += '</div>';
-    });
+    const visibleOptions = hasBothTypes
+      ? (currentTab === 'service' ? serviceOptions : surchargeOptions)
+      : options;
+    visibleOptions.forEach(opt => { html += buildOptionCard(opt); });
   }
 
   html += '</div>';
@@ -313,9 +430,54 @@ function render() {
   initCarousels();
 }
 
-function buildCarousel(photos) {
+function buildOptionCard(opt) {
+  const allPhotos = (opt.service_option_photos || []).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+  const beforePhotos = allPhotos.filter(p => (p.photo_type || 'before') === 'before');
+  const afterPhotos = allPhotos.filter(p => p.photo_type === 'after');
+
+  let h = '<div class="option-card">';
+
+  // 본문 (제목, 설명, 가격)
+  h += '<div class="option-body">';
+  h += `<div class="option-title">${opt.title || ''}</div>`;
+  if (opt.description) {
+    h += `<div class="option-desc">${opt.description}</div>`;
+  }
+  h += `<div class="option-price">${formatPrice(opt)}</div>`;
+  h += '</div>';
+
+  // Before 사진
+  if (beforePhotos.length > 0) {
+    h += '<div class="photo-section">';
+    h += '<div class="photo-section-label before">Before</div>';
+    h += buildCarousel(beforePhotos, 'BEFORE');
+    h += '</div>';
+  }
+
+  // After 사진
+  if (afterPhotos.length > 0) {
+    h += '<div class="photo-section">';
+    h += '<div class="photo-section-label after">After</div>';
+    h += buildCarousel(afterPhotos, 'AFTER');
+    h += '</div>';
+  }
+
+  // 영상
+  if (opt.video_url) {
+    h += '<div class="video-section">';
+    h += `<video class="video-player" controls preload="metadata" playsinline><source src="${opt.video_url}">영상을 재생할 수 없습니다</video>`;
+    h += '</div>';
+  }
+
+  h += '<div style="height:16px"></div>';
+  h += '</div>';
+  return h;
+}
+
+function buildCarousel(photos, label) {
   const id = carouselIdx++;
-  let h = `<div class="photo-carousel" data-carousel="${id}">`;
+  const urls = JSON.stringify(photos.map(p => p.photo_url));
+  let h = `<div class="photo-carousel" data-carousel="${id}" data-photos='${urls}' data-label="${label || ''}">`;
   photos.forEach((p, pi) => {
     h += `<img src="${p.photo_url}" alt="사진 ${pi + 1}" class="${pi === 0 ? 'active' : ''}" loading="lazy">`;
   });
@@ -344,11 +506,13 @@ function initCarousels() {
     const imgs = carousel.querySelectorAll('img');
     const dots = carousel.querySelectorAll('.photo-dot');
     const counter = carousel.querySelector('.photo-counter');
-    if (imgs.length <= 1) return;
+    const photos = JSON.parse(carousel.dataset.photos || '[]');
+    const label = carousel.dataset.label || '';
 
     let current = 0;
     let startX = 0;
     let isDragging = false;
+    let moved = false;
 
     function goTo(idx) {
       if (idx < 0 || idx >= imgs.length) return;
@@ -363,7 +527,10 @@ function initCarousels() {
     carousel.addEventListener('touchstart', (e) => {
       startX = e.touches[0].clientX;
       isDragging = true;
+      moved = false;
     }, { passive: true });
+
+    carousel.addEventListener('touchmove', () => { moved = true; }, { passive: true });
 
     carousel.addEventListener('touchend', (e) => {
       if (!isDragging) return;
@@ -374,7 +541,79 @@ function initCarousels() {
         else goTo(current - 1);
       }
     }, { passive: true });
+
+    // 클릭 시 전체화면 뷰어
+    carousel.addEventListener('click', () => {
+      if (!moved && photos.length > 0) openLightbox(photos, current, label);
+    });
   });
+}
+
+// ===== 전체화면 사진 뷰어 =====
+let lbPhotos = [];
+let lbCurrent = 0;
+let lbEl = null;
+
+function openLightbox(photos, index, label) {
+  lbPhotos = photos;
+  lbCurrent = index;
+
+  const el = document.createElement('div');
+  el.className = 'lightbox';
+  el.innerHTML = `
+    <div class="lightbox-header">
+      <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+      <span class="lightbox-label">${label}</span>
+    </div>
+    <div class="lightbox-body">
+      <img src="${photos[index]}" alt="">
+    </div>
+    ${photos.length > 1 ? `<div class="lightbox-counter">${index + 1} / ${photos.length}</div>` : ''}
+  `;
+  document.body.appendChild(el);
+  lbEl = el;
+  requestAnimationFrame(() => el.classList.add('show'));
+
+  // 스와이프
+  let sx = 0, dragging = false;
+  const body = el.querySelector('.lightbox-body');
+  body.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; dragging = true; }, { passive: true });
+  body.addEventListener('touchend', (e) => {
+    if (!dragging) return;
+    dragging = false;
+    const diff = sx - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && lbCurrent < lbPhotos.length - 1) lbGoTo(lbCurrent + 1);
+      else if (diff < 0 && lbCurrent > 0) lbGoTo(lbCurrent - 1);
+    }
+  }, { passive: true });
+
+  document.body.style.overflow = 'hidden';
+}
+
+function lbGoTo(idx) {
+  lbCurrent = idx;
+  const img = lbEl.querySelector('.lightbox-body img');
+  img.style.opacity = 0;
+  setTimeout(() => {
+    img.src = lbPhotos[idx];
+    img.style.opacity = 1;
+  }, 150);
+  const counter = lbEl.querySelector('.lightbox-counter');
+  if (counter) counter.textContent = `${idx + 1} / ${lbPhotos.length}`;
+}
+
+function closeLightbox() {
+  if (!lbEl) return;
+  lbEl.classList.remove('show');
+  setTimeout(() => { lbEl.remove(); lbEl = null; }, 200);
+  document.body.style.overflow = '';
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  carouselIdx = 0;
+  render();
 }
 
 loadData();
