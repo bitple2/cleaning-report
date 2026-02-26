@@ -97,11 +97,23 @@
     );
 
     async function init() {
+      // PKCE 방식: ?code= 파라미터로 세션 교환
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      if (code) {
+        try {
+          const { error } = await sb.auth.exchangeCodeForSession(code);
+          if (error) throw error;
+          return;
+        } catch { showExpired(); return; }
+      }
+
+      // Implicit 방식: #access_token= 해시로 세션 설정
       const h = window.location.hash.substring(1);
-      const p = new URLSearchParams(h);
-      const at = p.get('access_token');
-      const rt = p.get('refresh_token');
-      if (p.get('type') === 'recovery' && at) {
+      const hp = new URLSearchParams(h);
+      const at = hp.get('access_token');
+      const rt = hp.get('refresh_token');
+      if (hp.get('type') === 'recovery' && at) {
         try { await sb.auth.setSession({ access_token: at, refresh_token: rt }); }
         catch { showExpired(); }
       } else { showExpired(); }
