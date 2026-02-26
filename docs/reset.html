@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>비밀번호 재설정 - Cleaning Manager</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #F5F5F5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #1A1A1A;
+    }
+    .container { width: 100%; max-width: 380px; }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .desc { font-size: 14px; color: #888; margin-bottom: 28px; }
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: #555; margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%; padding: 13px 14px;
+      border: 1.5px solid #E8E8E8; border-radius: 10px;
+      font-size: 15px; outline: none; transition: border-color 0.2s;
+    }
+    .field input:focus { border-color: #2563EB; }
+    .btn {
+      width: 100%; padding: 14px; background: #2563EB; color: #fff;
+      border: none; border-radius: 10px; font-size: 15px;
+      font-weight: 700; cursor: pointer; margin-top: 8px;
+    }
+    .btn:disabled { background: #A5C4F7; cursor: not-allowed; }
+    .msg {
+      margin-top: 14px; padding: 10px 14px; border-radius: 8px;
+      font-size: 13px; display: none;
+    }
+    .msg.err { display: block; background: #FEF2F2; color: #DC2626; }
+    .done, .expired { display: none; text-align: center; padding: 16px 0; }
+    .done .icon {
+      width: 56px; height: 56px; background: #ECFDF5; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 14px;
+    }
+    .done h2, .expired h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .done p, .expired p { font-size: 14px; color: #888; line-height: 1.6; }
+    .expired .icon { font-size: 40px; margin-bottom: 12px; }
+    .footer { text-align: center; margin-top: 20px; font-size: 13px; color: #bbb; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div id="form">
+        <div class="title">비밀번호 재설정</div>
+        <div class="desc">새 비밀번호를 입력해주세요</div>
+        <div class="field">
+          <label>새 비밀번호</label>
+          <input type="password" id="pw" placeholder="6자 이상">
+        </div>
+        <div class="field">
+          <label>비밀번호 확인</label>
+          <input type="password" id="pw2" placeholder="다시 입력">
+        </div>
+        <div id="msg" class="msg"></div>
+        <button class="btn" id="btn" onclick="submit()">변경하기</button>
+      </div>
+      <div class="done" id="done">
+        <div class="icon">✓</div>
+        <h2>변경 완료</h2>
+        <p>앱에서 새 비밀번호로 로그인하세요</p>
+      </div>
+      <div class="expired" id="expired">
+        <div class="icon">⏳</div>
+        <h2>링크 만료</h2>
+        <p>재설정 링크가 만료되었습니다<br>앱에서 다시 요청해주세요</p>
+      </div>
+    </div>
+    <div class="footer">Cleaning Manager</div>
+  </div>
+  <script>
+    const sb = window.supabase.createClient(
+      'https://iucicugxihxilcqtzrbk.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1Y2ljdWd4aWh4aWxjcXR6cmJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2OTc0ODAsImV4cCI6MjA4NjI3MzQ4MH0.5_7_vNc7x2kU68ynssGhf2jPCevkE-OMfSfgmyrkZDA'
+    );
+
+    async function init() {
+      const h = window.location.hash.substring(1);
+      const p = new URLSearchParams(h);
+      const at = p.get('access_token');
+      const rt = p.get('refresh_token');
+      if (p.get('type') === 'recovery' && at) {
+        try { await sb.auth.setSession({ access_token: at, refresh_token: rt }); }
+        catch { showExpired(); }
+      } else { showExpired(); }
+    }
+
+    function showExpired() {
+      document.getElementById('form').style.display = 'none';
+      document.getElementById('expired').style.display = 'block';
+    }
+
+    function showErr(t) {
+      const m = document.getElementById('msg');
+      m.textContent = t; m.className = 'msg err';
+    }
+
+    async function submit() {
+      const pw = document.getElementById('pw').value;
+      const pw2 = document.getElementById('pw2').value;
+      const btn = document.getElementById('btn');
+      if (!pw || pw.length < 6) return showErr('비밀번호는 6자 이상이어야 합니다');
+      if (pw !== pw2) return showErr('비밀번호가 일치하지 않습니다');
+      btn.disabled = true; btn.textContent = '변경 중...';
+      try {
+        const { error } = await sb.auth.updateUser({ password: pw });
+        if (error) throw error;
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('done').style.display = 'block';
+      } catch {
+        showErr('변경에 실패했습니다. 다시 시도해주세요');
+        btn.disabled = false; btn.textContent = '변경하기';
+      }
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+    init();
+  </script>
+</body>
+</html>
