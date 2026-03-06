@@ -397,6 +397,35 @@
     max-height: 100%;
     object-fit: contain;
   }
+  .viewer-footer {
+    display: flex;
+    justify-content: center;
+    padding: 12px 16px 24px;
+  }
+  .viewer-download {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .viewer-download:active {
+    background: rgba(255,255,255,0.3);
+  }
+  .viewer-download svg {
+    width: 22px;
+    height: 22px;
+    stroke: white;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 
   /* 로딩 */
   .loading {
@@ -479,6 +508,11 @@
     ontouchstart="handleTouchStart(event)"
     ontouchmove="handleTouchMove(event)"
     ontouchend="handleTouchEnd(event)">
+  </div>
+  <div class="viewer-footer">
+    <button class="viewer-download" onclick="downloadPhoto()">
+      <svg viewBox="0 0 24 24"><path d="M12 3v13M5 12l7 7 7-7"/><path d="M5 20h14"/></svg>
+    </button>
   </div>
 </div>
 
@@ -930,6 +964,22 @@ function updateViewer() {
     `${viewerIndex + 1} / ${viewerPhotos.length}`;
   document.getElementById('viewerBody').innerHTML =
     `<img src="${viewerPhotos[viewerIndex]}">`;
+}
+
+async function downloadPhoto() {
+  const url = viewerPhotos[viewerIndex];
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch (e) {
+    // fetch 실패 시 새 탭으로 열기
+    window.open(url, '_blank');
+  }
 }
 
 function handleTouchStart(e) {
