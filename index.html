@@ -635,7 +635,17 @@ function render() {
     : '';
   const companyName = companyData?.name || '청소 리포트';
 
-  const categoriesWithData = CATEGORIES.map(cat => {
+  // 커스텀 구역 자동 감지
+  const defaultKeys = new Set(CATEGORIES.map(c => c.key));
+  const customCats = [];
+  for (const e of entries) {
+    if (!defaultKeys.has(e.category) && !customCats.find(c => c.key === e.category)) {
+      customCats.push({ key: e.category, icon: '📁' });
+    }
+  }
+  const allCategories = [...CATEGORIES, ...customCats];
+
+  const categoriesWithData = allCategories.map(cat => {
     const catEntries = entries.filter(e => e.category === cat.key);
     const beforeEntries = catEntries.filter(e => e.photo_type === 'before');
     const afterEntries = catEntries.filter(e => e.photo_type === 'after');
@@ -809,7 +819,7 @@ function renderDefectsTab() {
 
   for (const [category, items] of Object.entries(grouped)) {
     const catInfo = CATEGORIES.find(c => c.key === category);
-    const icon = catInfo ? catInfo.icon : '📍';
+    const icon = catInfo ? catInfo.icon : '📁';
 
     html += `
       <div class="defect-group-title">
