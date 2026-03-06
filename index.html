@@ -866,7 +866,9 @@ function renderDefectsTab() {
   if (defects.length === 0) {
     return `
       <div class="empty-state" style="margin-top:40px">
-        <div class="icon">✅</div>
+        <div style="width:48px;height:48px;border-radius:50%;background:rgba(74,157,91,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4A9D5B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
         <div class="text">발견된 하자가 없습니다</div>
       </div>`;
   }
