@@ -603,7 +603,7 @@ async function init() {
       .from('report_entries')
       .select('*, report_photos(*)')
       .eq('report_id', reportId)
-      .order('created_at');
+      .order('created_at', { ascending: false });
 
     entries = entryData || [];
 
@@ -612,7 +612,7 @@ async function init() {
       .from('report_defects')
       .select()
       .eq('report_id', reportId)
-      .order('created_at');
+      .order('created_at', { ascending: false });
 
     defects = defectData || [];
 
@@ -661,14 +661,14 @@ async function refreshData(reportId) {
     .from('report_entries')
     .select('*, report_photos(*)')
     .eq('report_id', reportId)
-    .order('created_at');
+    .order('created_at', { ascending: false });
   entries = entryData || [];
 
   const { data: defectData } = await sb
     .from('report_defects')
     .select()
     .eq('report_id', reportId)
-    .order('created_at');
+    .order('created_at', { ascending: false });
   defects = defectData || [];
 
   for (const d of defects) {
@@ -998,32 +998,17 @@ function updateViewer() {
 
 async function downloadPhoto() {
   const url = viewerPhotos[viewerIndex];
-  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
   try {
     const res = await fetch(url);
     const blob = await res.blob();
-
-    if (isIOS) {
-      const file = new File([blob], 'cleanops_photo.jpg', { type: blob.type });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file] });
-      } else {
-        window.open(url, '_blank');
-      }
-    } else {
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(a.href);
-    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
+    a.click();
+    URL.revokeObjectURL(a.href);
     showToast('저장되었습니다');
   } catch (e) {
-    if (e.name !== 'AbortError') {
-      window.open(url, '_blank');
-    }
+    window.open(url, '_blank');
   }
 }
 
