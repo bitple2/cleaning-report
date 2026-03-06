@@ -302,7 +302,7 @@
     object-fit: cover;
     cursor: pointer;
   }
-  .feed-photos.one img { height: 200px; }
+  .feed-photos.one img { height: auto; max-height: 400px; object-fit: contain; background: #F2F3EE; border-radius: 4px; }
 
   /* 하자 탭 */
   .defect-section {
@@ -426,6 +426,26 @@
     stroke-linecap: round;
     stroke-linejoin: round;
   }
+  .viewer-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(0,0,0,0.75);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1100;
+    pointer-events: none;
+  }
+  .viewer-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 
   /* 로딩 */
   .loading {
@@ -515,6 +535,7 @@
     </button>
   </div>
 </div>
+<div class="viewer-toast" id="viewerToast">저장되었습니다</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -976,10 +997,17 @@ async function downloadPhoto() {
     a.download = 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
     a.click();
     URL.revokeObjectURL(a.href);
+    showToast('저장되었습니다');
   } catch (e) {
-    // fetch 실패 시 새 탭으로 열기
     window.open(url, '_blank');
   }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('viewerToast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1500);
 }
 
 function handleTouchStart(e) {
