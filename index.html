@@ -305,7 +305,13 @@
     object-fit: cover;
     cursor: pointer;
   }
-  .feed-photos.one img { height: auto; max-height: 400px; object-fit: contain; background: #F2F3EE; border-radius: 4px; }
+  .feed-photos.one img {
+    height: auto !important;
+    max-height: 400px;
+    object-fit: contain !important;
+    background: #F2F3EE;
+    border-radius: 4px;
+  }
 
   /* 하자 탭 */
   .defect-section {
@@ -995,14 +1001,23 @@ async function downloadPhoto() {
   try {
     const res = await fetch(url);
     const blob = await res.blob();
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
-    a.click();
-    URL.revokeObjectURL(a.href);
-    showToast('저장되었습니다');
+    const file = new File([blob], 'cleanops_photo.jpg', { type: blob.type });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file] });
+      showToast('저장되었습니다');
+    } else {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('저장되었습니다');
+    }
   } catch (e) {
-    window.open(url, '_blank');
+    if (e.name !== 'AbortError') {
+      window.open(url, '_blank');
+    }
   }
 }
 
