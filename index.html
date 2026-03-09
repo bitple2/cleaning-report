@@ -408,7 +408,8 @@
   }
   .viewer-footer {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     padding: 12px 16px 24px;
   }
   .viewer-download {
@@ -507,9 +508,9 @@
     .photo-viewer { display: none !important; }
     #statusTab { display: none !important; }
     #defectsTab { display: block !important; }
-    .defect-card { break-inside: avoid; margin-bottom: 16px !important; }
-    .defect-photos { grid-template-columns: 1fr !important; gap: 6px !important; }
-    .defect-photos img { height: auto !important; max-height: 350px; object-fit: contain !important; background: #f5f5f0; border-radius: 8px; }
+    .defect-card { break-inside: avoid; margin-bottom: 10px !important; }
+    .defect-photos { grid-template-columns: 1fr 1fr !important; gap: 4px !important; }
+    .defect-photos img { height: 120px !important; max-height: 120px; object-fit: cover !important; background: #f5f5f0; border-radius: 6px; }
     .defect-group-title { break-after: avoid; }
     .live-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .progress-bar-bg, .progress-bar-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -542,6 +543,7 @@
     <button class="viewer-download" onclick="downloadPhoto()">
       <svg viewBox="0 0 24 24"><path d="M12 3v13M5 12l7 7 7-7"/><path d="M5 20h14"/></svg>
     </button>
+    <div id="iosHint" style="display:none;color:rgba(255,255,255,0.5);font-size:11px;margin-top:8px">사진을 길게 눌러 저장</div>
   </div>
 </div>
 <div class="viewer-toast" id="viewerToast">저장되었습니다</div>
@@ -632,6 +634,19 @@ async function init() {
 
     render();
     setupRealtime(reportId);
+
+    // Safari에서 print 파라미터로 열렸으면 자동 PDF 실행
+    if (params.get('print') === '1') {
+      currentTab = 'defects';
+      render();
+      const images = document.querySelectorAll('#defectsTab img[loading="lazy"]');
+      images.forEach(img => img.removeAttribute('loading'));
+      const allLoaded = Array.from(images).map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => { img.onload = resolve; img.onerror = resolve; });
+      });
+      Promise.all(allLoaded).then(() => setTimeout(() => window.print(), 500));
+    }
   } catch (e) {
     document.getElementById('app').innerHTML = `
       <div class="empty-state" style="margin-top:100px">
@@ -951,8 +966,10 @@ function savePdf() {
 
   // iOS 인앱 브라우저: Safari로 열기 안내
   if (isIOS && isInApp) {
-    if (confirm('PDF 저장은 Safari에서 가능합니다.\nSafari로 열까요?')) {
-      window.open(window.location.href, '_blank');
+    if (confirm('현재 브라우저에서는 PDF 저장이 지원되지 않아\nSafari로 이동합니다.')) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('print', '1');
+      window.open(url.toString(), '_blank');
     }
     return;
   }
@@ -1054,6 +1071,12 @@ function handleTouchEnd(e) {
       updateViewer();
     }
   }
+}
+
+// iOS 힌트 표시
+if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+  const hint = document.getElementById('iosHint');
+  if (hint) hint.style.display = 'block';
 }
 
 // 시작
