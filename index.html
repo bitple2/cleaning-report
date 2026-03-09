@@ -964,9 +964,10 @@ function savePdf() {
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   const isInApp = /KAKAOTALK|NAVER|Line|Instagram|FBAN|FBAV/i.test(navigator.userAgent);
 
-  // iOS 인앱 브라우저: 안내
+  // iOS 인앱 브라우저: 링크 복사 + 안내
   if (isIOS && isInApp) {
-    alert('카카오톡 등 인앱 브라우저에서는\nPDF 저장이 지원되지 않습니다.\n\n우측 상단 ··· 메뉴에서\n"Safari로 열기"를 선택한 후\n다시 시도해주세요.');
+    navigator.clipboard.writeText(window.location.href).catch(() => {});
+    alert('카카오톡 등 인앱 브라우저에서는\nPDF 저장이 지원되지 않습니다.\n\n링크가 복사되었습니다.\nSafari에서 해당 링크를 열어\nPDF를 다운받아주세요.');
     return;
   }
 
