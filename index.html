@@ -747,10 +747,6 @@ function render() {
         <div class="customer-name">${booking?.customer_name || booking?.customers?.name || '고객'}님</div>
         <div class="customer-date">${booking?.scheduled_date || ''}</div>
       </div>
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" style="width:${progress}%"></div>
-      </div>
-      <div class="progress-text">사진 ${totalPhotos}장 · ${progress}% 완료</div>
     </div>
 
     <!-- 메인 탭 -->
@@ -950,6 +946,17 @@ function switchSubTab(index, type) {
 
 // ===== PDF 저장 =====
 function savePdf() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isInApp = /KAKAOTALK|NAVER|Line|Instagram|FBAN|FBAV/i.test(navigator.userAgent);
+
+  // iOS 인앱 브라우저: Safari로 열기 안내
+  if (isIOS && isInApp) {
+    if (confirm('PDF 저장은 Safari에서 가능합니다.\nSafari로 열까요?')) {
+      window.open(window.location.href, '_blank');
+    }
+    return;
+  }
+
   // 하자 탭으로 전환
   if (currentTab !== 'defects') {
     currentTab = 'defects';
@@ -1000,6 +1007,15 @@ function updateViewer() {
 
 async function downloadPhoto() {
   const url = viewerPhotos[viewerIndex];
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if (isIOS) {
+    // iOS: 새 탭에서 열고 길게 눌러 저장 안내
+    window.open(url, '_blank');
+    showToast('사진을 길게 눌러 저장하세요');
+    return;
+  }
+
   try {
     const res = await fetch(url);
     const blob = await res.blob();
