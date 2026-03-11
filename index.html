@@ -865,9 +865,15 @@ function renderFeedCard(entry, type) {
       ${entry.memo ? `<div class="${isDefect ? 'feed-memo defect-memo' : 'feed-memo'}">${entry.memo}</div>` : ''}
       ${photos.length > 0 ? `
         <div class="feed-photos ${gridClass}">
-          ${displayPhotos.map((p, i) => `
-            <img src="${p.photo_url}" onclick="openViewer(${JSON.stringify(photoUrls).replace(/"/g, '&quot;')}, ${i})" loading="lazy">
-          `).join('')}
+          ${displayPhotos.map((p, i) => {
+            const isLast = i === 3 && remaining > 0;
+            return isLast
+              ? `<div style="position:relative;cursor:pointer" onclick="openViewer(${JSON.stringify(photoUrls).replace(/"/g, '&quot;')}, ${i})">
+                  <img src="${p.photo_url}" loading="lazy" style="pointer-events:none">
+                  <div style="position:absolute;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:700">+${remaining}</div>
+                </div>`
+              : `<img src="${p.photo_url}" onclick="openViewer(${JSON.stringify(photoUrls).replace(/"/g, '&quot;')}, ${i})" loading="lazy">`;
+          }).join('')}
         </div>
       ` : ''}
     </div>`;
@@ -1002,6 +1008,8 @@ let touchStartX = 0;
 function openViewer(urls, index) {
   viewerPhotos = urls;
   viewerIndex = index;
+  // 모든 사진 프리로드 (5장째부터 로딩 지연 방지)
+  urls.forEach(url => { const img = new Image(); img.src = url; });
   updateViewer();
   document.getElementById('photoViewer').classList.add('active');
   document.body.style.overflow = 'hidden';
