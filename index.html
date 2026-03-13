@@ -88,20 +88,15 @@
     font-size: 12px;
     opacity: 0.6;
   }
-  .contact-phone-row {
-    margin-top: 8px;
-  }
-  .contact-phone-link {
-    color: rgba(255,255,255,0.85);
+  .company-phone {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 2px;
     text-decoration: none;
-    font-size: 13px;
-    padding: 4px 10px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 8px;
-    display: inline-block;
+    display: block;
   }
-  .contact-phone-link:hover {
-    background: rgba(255,255,255,0.2);
+  .company-phone:active {
+    color: rgba(255,255,255,0.8);
   }
   .progress-bar-bg {
     background: rgba(255,255,255,0.15);
@@ -779,7 +774,10 @@ function render() {
       <div class="header-top">
         <div class="company-info">
           ${logoHtml}
-          <div class="company-name">${companyName}</div>
+          <div>
+            <div class="company-name">${companyName}</div>
+            ${contactPhone ? `<a href="tel:${contactPhone}" class="company-phone">☎ ${contactPhone}</a>` : ''}
+          </div>
         </div>
         <div class="live-badge ${isCompleted ? 'completed-badge' : ''}">
           ${isCompleted
@@ -791,12 +789,6 @@ function render() {
         <div class="customer-name">${booking?.customer_name || booking?.customers?.name || '고객'}님</div>
         <div class="customer-date">${booking?.scheduled_date || ''}</div>
       </div>
-      ${contactPhone ? `
-      <div class="contact-phone-row">
-        <a href="tel:${contactPhone}" class="contact-phone-link">
-          📞 ${contactPhone}
-        </a>
-      </div>` : ''}
     </div>
 
     <!-- 메인 탭 -->
