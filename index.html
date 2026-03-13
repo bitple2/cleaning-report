@@ -88,15 +88,14 @@
     font-size: 12px;
     opacity: 0.6;
   }
-  .company-phone {
-    font-size: 12px;
-    color: rgba(255,255,255,0.55);
-    margin-top: 2px;
+  .company-call {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
     text-decoration: none;
-    display: block;
+    margin-left: 6px;
   }
-  .company-phone:active {
-    color: rgba(255,255,255,0.8);
+  .company-call:active {
+    color: rgba(255,255,255,0.7);
   }
   .progress-bar-bg {
     background: rgba(255,255,255,0.15);
@@ -774,10 +773,7 @@ function render() {
       <div class="header-top">
         <div class="company-info">
           ${logoHtml}
-          <div>
-            <div class="company-name">${companyName}</div>
-            ${contactPhone ? `<a href="tel:${contactPhone}" class="company-phone">☎ ${contactPhone}</a>` : ''}
-          </div>
+          <div class="company-name">${companyName}${contactPhone ? `<a href="tel:${contactPhone}" class="company-call">☎</a>` : ''}</div>
         </div>
         <div class="live-badge ${isCompleted ? 'completed-badge' : ''}">
           ${isCompleted
