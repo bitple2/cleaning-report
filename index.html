@@ -88,6 +88,21 @@
     font-size: 12px;
     opacity: 0.6;
   }
+  .contact-phone-row {
+    margin-top: 8px;
+  }
+  .contact-phone-link {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    display: inline-block;
+  }
+  .contact-phone-link:hover {
+    background: rgba(255,255,255,0.2);
+  }
   .progress-bar-bg {
     background: rgba(255,255,255,0.15);
     border-radius: 6px;
@@ -413,23 +428,26 @@
     padding: 12px 16px 24px;
   }
   .viewer-download {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
     background: rgba(255,255,255,0.15);
     border: none;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 24px;
     transition: background 0.2s;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
   }
   .viewer-download:active {
     background: rgba(255,255,255,0.3);
   }
   .viewer-download svg {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     stroke: white;
     fill: none;
     stroke-width: 2;
@@ -542,6 +560,7 @@
   <div class="viewer-footer">
     <button class="viewer-download" onclick="downloadPhoto()">
       <svg viewBox="0 0 24 24"><path d="M12 3v13M5 12l7 7 7-7"/><path d="M5 20h14"/></svg>
+      사진 저장
     </button>
     <div id="iosHint" style="display:none;color:rgba(255,255,255,0.5);font-size:11px;margin-top:8px">사진을 길게 눌러 저장</div>
   </div>
@@ -557,15 +576,20 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const CATEGORIES = [
+  { key: '현관', icon: '🚪' },
+  { key: '거실', icon: '🛋️' },
   { key: '주방', icon: '🍳' },
   { key: '화장실', icon: '🚿' },
-  { key: '거실', icon: '🛋️' },
   { key: '안방', icon: '🛏️' },
+  { key: '안방 화장실', icon: '🚿' },
   { key: '방1', icon: '🛏️' },
   { key: '방2', icon: '🛏️' },
   { key: '방3', icon: '🛏️' },
+  { key: '드레스룸', icon: '👔' },
+  { key: '다용도실', icon: '🧹' },
   { key: '베란다', icon: '🌿' },
-  { key: '현관', icon: '🚪' },
+  { key: '안방 베란다', icon: '🌿' },
+  { key: '팬트리', icon: '🗄️' },
 ];
 
 let reportData = null;
@@ -713,16 +737,21 @@ function render() {
     ? `<img class="company-logo" src="${companyData.logo_url}" alt="logo">`
     : '';
   const companyName = companyData?.name || '청소 리포트';
+  const contactPhone = reportData.contact_phone || '';
+
+  // 숨긴 구역 필터링
+  const hiddenSet = new Set(reportData.hidden_categories || []);
+  const visibleCategories = CATEGORIES.filter(c => !hiddenSet.has(c.key));
 
   // 커스텀 구역 자동 감지
   const defaultKeys = new Set(CATEGORIES.map(c => c.key));
   const customCats = [];
   for (const e of entries) {
-    if (!defaultKeys.has(e.category) && !customCats.find(c => c.key === e.category)) {
+    if (!defaultKeys.has(e.category) && !hiddenSet.has(e.category) && !customCats.find(c => c.key === e.category)) {
       customCats.push({ key: e.category, icon: '📁' });
     }
   }
-  const allCategories = [...CATEGORIES, ...customCats];
+  const allCategories = [...visibleCategories, ...customCats];
 
   const categoriesWithData = allCategories.map(cat => {
     const catEntries = entries.filter(e => e.category === cat.key);
@@ -762,6 +791,12 @@ function render() {
         <div class="customer-name">${booking?.customer_name || booking?.customers?.name || '고객'}님</div>
         <div class="customer-date">${booking?.scheduled_date || ''}</div>
       </div>
+      ${contactPhone ? `
+      <div class="contact-phone-row">
+        <a href="tel:${contactPhone}" class="contact-phone-link">
+          📞 ${contactPhone}
+        </a>
+      </div>` : ''}
     </div>
 
     <!-- 메인 탭 -->
@@ -823,19 +858,19 @@ function renderAccordion(cat, index) {
       </div>
       <div class="accordion-body">
         <div class="sub-tabs">
-          <div class="sub-tab active" id="sub-before-${index}" onclick="switchSubTab(${index}, 'before')">
+          <div class="sub-tab ${cat.status !== 'done' ? 'active' : ''}" id="sub-before-${index}" onclick="switchSubTab(${index}, 'before')">
             청소 전 <span class="count before">${cat.beforeCount}</span>
           </div>
-          <div class="sub-tab" id="sub-after-${index}" onclick="switchSubTab(${index}, 'after')">
+          <div class="sub-tab ${cat.status === 'done' ? 'after-active' : ''}" id="sub-after-${index}" onclick="switchSubTab(${index}, 'after')">
             청소 후 <span class="count after">${cat.afterCount}</span>
           </div>
         </div>
-        <div class="sub-content active" id="sub-content-before-${index}">
+        <div class="sub-content ${cat.status !== 'done' ? 'active' : ''}" id="sub-content-before-${index}">
           ${cat.beforeEntries.length > 0
             ? cat.beforeEntries.map(e => renderFeedCard(e, 'before')).join('')
             : '<div class="empty-state"><div class="icon">📷</div><div class="text">아직 사진이 없습니다</div></div>'}
         </div>
-        <div class="sub-content" id="sub-content-after-${index}">
+        <div class="sub-content ${cat.status === 'done' ? 'active' : ''}" id="sub-content-after-${index}">
           ${cat.afterEntries.length > 0
             ? cat.afterEntries.map(e => renderFeedCard(e, 'after')).join('')
             : '<div class="empty-state"><div class="icon">✨</div><div class="text">아직 사진이 없습니다</div></div>'}
@@ -939,11 +974,15 @@ function renderDefectsTab() {
 function switchTab(tab) {
   currentTab = tab;
   render();
+  pushState();
 }
 
 function toggleAccordion(index) {
   const el = document.getElementById('acc-' + index);
-  if (el) el.classList.toggle('open');
+  if (!el) return;
+  const wasOpen = el.classList.contains('open');
+  el.classList.toggle('open');
+  if (!wasOpen) pushState();
 }
 
 function switchSubTab(index, type) {
@@ -1013,6 +1052,7 @@ function openViewer(urls, index) {
   updateViewer();
   document.getElementById('photoViewer').classList.add('active');
   document.body.style.overflow = 'hidden';
+  pushState();
 }
 
 function closeViewer() {
@@ -1078,6 +1118,35 @@ function handleTouchEnd(e) {
   }
 }
 
+// ===== 뒤로가기 처리 =====
+function pushState() {
+  history.pushState({ inApp: true }, '');
+}
+
+window.addEventListener('popstate', function(e) {
+  // 1. 사진 뷰어가 열려있으면 닫기
+  const viewer = document.getElementById('photoViewer');
+  if (viewer && viewer.classList.contains('active')) {
+    closeViewer();
+    pushState();
+    return;
+  }
+
+  // 2. 그 외: 아코디언 모두 접고 청소현황 탭으로
+  const openAccs = document.querySelectorAll('.accordion-item.open');
+  if (openAccs.length > 0 || currentTab !== 'status') {
+    openAccs.forEach(el => el.classList.remove('open'));
+    if (currentTab !== 'status') {
+      currentTab = 'status';
+      render();
+    }
+    pushState();
+    return;
+  }
+
+  // 3. 이미 목록 상태면 페이지에서 나감 (기본 동작)
+});
+
 // iOS 힌트 표시
 if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
   const hint = document.getElementById('iosHint');
@@ -1085,6 +1154,7 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
 }
 
 // 시작
+pushState(); // 초기 히스토리 쌓기
 init();
 </script>
 </body>
