@@ -89,13 +89,18 @@
     opacity: 0.6;
   }
   .company-call {
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
     text-decoration: none;
-    margin-left: 6px;
+    margin-left: 8px;
+    background: rgba(255,255,255,0.12);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    vertical-align: middle;
   }
   .company-call:active {
-    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.25);
   }
   .progress-bar-bg {
     background: rgba(255,255,255,0.15);
@@ -773,7 +778,7 @@ function render() {
       <div class="header-top">
         <div class="company-info">
           ${logoHtml}
-          <div class="company-name">${companyName}${contactPhone ? `<a href="tel:${contactPhone}" class="company-call">☎</a>` : ''}</div>
+          <div class="company-name">${companyName}${contactPhone ? `<a href="tel:${contactPhone}" class="company-call">문의</a>` : ''}</div>
         </div>
         <div class="live-badge ${isCompleted ? 'completed-badge' : ''}">
           ${isCompleted
