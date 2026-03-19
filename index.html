@@ -1076,6 +1076,8 @@ function openViewer(urls, index, videoUrls) {
 }
 
 function closeViewer() {
+  const video = document.querySelector('#viewerBody video');
+  if (video) video.pause();
   document.getElementById('photoViewer').classList.remove('active');
   document.body.style.overflow = '';
 }
