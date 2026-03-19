@@ -872,11 +872,44 @@ function renderAccordion(cat, index) {
     </div>`;
 }
 
+function isVideoUrl(url) {
+  const lower = (url || '').toLowerCase();
+  return lower.includes('.mp4') || lower.includes('.mov') || lower.includes('.avi');
+}
+
+function renderMediaThumb(photo, photoUrls, videoUrlMap, index, isLast, remaining) {
+  const url = photo.photo_url;
+  const hasVideo = !!photo.video_url;
+  const jsonUrls = JSON.stringify(photoUrls).replace(/"/g, '&quot;');
+  const jsonVids = JSON.stringify(videoUrlMap).replace(/"/g, '&quot;');
+  const onclick = `openViewer(${jsonUrls}, ${index}, ${jsonVids})`;
+
+  if (hasVideo) {
+    return `<div style="position:relative;cursor:pointer" onclick="${onclick}">
+      <img src="${url}" loading="lazy" style="pointer-events:none">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+        <div style="background:rgba(0,0,0,0.5);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center">
+          <div style="color:white;font-size:20px;margin-left:2px">▶</div>
+        </div>
+      </div>
+      ${isLast ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:700">+${remaining}</div>` : ''}
+    </div>`;
+  }
+  if (isLast) {
+    return `<div style="position:relative;cursor:pointer" onclick="${onclick}">
+      <img src="${url}" loading="lazy" style="pointer-events:none">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:700">+${remaining}</div>
+    </div>`;
+  }
+  return `<img src="${url}" onclick="${onclick}" loading="lazy">`;
+}
+
 function renderFeedCard(entry, type) {
   const photos = entry.report_photos || [];
   const isDefect = entry.is_defect === true;
   const time = entry.created_at ? new Date(entry.created_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '';
   const photoUrls = photos.map(p => p.photo_url);
+  const videoUrlMap = photos.map(p => p.video_url || null);
 
   const gridClass = photos.length === 1 ? 'one' : photos.length === 2 ? 'two' : 'three-plus';
   const displayPhotos = photos.slice(0, 4);
@@ -893,15 +926,7 @@ function renderFeedCard(entry, type) {
       ${entry.memo ? `<div class="${isDefect ? 'feed-memo defect-memo' : 'feed-memo'}">${entry.memo}</div>` : ''}
       ${photos.length > 0 ? `
         <div class="feed-photos ${gridClass}">
-          ${displayPhotos.map((p, i) => {
-            const isLast = i === 3 && remaining > 0;
-            return isLast
-              ? `<div style="position:relative;cursor:pointer" onclick="openViewer(${JSON.stringify(photoUrls).replace(/"/g, '&quot;')}, ${i})">
-                  <img src="${p.photo_url}" loading="lazy" style="pointer-events:none">
-                  <div style="position:absolute;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:700">+${remaining}</div>
-                </div>`
-              : `<img src="${p.photo_url}" onclick="openViewer(${JSON.stringify(photoUrls).replace(/"/g, '&quot;')}, ${i})" loading="lazy">`;
-          }).join('')}
+          ${displayPhotos.map((p, i) => renderMediaThumb(p, photoUrls, videoUrlMap, i, i === 3 && remaining > 0, remaining)).join('')}
         </div>
       ` : ''}
     </div>`;
@@ -1034,14 +1059,16 @@ function savePdf() {
 
 // ===== 사진 뷰어 =====
 let viewerPhotos = [];
+let viewerVideoUrls = [];
 let viewerIndex = 0;
 let touchStartX = 0;
 
-function openViewer(urls, index) {
+function openViewer(urls, index, videoUrls) {
   viewerPhotos = urls;
+  viewerVideoUrls = videoUrls || [];
   viewerIndex = index;
   // 모든 사진 프리로드 (5장째부터 로딩 지연 방지)
-  urls.forEach(url => { const img = new Image(); img.src = url; });
+  urls.forEach(url => { if (!isVideoUrl(url)) { const img = new Image(); img.src = url; } });
   updateViewer();
   document.getElementById('photoViewer').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -1056,12 +1083,18 @@ function closeViewer() {
 function updateViewer() {
   document.getElementById('viewerCounter').textContent =
     `${viewerIndex + 1} / ${viewerPhotos.length}`;
-  document.getElementById('viewerBody').innerHTML =
-    `<img src="${viewerPhotos[viewerIndex]}">`;
+  const videoUrl = viewerVideoUrls[viewerIndex];
+  if (videoUrl) {
+    document.getElementById('viewerBody').innerHTML =
+      `<video src="${videoUrl}" controls playsinline style="max-width:100%;max-height:80vh"></video>`;
+  } else {
+    document.getElementById('viewerBody').innerHTML =
+      `<img src="${viewerPhotos[viewerIndex]}">`;
+  }
 }
 
 async function downloadPhoto() {
-  const url = viewerPhotos[viewerIndex];
+  const url = viewerVideoUrls[viewerIndex] || viewerPhotos[viewerIndex];
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   if (isIOS) {
@@ -1076,7 +1109,8 @@ async function downloadPhoto() {
     const blob = await res.blob();
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
+    const isVid = isVideoUrl(url);
+    a.download = isVid ? 'cleanops_video_' + (viewerIndex + 1) + '.mp4' : 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
     a.click();
     URL.revokeObjectURL(a.href);
     showToast('저장되었습니다');
