@@ -885,12 +885,12 @@ function renderMediaThumb(photo, photoUrls, videoUrlMap, index, isLast, remainin
   const onclick = `openViewer(${jsonUrls}, ${index}, ${jsonVids})`;
 
   if (hasVideo) {
-    return `<div style="position:relative;cursor:pointer" onclick="${onclick}">
-      <img src="${url}" loading="lazy" style="pointer-events:none">
-      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
-        <div style="background:rgba(0,0,0,0.5);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center">
+    return `<div style="position:relative;cursor:pointer;background:#1a1a1a;min-height:120px;display:flex;align-items:center;justify-content:center" onclick="${onclick}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <div style="background:rgba(255,255,255,0.15);border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center">
           <div style="color:white;font-size:20px;margin-left:2px">▶</div>
         </div>
+        <div style="color:rgba(255,255,255,0.5);font-size:11px">영상</div>
       </div>
       ${isLast ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:700">+${remaining}</div>` : ''}
     </div>`;
@@ -1086,7 +1086,7 @@ function updateViewer() {
   const videoUrl = viewerVideoUrls[viewerIndex];
   if (videoUrl) {
     document.getElementById('viewerBody').innerHTML =
-      `<video src="${videoUrl}" controls playsinline style="max-width:100%;max-height:80vh"></video>`;
+      `<video src="${videoUrl}" controls playsinline preload="metadata" style="max-width:100%;max-height:80vh"></video>`;
   } else {
     document.getElementById('viewerBody').innerHTML =
       `<img src="${viewerPhotos[viewerIndex]}">`;
