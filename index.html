@@ -879,7 +879,7 @@ function isVideoUrl(url) {
 
 function renderMediaThumb(photo, photoUrls, videoUrlMap, index, isLast, remaining) {
   const url = photo.photo_url;
-  const hasVideo = !!photo.video_url;
+  const hasVideo = !!photo.video_url || isVideoUrl(url);
   const jsonUrls = JSON.stringify(photoUrls).replace(/"/g, '&quot;');
   const jsonVids = JSON.stringify(videoUrlMap).replace(/"/g, '&quot;');
   const onclick = `openViewer(${jsonUrls}, ${index}, ${jsonVids})`;
