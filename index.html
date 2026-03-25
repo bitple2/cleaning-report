@@ -559,12 +559,7 @@
     ontouchend="handleTouchEnd(event)">
   </div>
   <div class="viewer-footer">
-    <button class="viewer-download" onclick="downloadPhoto()">
-      <svg viewBox="0 0 24 24"><path d="M12 3v13M5 12l7 7 7-7"/><path d="M5 20h14"/></svg>
-      사진 저장
-    </button>
-    <div id="iosHint" style="display:none;color:rgba(255,255,255,0.5);font-size:11px;margin-top:8px">사진을 길게 눌러 저장하세요</div>
-    <div id="inAppHint" style="display:none;color:rgba(255,255,255,0.5);font-size:11px;margin-top:8px">사진을 길게 눌러 저장하세요</div>
+    <div style="color:rgba(255,255,255,0.5);font-size:11px">사진을 길게 눌러 저장하세요</div>
   </div>
 </div>
 <div class="viewer-toast" id="viewerToast">저장되었습니다</div>
@@ -1196,11 +1191,7 @@ window.addEventListener('popstate', function(e) {
   // 3. 이미 목록 상태면 페이지에서 나감 (기본 동작)
 });
 
-// iOS 힌트 표시
-if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-  const hint = document.getElementById('iosHint');
-  if (hint) hint.style.display = 'block';
-}
+// iOS/인앱 브라우저 힌트는 isInAppBrowser()에서 처리
 
 // 카톡 인앱 브라우저 힌트 표시
 if (isInAppBrowser()) {
