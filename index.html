@@ -1469,89 +1469,79 @@ function openReview() {
   document.body.style.overflow = 'hidden';
   pushState();
 
-  // 리포트 첫 화면 캡쳐
-  setTimeout(() => {
-    // 캡쳐 준비 - 앱을 화면 밖에서 캡쳐
-    document.getElementById('reviewOverlay').classList.remove('active');
-    const header = document.querySelector('.header');
-    const mainTabs = document.querySelector('.main-tabs');
-    if (header) header.style.position = 'static';
-    if (mainTabs) mainTabs.style.position = 'static';
-    const appEl = document.getElementById('app');
-    appEl.style.position = 'fixed';
-    appEl.style.left = '-9999px';
-    appEl.style.width = '500px';
-    window.scrollTo(0, 0);
-    const captureContainer = document.getElementById('reviewCaptureContainer');
+  // 리포트 캡쳐 (백그라운드)
+  if (typeof html2canvas !== 'undefined') {
+    setTimeout(() => {
+      try {
+        const appEl = document.getElementById('app');
+        const header = document.querySelector('.header');
+        const mainTabs = document.querySelector('.main-tabs');
 
-    // 1) 전체 구역 목록 캡쳐 (닫힌 상태)
-    html2canvas(appEl, { useCORS: true, scale: 2, windowWidth: 500 }).then(canvas1 => {
-      const img1 = document.createElement('img');
-      img1.src = canvas1.toDataURL('image/png');
-      img1.style.cssText = 'width:100%;border-radius:8px;-webkit-touch-callout:default;box-shadow:0 2px 12px rgba(0,0,0,0.1)';
+        // 캡쳐용 클론 생성 (화면에 영향 없음)
+        const clone = appEl.cloneNode(true);
+        clone.style.cssText = 'position:fixed;left:-9999px;width:500px;top:0';
+        if (clone.querySelector('.header')) clone.querySelector('.header').style.position = 'static';
+        if (clone.querySelector('.main-tabs')) clone.querySelector('.main-tabs').style.position = 'static';
+        document.body.appendChild(clone);
 
-      // 2) 대표 구역 열고 청소후 탭으로 전환 후 캡쳐
-      // 거실 또는 첫 번째 완료 구역 찾기
-      let targetIndex = -1;
-      const accItems = document.querySelectorAll('.accordion-item');
-      const catNames = categoriesWithData || [];
-      for (let i = 0; i < catNames.length; i++) {
-        if (catNames[i].key === '거실' && catNames[i].status === 'done') { targetIndex = i; break; }
-      }
-      if (targetIndex === -1) {
-        for (let i = 0; i < catNames.length; i++) {
-          if (catNames[i].status === 'done') { targetIndex = i; break; }
-        }
-      }
+        html2canvas(clone, { useCORS: true, scale: 2, windowWidth: 500 }).then(canvas1 => {
+          const img1 = document.createElement('img');
+          img1.src = canvas1.toDataURL('image/png');
+          img1.style.cssText = 'width:100%;border-radius:8px;-webkit-touch-callout:default;box-shadow:0 2px 12px rgba(0,0,0,0.1)';
 
-      if (targetIndex >= 0) {
-        // 아코디언 열기 + 청소후 탭 전환
-        const accEl = document.getElementById('acc-' + targetIndex);
-        if (accEl) accEl.classList.add('open');
-        switchSubTab(targetIndex, 'after');
-
-        setTimeout(() => {
-          html2canvas(appEl, { useCORS: true, scale: 2, windowWidth: 500 }).then(canvas2 => {
-            if (header) header.style.position = 'sticky';
-            if (mainTabs) mainTabs.style.position = 'sticky';
-            if (accEl) accEl.classList.remove('open');
-            appEl.style.position = '';
-            appEl.style.left = '';
-            appEl.style.width = '';
-            document.getElementById('reviewOverlay').classList.add('active');
-
-            const img2 = document.createElement('img');
-            img2.src = canvas2.toDataURL('image/png');
-            img2.style.cssText = 'width:100%;border-radius:8px;-webkit-touch-callout:default;box-shadow:0 2px 12px rgba(0,0,0,0.1)';
-
-            const loading = document.getElementById('reviewCaptureLoading');
-            if (loading) {
-              loading.replaceWith(img1);
-              img1.after(img2);
+          // 대표 구역 열고 두 번째 캡쳐
+          let targetIndex = -1;
+          const catNames = categoriesWithData || [];
+          for (let i = 0; i < catNames.length; i++) {
+            if (catNames[i].key === '거실' && catNames[i].status === 'done') { targetIndex = i; break; }
+          }
+          if (targetIndex === -1) {
+            for (let i = 0; i < catNames.length; i++) {
+              if (catNames[i].status === 'done') { targetIndex = i; break; }
             }
-          });
-        }, 300);
-      } else {
-        if (header) header.style.position = 'sticky';
-        if (mainTabs) mainTabs.style.position = 'sticky';
-        appEl.style.position = '';
-        appEl.style.left = '';
-        appEl.style.width = '';
-        document.getElementById('reviewOverlay').classList.add('active');
+          }
+
+          if (targetIndex >= 0) {
+            const accEl = clone.querySelector('#acc-' + targetIndex);
+            if (accEl) accEl.classList.add('open');
+            const afterTab = clone.querySelector('#sub-after-' + targetIndex);
+            const beforeTab = clone.querySelector('#sub-before-' + targetIndex);
+            const afterContent = clone.querySelector('#sub-content-after-' + targetIndex);
+            const beforeContent = clone.querySelector('#sub-content-before-' + targetIndex);
+            if (afterTab) afterTab.className = 'sub-tab after-active';
+            if (beforeTab) beforeTab.className = 'sub-tab';
+            if (afterContent) afterContent.className = 'sub-content active';
+            if (beforeContent) beforeContent.className = 'sub-content';
+
+            setTimeout(() => {
+              html2canvas(clone, { useCORS: true, scale: 2, windowWidth: 500 }).then(canvas2 => {
+                document.body.removeChild(clone);
+                const img2 = document.createElement('img');
+                img2.src = canvas2.toDataURL('image/png');
+                img2.style.cssText = 'width:100%;border-radius:8px;-webkit-touch-callout:default;box-shadow:0 2px 12px rgba(0,0,0,0.1)';
+                const loading = document.getElementById('reviewCaptureLoading');
+                if (loading) { loading.replaceWith(img1); img1.after(img2); }
+              }).catch(() => { document.body.removeChild(clone); });
+            }, 300);
+          } else {
+            document.body.removeChild(clone);
+            const loading = document.getElementById('reviewCaptureLoading');
+            if (loading) loading.replaceWith(img1);
+          }
+        }).catch(() => {
+          document.body.removeChild(clone);
+          const loading = document.getElementById('reviewCaptureLoading');
+          if (loading) loading.textContent = '';
+        });
+      } catch(e) {
         const loading = document.getElementById('reviewCaptureLoading');
-        if (loading) loading.replaceWith(img1);
+        if (loading) loading.textContent = '';
       }
-    }).catch(() => {
-      if (header) header.style.position = 'sticky';
-      if (mainTabs) mainTabs.style.position = 'sticky';
-      appEl.style.position = '';
-      appEl.style.left = '';
-      appEl.style.width = '';
-      document.getElementById('reviewOverlay').classList.add('active');
-      const loading = document.getElementById('reviewCaptureLoading');
-      if (loading) loading.textContent = '캡쳐 생성에 실패했습니다';
-    });
-  }, 100);
+    }, 500);
+  } else {
+    const loading = document.getElementById('reviewCaptureLoading');
+    if (loading) loading.textContent = '';
+  }
 }
 
 function closeReview() {
