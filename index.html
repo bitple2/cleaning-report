@@ -522,143 +522,12 @@
   }
   .pdf-save-btn:active { opacity: 0.8; }
 
-  /* 리뷰 만들기 */
-  .review-bar {
+  /* 소개하기 */
+  .share-bar {
     padding: 12px 12px 32px;
     text-align: center;
   }
-  .review-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    background: #1a1a1a;
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 14px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    letter-spacing: -0.3px;
-    transition: all 0.2s;
-  }
-  .review-btn:active { opacity: 0.85; }
-  .review-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: white;
-    z-index: 1000;
-    overflow-y: auto;
-  }
-  .review-overlay.active { display: block; }
-  .review-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 16px 12px;
-    border-bottom: 1px solid #E5E5DC;
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 10;
-  }
-  .review-close {
-    font-size: 20px;
-    cursor: pointer;
-    color: #94a3b8;
-    padding: 4px;
-  }
-  .review-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #1a1a1a;
-  }
-  .review-hint {
-    text-align: center;
-    padding: 20px 24px 14px;
-    color: #64748b;
-    font-size: 13px;
-    line-height: 1.6;
-  }
-  .review-hint-icon {
-    display: inline-block;
-    background: #F2F3EE;
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    line-height: 44px;
-    font-size: 20px;
-    margin-bottom: 8px;
-  }
-  .review-hint strong {
-    color: #1a1a1a;
-    font-weight: 700;
-  }
-  .review-section-label {
-    padding: 8px 16px 4px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #94a3b8;
-  }
-  .review-photos {
-    padding: 4px 12px;
-  }
-  .review-photos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-  .review-photos img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: 8px;
-    -webkit-touch-callout: default;
-  }
-  .review-capture {
-    margin: 8px 12px 16px;
-    padding: 20px;
-    background: #1E293B;
-    border-radius: 14px;
-    color: white;
-    -webkit-touch-callout: default;
-  }
-  .review-capture-company {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-  .review-capture-date {
-    font-size: 12px;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 12px;
-  }
-  .review-capture-cats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 14px;
-  }
-  .review-capture-cat {
-    background: rgba(255,255,255,0.12);
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 600;
-  }
-  .review-capture-watermark {
-    text-align: right;
-    font-size: 10px;
-    color: rgba(255,255,255,0.3);
-  }
-  .review-share-bar {
-    padding: 12px;
-    text-align: center;
-  }
-  .review-share-btn {
+  .share-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -674,7 +543,7 @@
     font-family: inherit;
     letter-spacing: -0.3px;
   }
-  .review-share-btn:active { background: #f5f5f0; }
+  .share-btn:active { background: #f5f5f0; }
 
   /* 프린트용 CSS */
   @media print {
@@ -722,24 +591,6 @@
 </div>
 <div class="viewer-toast" id="viewerToast">저장되었습니다</div>
 
-<!-- 리뷰 만들기 오버레이 -->
-<div class="review-overlay" id="reviewOverlay">
-  <div class="review-header">
-    <div class="review-close" onclick="closeReview()">✕</div>
-    <div class="review-title">리뷰용 사진</div>
-    <div style="width:28px"></div>
-  </div>
-  <div class="review-hint">
-    <div class="review-hint-icon">👆</div><br>
-    구역별 베스트 사진입니다<br>
-    <strong>사진을 꾹 누르면</strong> 앨범에 저장됩니다<br>
-    리뷰 작성에 활용해보세요
-  </div>
-  <div id="reviewContent"></div>
-  <div class="review-share-bar">
-    <button class="review-share-btn" onclick="shareReportLink()">🔗 이 리포트가 마음에 드셨나요? 지인에게 공유하기</button>
-  </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -1020,12 +871,12 @@ function render() {
 
     <!-- 소개하기 -->
     ${totalPhotos > 0 ? `
-      <div class="review-bar">
+      <div class="share-bar">
         <div style="text-align:center;font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px">✨ 청소가 마음에 드셨나요?</div>
-        <button class="review-share-btn" onclick="shareReportLink()">
+        <button class="share-btn" onclick="shareReportLink()">
           🔗 지인에게 소개하기
         </button>
-        <div style="text-align:center;font-size:11px;color:#94a3b8;margin-top:12px;line-height:1.6">사진은 꾹 눌러 저장, 리포트 화면은 캡쳐하여<br>후기에 활용해주시면 업체에 큰 힘이 됩니다</div>
+        <div style="text-align:center;font-size:11px;color:#94a3b8;margin-top:12px;line-height:1.6">사진은 꾹 눌러 저장, 리포트 화면은 캡쳐하여<br>후기에 활용해주시면 사장님에게 큰 힘이 됩니다</div>
         <div style="text-align:right;font-size:9px;color:#c4c4c4;margin-top:8px;padding-right:4px">Powered by 클리닝매니저</div>
       </div>
     ` : ''}
@@ -1371,14 +1222,6 @@ function pushState() {
 }
 
 window.addEventListener('popstate', function(e) {
-  // 0. 리뷰 오버레이가 열려있으면 닫기
-  const reviewOverlay = document.getElementById('reviewOverlay');
-  if (reviewOverlay && reviewOverlay.classList.contains('active')) {
-    closeReview();
-    pushState();
-    return;
-  }
-
   // 1. 사진 뷰어가 열려있으면 닫기
   const viewer = document.getElementById('photoViewer');
   if (viewer && viewer.classList.contains('active')) {
@@ -1408,80 +1251,6 @@ window.addEventListener('popstate', function(e) {
 if (isInAppBrowser()) {
   const hint = document.getElementById('inAppHint');
   if (hint) hint.style.display = 'block';
-}
-
-// ===== 리뷰 만들기 =====
-function getReviewPhotos() {
-  // 구역별 청소 후 사진 중 가장 용량 큰 1장씩 선택
-  const afterPhotos = [];
-  const categories = [...new Set(entries.map(e => e.category))];
-
-  for (const cat of categories) {
-    const catAfterEntries = entries.filter(e => e.category === cat && e.photo_type === 'after');
-    const allPhotos = catAfterEntries.flatMap(e => (e.report_photos || []).filter(p => !isVideoUrl(p.photo_url)));
-    if (allPhotos.length > 0) {
-      // 가장 마지막에 올린 사진 (최신)
-      afterPhotos.push(allPhotos[0].photo_url);
-    }
-    if (afterPhotos.length >= 6) break;
-  }
-  return afterPhotos;
-}
-
-function openReview() {
-  const photos = getReviewPhotos();
-  const booking = reportData.bookings;
-  const companyName = companyData?.name || '청소 리포트';
-  const date = booking?.scheduled_date || '';
-
-  // 완료된 구역 목록
-  const doneCats = [];
-  const defaultKeys = new Set(CATEGORIES.map(c => c.key));
-  for (const e of entries) {
-    if (e.photo_type === 'after' && !doneCats.includes(e.category)) {
-      doneCats.push(e.category);
-    }
-  }
-
-  let html = '';
-
-  // 선별된 사진
-  if (photos.length > 0) {
-    html += `<div class="review-section-label">청소 후 베스트 사진 ${photos.length}장</div>`;
-    html += '<div class="review-photos">';
-    for (const url of photos) {
-      html += `<img src="${url}">`;
-    }
-    html += '</div>';
-  }
-
-  // 리포트 요약 카드
-  html += `
-    <div class="review-section-label">리포트 요약</div>
-    <div style="margin:0 12px 16px;padding:16px;background:#1E293B;border-radius:14px;color:white;-webkit-touch-callout:default">
-      <div style="margin-bottom:10px"><span style="display:inline-block;padding:3px 10px;border:1px solid rgba(255,255,255,0.2);border-radius:8px;font-size:9px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:0.5px">✨ 프리미엄 청소 리포트</span></div>
-      <div style="font-size:15px;font-weight:700;margin-bottom:3px">${companyName}</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:12px">${date}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">
-        ${doneCats.map(c => {
-          const catInfo = CATEGORIES.find(ct => ct.key === c);
-          const icon = catInfo ? catInfo.icon : '📁';
-          return `<span style="background:rgba(74,157,91,0.15);padding:4px 8px;border-radius:8px;font-size:10px;font-weight:600;color:#4A9D5B">${icon} ${c} ✓</span>`;
-        }).join('')}
-      </div>
-      <div style="text-align:right;font-size:9px;color:rgba(255,255,255,0.25)">Powered by 클리닝매니저</div>
-    </div>`;
-
-  document.getElementById('reviewContent').innerHTML = html;
-  document.getElementById('reviewOverlay').classList.add('active');
-  document.body.style.overflow = 'hidden';
-  pushState();
-
-}
-
-function closeReview() {
-  document.getElementById('reviewOverlay').classList.remove('active');
-  document.body.style.overflow = '';
 }
 
 function shareReportLink() {
