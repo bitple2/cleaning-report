@@ -1022,7 +1022,7 @@ function render() {
     ${totalPhotos > 0 ? `
       <div class="review-bar">
         <button class="review-share-btn" style="width:100%" onclick="shareReportLink()">
-          🔗 이 리포트가 마음에 드셨나요? 지인에게 소개하기
+          🔗 청소가 마음에 드셨나요? 지인에게 소개하기
         </button>
         <div style="text-align:right;font-size:9px;color:#c4c4c4;margin-top:8px;padding-right:4px">Powered by 클리닝매니저</div>
       </div>
@@ -1486,7 +1486,7 @@ function shareReportLink() {
   const url = window.location.href;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(url).then(() => {
-      showToast('링크가 복사되었습니다');
+      showToast('리포트가 복사되었습니다');
     });
   } else {
     showToast('링크 복사에 실패했습니다');
