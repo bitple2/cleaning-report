@@ -1018,14 +1018,11 @@ function render() {
       ` : ''}
     </div>
 
-    <!-- 리뷰 & 공유 -->
+    <!-- 소개하기 -->
     ${totalPhotos > 0 ? `
       <div class="review-bar">
-        <button class="review-btn" style="width:100%" onclick="openReview()">
-          ✨ 리뷰 만들기
-        </button>
-        <button class="review-share-btn" style="width:100%;margin-top:10px" onclick="shareReportLink()">
-          🔗 이 리포트가 마음에 드셨나요? 지인에게 공유하기
+        <button class="review-share-btn" style="width:100%" onclick="shareReportLink()">
+          🔗 이 리포트가 마음에 드셨나요? 지인에게 소개하기
         </button>
         <div style="text-align:right;font-size:9px;color:#c4c4c4;margin-top:8px;padding-right:4px">Powered by 클리닝매니저</div>
       </div>
