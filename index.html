@@ -24,7 +24,7 @@
   .header {
     background: #1E293B;
     color: white;
-    padding: 20px 16px 16px;
+    padding: 12px 16px 16px;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -959,7 +959,7 @@ function render() {
   document.getElementById('app').innerHTML = `
     <!-- 헤더 -->
     <div class="header" style="position:static">
-      <div style="margin-bottom:12px">
+      <div style="margin-bottom:16px">
         <span style="display:inline-block;padding:4px 12px;border:1.5px solid rgba(255,255,255,0.25);border-radius:10px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:0.5px">✨ 프리미엄 청소 리포트</span>
       </div>
       <div class="header-top">
@@ -1021,9 +1021,11 @@ function render() {
     <!-- 소개하기 -->
     ${totalPhotos > 0 ? `
       <div class="review-bar">
-        <button class="review-share-btn" style="width:100%" onclick="shareReportLink()">
-          🔗 청소가 마음에 드셨나요? 지인에게 소개하기
+        <div style="text-align:center;font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px">✨ 청소가 마음에 드셨나요?</div>
+        <button class="review-share-btn" onclick="shareReportLink()">
+          🔗 지인에게 소개하기
         </button>
+        <div style="text-align:center;font-size:11px;color:#94a3b8;margin-top:12px;line-height:1.6">사진은 꾹 눌러 저장, 리포트 화면은 캡쳐하여<br>후기에 활용해주시면 업체에 큰 힘이 됩니다</div>
         <div style="text-align:right;font-size:9px;color:#c4c4c4;margin-top:8px;padding-right:4px">Powered by 클리닝매니저</div>
       </div>
     ` : ''}
