@@ -76,6 +76,10 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.3; }
   }
+  @keyframes pulse-ring {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
   .customer-info-row {
     display: flex;
     justify-content: space-between;
@@ -91,18 +95,18 @@
     opacity: 0.6;
   }
   .company-call {
-    font-size: 10px;
-    color: rgba(255,255,255,0.6);
+    font-size: 9px;
+    color: rgba(255,255,255,0.45);
     text-decoration: none;
-    margin-left: 8px;
-    background: rgba(255,255,255,0.12);
+    margin-left: 6px;
+    border: 1px solid rgba(255,255,255,0.15);
     padding: 2px 8px;
-    border-radius: 10px;
+    border-radius: 8px;
     font-weight: 600;
     vertical-align: middle;
   }
   .company-call:active {
-    background: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.1);
   }
   .progress-bar-bg {
     background: rgba(255,255,255,0.15);
@@ -518,6 +522,160 @@
   }
   .pdf-save-btn:active { opacity: 0.8; }
 
+  /* 리뷰 만들기 */
+  .review-bar {
+    padding: 12px 12px 32px;
+    text-align: center;
+  }
+  .review-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: -0.3px;
+    transition: all 0.2s;
+  }
+  .review-btn:active { opacity: 0.85; }
+  .review-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: white;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+  .review-overlay.active { display: block; }
+  .review-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid #E5E5DC;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+  }
+  .review-close {
+    font-size: 20px;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 4px;
+  }
+  .review-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+  .review-hint {
+    text-align: center;
+    padding: 20px 24px 14px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .review-hint-icon {
+    display: inline-block;
+    background: #F2F3EE;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .review-hint strong {
+    color: #1a1a1a;
+    font-weight: 700;
+  }
+  .review-section-label {
+    padding: 8px 16px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+  }
+  .review-photos {
+    padding: 4px 12px;
+  }
+  .review-photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .review-photos img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+    -webkit-touch-callout: default;
+  }
+  .review-capture {
+    margin: 8px 12px 16px;
+    padding: 20px;
+    background: #1E293B;
+    border-radius: 14px;
+    color: white;
+    -webkit-touch-callout: default;
+  }
+  .review-capture-company {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .review-capture-date {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 12px;
+  }
+  .review-capture-cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .review-capture-cat {
+    background: rgba(255,255,255,0.12);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .review-capture-watermark {
+    text-align: right;
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+  }
+  .review-share-bar {
+    padding: 12px;
+    text-align: center;
+  }
+  .review-share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: white;
+    color: #1a1a1a;
+    border: 1.5px solid #E5E5DC;
+    padding: 12px 28px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: -0.3px;
+  }
+  .review-share-btn:active { background: #f5f5f0; }
+
   /* 프린트용 CSS */
   @media print {
     body { background: white !important; max-width: 100%; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -564,6 +722,26 @@
 </div>
 <div class="viewer-toast" id="viewerToast">저장되었습니다</div>
 
+<!-- 리뷰 만들기 오버레이 -->
+<div class="review-overlay" id="reviewOverlay">
+  <div class="review-header">
+    <div class="review-close" onclick="closeReview()">✕</div>
+    <div class="review-title">리뷰용 사진</div>
+    <div style="width:28px"></div>
+  </div>
+  <div class="review-hint">
+    <div class="review-hint-icon">👆</div><br>
+    구역별 베스트 사진입니다<br>
+    <strong>사진을 꾹 누르면</strong> 앨범에 저장됩니다<br>
+    리뷰 작성에 활용해보세요
+  </div>
+  <div id="reviewContent"></div>
+  <div class="review-share-bar">
+    <button class="review-share-btn" onclick="shareReportLink()">🔗 이 리포트가 마음에 드셨나요? 지인에게 공유하기</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ===== 설정 =====
@@ -594,6 +772,7 @@ let companyData = null;
 let entries = [];
 let defects = [];
 let currentTab = 'status'; // status | defects
+let categoriesWithData = [];
 
 // ===== 초기화 =====
 async function init() {
@@ -758,7 +937,7 @@ function render() {
   }
   const allCategories = [...visibleCategories, ...customCats];
 
-  const categoriesWithData = allCategories.map(cat => {
+  categoriesWithData = allCategories.map(cat => {
     const catEntries = entries.filter(e => e.category === cat.key);
     const beforeEntries = catEntries.filter(e => e.photo_type === 'before');
     const afterEntries = catEntries.filter(e => e.photo_type === 'after');
@@ -780,21 +959,34 @@ function render() {
 
   document.getElementById('app').innerHTML = `
     <!-- 헤더 -->
-    <div class="header">
+    <div class="header" style="position:static">
+      <div style="margin-bottom:12px">
+        <span style="display:inline-block;padding:4px 12px;border:1.5px solid rgba(255,255,255,0.25);border-radius:10px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:0.5px">✨ 프리미엄 청소 리포트</span>
+      </div>
       <div class="header-top">
         <div class="company-info">
-          ${logoHtml}
-          <div class="company-name">${companyName}${contactPhone ? `<a href="tel:${contactPhone}" class="company-call">문의</a>` : ''}</div>
+          ${logoHtml ? `<img class="company-logo" src="${companyData.logo_url}" alt="logo" style="width:40px;height:40px;border-radius:10px">` : ''}
+          <div>
+            <div class="company-name" style="font-size:17px">${companyName}${contactPhone ? `<a href="tel:${contactPhone}" class="company-call">문의</a>` : ''}</div>
+          </div>
         </div>
-        <div class="live-badge ${isCompleted ? 'completed-badge' : ''}">
+        <div style="text-align:right">
           ${isCompleted
-            ? '✓ 완료'
-            : '<div class="live-dot"></div> LIVE'}
+            ? `<div class="live-badge completed-badge" style="display:inline-flex">✓ 완료</div>`
+            : `<div style="display:inline-flex;align-items:center;gap:5px">
+                <div style="position:relative;width:7px;height:7px">
+                  <div style="position:absolute;inset:0;background:#4A9D5B;border-radius:50%"></div>
+                  <div style="position:absolute;inset:-3px;border:2px solid #4A9D5B;border-radius:50%;animation:pulse-ring 1.5s infinite;opacity:0"></div>
+                </div>
+                <span style="font-size:10px;font-weight:600;color:#4A9D5B">현재 청소중</span>
+              </div>`}
+          ${!isCompleted ? `<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">실시간으로 업데이트됩니다</div>` : ''}
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px">${booking?.scheduled_date || ''}</div>
         </div>
       </div>
-      <div class="customer-info-row">
-        <div class="customer-name">${booking?.customer_name || booking?.customers?.name || '고객'}님</div>
-        <div class="customer-date">${booking?.scheduled_date || ''}</div>
+      <div onclick="var f=this.querySelector('.customer-full');var m=this.querySelector('.customer-masked');if(f.style.display==='none'){f.style.display='inline';m.style.display='none'}else{f.style.display='none';m.style.display='inline'}" style="margin-top:10px;cursor:pointer;font-size:12px;color:rgba(255,255,255,0.5)">
+        <span class="customer-masked">${(booking?.customer_name || booking?.customers?.name || '고객').charAt(0)}*님 ▸</span>
+        <span class="customer-full" style="display:none;color:rgba(255,255,255,0.85);font-weight:600">${booking?.customer_name || booking?.customers?.name || '고객'}님 ◂</span>
       </div>
     </div>
 
@@ -826,6 +1018,19 @@ function render() {
         </div>
       ` : ''}
     </div>
+
+    <!-- 리뷰 & 공유 -->
+    ${totalPhotos > 0 ? `
+      <div class="review-bar">
+        <button class="review-btn" style="width:100%" onclick="openReview()">
+          ✨ 리뷰 만들기
+        </button>
+        <button class="review-share-btn" style="width:100%;margin-top:10px" onclick="shareReportLink()">
+          🔗 이 리포트가 마음에 드셨나요? 지인에게 공유하기
+        </button>
+        <div style="text-align:right;font-size:9px;color:#c4c4c4;margin-top:8px;padding-right:4px">Powered by 클리닝매니저</div>
+      </div>
+    ` : ''}
   `;
 }
 
@@ -1168,6 +1373,14 @@ function pushState() {
 }
 
 window.addEventListener('popstate', function(e) {
+  // 0. 리뷰 오버레이가 열려있으면 닫기
+  const reviewOverlay = document.getElementById('reviewOverlay');
+  if (reviewOverlay && reviewOverlay.classList.contains('active')) {
+    closeReview();
+    pushState();
+    return;
+  }
+
   // 1. 사진 뷰어가 열려있으면 닫기
   const viewer = document.getElementById('photoViewer');
   if (viewer && viewer.classList.contains('active')) {
@@ -1197,6 +1410,164 @@ window.addEventListener('popstate', function(e) {
 if (isInAppBrowser()) {
   const hint = document.getElementById('inAppHint');
   if (hint) hint.style.display = 'block';
+}
+
+// ===== 리뷰 만들기 =====
+function getReviewPhotos() {
+  // 구역별 청소 후 사진 중 가장 용량 큰 1장씩 선택
+  const afterPhotos = [];
+  const categories = [...new Set(entries.map(e => e.category))];
+
+  for (const cat of categories) {
+    const catAfterEntries = entries.filter(e => e.category === cat && e.photo_type === 'after');
+    const allPhotos = catAfterEntries.flatMap(e => (e.report_photos || []).filter(p => !isVideoUrl(p.photo_url)));
+    if (allPhotos.length > 0) {
+      // 가장 마지막에 올린 사진 (최신)
+      afterPhotos.push(allPhotos[0].photo_url);
+    }
+    if (afterPhotos.length >= 6) break;
+  }
+  return afterPhotos;
+}
+
+function openReview() {
+  const photos = getReviewPhotos();
+  const booking = reportData.bookings;
+  const companyName = companyData?.name || '청소 리포트';
+  const date = booking?.scheduled_date || '';
+
+  // 완료된 구역 목록
+  const doneCats = [];
+  const defaultKeys = new Set(CATEGORIES.map(c => c.key));
+  for (const e of entries) {
+    if (e.photo_type === 'after' && !doneCats.includes(e.category)) {
+      doneCats.push(e.category);
+    }
+  }
+
+  let html = '';
+
+  // 선별된 사진
+  if (photos.length > 0) {
+    html += `<div class="review-section-label">청소 후 베스트 사진 ${photos.length}장</div>`;
+    html += '<div class="review-photos">';
+    for (const url of photos) {
+      html += `<img src="${url}">`;
+    }
+    html += '</div>';
+  }
+
+  // 리포트 캡쳐 이미지 (맨 마지막)
+  html += `
+    <div class="review-section-label">리포트 캡쳐</div>
+    <div id="reviewCaptureArea" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px 16px">
+      <div id="reviewCaptureLoading" style="text-align:center;padding:20px;color:#94a3b8;font-size:13px;grid-column:1/-1">캡쳐 생성 중...</div>
+    </div>`;
+
+  document.getElementById('reviewContent').innerHTML = html;
+  document.getElementById('reviewOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  pushState();
+
+  // 리포트 첫 화면 캡쳐
+  setTimeout(() => {
+    // 캡쳐 준비 - 앱을 화면 밖에서 캡쳐
+    document.getElementById('reviewOverlay').classList.remove('active');
+    const header = document.querySelector('.header');
+    const mainTabs = document.querySelector('.main-tabs');
+    if (header) header.style.position = 'static';
+    if (mainTabs) mainTabs.style.position = 'static';
+    const appEl = document.getElementById('app');
+    appEl.style.position = 'fixed';
+    appEl.style.left = '-9999px';
+    appEl.style.width = '500px';
+    window.scrollTo(0, 0);
+    const captureContainer = document.getElementById('reviewCaptureContainer');
+
+    // 1) 전체 구역 목록 캡쳐 (닫힌 상태)
+    html2canvas(appEl, { useCORS: true, scale: 2, windowWidth: 500 }).then(canvas1 => {
+      const img1 = document.createElement('img');
+      img1.src = canvas1.toDataURL('image/png');
+      img1.style.cssText = 'width:100%;border-radius:8px;-webkit-touch-callout:default;box-shadow:0 2px 12px rgba(0,0,0,0.1)';
+
+      // 2) 대표 구역 열고 청소후 탭으로 전환 후 캡쳐
+      // 거실 또는 첫 번째 완료 구역 찾기
+      let targetIndex = -1;
+      const accItems = document.querySelectorAll('.accordion-item');
+      const catNames = categoriesWithData || [];
+      for (let i = 0; i < catNames.length; i++) {
+        if (catNames[i].key === '거실' && catNames[i].status === 'done') { targetIndex = i; break; }
+      }
+      if (targetIndex === -1) {
+        for (let i = 0; i < catNames.length; i++) {
+          if (catNames[i].status === 'done') { targetIndex = i; break; }
+        }
+      }
+
+      if (targetIndex >= 0) {
+        // 아코디언 열기 + 청소후 탭 전환
+        const accEl = document.getElementById('acc-' + targetIndex);
+        if (accEl) accEl.classList.add('open');
+        switchSubTab(targetIndex, 'after');
+
+        setTimeout(() => {
+          html2canvas(appEl, { useCORS: true, scale: 2, windowWidth: 500 }).then(canvas2 => {
+            if (header) header.style.position = 'sticky';
+            if (mainTabs) mainTabs.style.position = 'sticky';
+            if (accEl) accEl.classList.remove('open');
+            appEl.style.position = '';
+            appEl.style.left = '';
+            appEl.style.width = '';
+            document.getElementById('reviewOverlay').classList.add('active');
+
+            const img2 = document.createElement('img');
+            img2.src = canvas2.toDataURL('image/png');
+            img2.style.cssText = 'width:100%;border-radius:8px;-webkit-touch-callout:default;box-shadow:0 2px 12px rgba(0,0,0,0.1)';
+
+            const loading = document.getElementById('reviewCaptureLoading');
+            if (loading) {
+              loading.replaceWith(img1);
+              img1.after(img2);
+            }
+          });
+        }, 300);
+      } else {
+        if (header) header.style.position = 'sticky';
+        if (mainTabs) mainTabs.style.position = 'sticky';
+        appEl.style.position = '';
+        appEl.style.left = '';
+        appEl.style.width = '';
+        document.getElementById('reviewOverlay').classList.add('active');
+        const loading = document.getElementById('reviewCaptureLoading');
+        if (loading) loading.replaceWith(img1);
+      }
+    }).catch(() => {
+      if (header) header.style.position = 'sticky';
+      if (mainTabs) mainTabs.style.position = 'sticky';
+      appEl.style.position = '';
+      appEl.style.left = '';
+      appEl.style.width = '';
+      document.getElementById('reviewOverlay').classList.add('active');
+      const loading = document.getElementById('reviewCaptureLoading');
+      if (loading) loading.textContent = '캡쳐 생성에 실패했습니다';
+    });
+  }, 100);
+}
+
+function closeReview() {
+  document.getElementById('reviewOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function shareReportLink() {
+  const url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('링크가 복사되었습니다');
+    });
+  } else {
+    showToast('링크 복사에 실패했습니다');
+  }
 }
 
 // 시작
