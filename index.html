@@ -1457,11 +1457,11 @@ function openReview() {
     html += '</div>';
   }
 
-  // 리포트 캡쳐 이미지 (맨 마지막)
+  // 리포트 캡쳐
   html += `
     <div class="review-section-label">리포트 캡쳐</div>
-    <div id="reviewCaptureArea" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px 16px">
-      <div id="reviewCaptureLoading" style="text-align:center;padding:20px;color:#94a3b8;font-size:13px;grid-column:1/-1">캡쳐 생성 중...</div>
+    <div style="padding:0 12px 16px;width:55%;margin:0 auto">
+      <div id="reviewCaptureLoading" style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">캡쳐 생성 중...</div>
     </div>`;
 
   document.getElementById('reviewContent').innerHTML = html;
@@ -1469,79 +1469,43 @@ function openReview() {
   document.body.style.overflow = 'hidden';
   pushState();
 
-  // 리포트 캡쳐 (백그라운드)
-  if (typeof html2canvas !== 'undefined') {
-    setTimeout(() => {
-      try {
-        const appEl = document.getElementById('app');
-        const header = document.querySelector('.header');
-        const mainTabs = document.querySelector('.main-tabs');
+  // 리포트 캡쳐 (사진 제외 - 헤더+구역목록만)
+  setTimeout(() => {
+    try {
+      // 캡쳐용 div 생성 (사진 없이 헤더+구역만)
+      const captureDiv = document.createElement('div');
+      captureDiv.style.cssText = 'position:fixed;left:-9999px;width:500px;top:0;background:#F2F3EE';
+      captureDiv.innerHTML = document.getElementById('app').innerHTML;
 
-        // 캡쳐용 클론 생성 (화면에 영향 없음)
-        const clone = appEl.cloneNode(true);
-        clone.style.cssText = 'position:fixed;left:-9999px;width:500px;top:0';
-        if (clone.querySelector('.header')) clone.querySelector('.header').style.position = 'static';
-        if (clone.querySelector('.main-tabs')) clone.querySelector('.main-tabs').style.position = 'static';
-        document.body.appendChild(clone);
+      // 사진/영상 그리드 제거 (CORS 문제 방지)
+      captureDiv.querySelectorAll('.feed-photos,.accordion-body').forEach(el => el.remove());
+      // sticky 해제
+      const h = captureDiv.querySelector('.header');
+      if (h) h.style.position = 'static';
+      const t = captureDiv.querySelector('.main-tabs');
+      if (t) t.style.position = 'static';
+      // 하단 버튼 제거
+      captureDiv.querySelectorAll('.review-bar,.pdf-save-bar').forEach(el => el.remove());
 
-        html2canvas(clone, { useCORS: true, scale: 2, windowWidth: 500 }).then(canvas1 => {
-          const img1 = document.createElement('img');
-          img1.src = canvas1.toDataURL('image/png');
-          img1.style.cssText = 'width:100%;border-radius:8px;-webkit-touch-callout:default;box-shadow:0 2px 12px rgba(0,0,0,0.1)';
+      document.body.appendChild(captureDiv);
 
-          // 대표 구역 열고 두 번째 캡쳐
-          let targetIndex = -1;
-          const catNames = categoriesWithData || [];
-          for (let i = 0; i < catNames.length; i++) {
-            if (catNames[i].key === '거실' && catNames[i].status === 'done') { targetIndex = i; break; }
-          }
-          if (targetIndex === -1) {
-            for (let i = 0; i < catNames.length; i++) {
-              if (catNames[i].status === 'done') { targetIndex = i; break; }
-            }
-          }
-
-          if (targetIndex >= 0) {
-            const accEl = clone.querySelector('#acc-' + targetIndex);
-            if (accEl) accEl.classList.add('open');
-            const afterTab = clone.querySelector('#sub-after-' + targetIndex);
-            const beforeTab = clone.querySelector('#sub-before-' + targetIndex);
-            const afterContent = clone.querySelector('#sub-content-after-' + targetIndex);
-            const beforeContent = clone.querySelector('#sub-content-before-' + targetIndex);
-            if (afterTab) afterTab.className = 'sub-tab after-active';
-            if (beforeTab) beforeTab.className = 'sub-tab';
-            if (afterContent) afterContent.className = 'sub-content active';
-            if (beforeContent) beforeContent.className = 'sub-content';
-
-            setTimeout(() => {
-              html2canvas(clone, { useCORS: true, scale: 2, windowWidth: 500 }).then(canvas2 => {
-                document.body.removeChild(clone);
-                const img2 = document.createElement('img');
-                img2.src = canvas2.toDataURL('image/png');
-                img2.style.cssText = 'width:100%;border-radius:8px;-webkit-touch-callout:default;box-shadow:0 2px 12px rgba(0,0,0,0.1)';
-                const loading = document.getElementById('reviewCaptureLoading');
-                if (loading) { loading.replaceWith(img1); img1.after(img2); }
-              }).catch(() => { document.body.removeChild(clone); });
-            }, 300);
-          } else {
-            document.body.removeChild(clone);
-            const loading = document.getElementById('reviewCaptureLoading');
-            if (loading) loading.replaceWith(img1);
-          }
-        }).catch(() => {
-          document.body.removeChild(clone);
-          const loading = document.getElementById('reviewCaptureLoading');
-          if (loading) loading.textContent = '';
-        });
-      } catch(e) {
+      html2canvas(captureDiv, { scale: 2, windowWidth: 500, backgroundColor: '#F2F3EE' }).then(canvas => {
+        document.body.removeChild(captureDiv);
+        const img = document.createElement('img');
+        img.src = canvas.toDataURL('image/png');
+        img.style.cssText = 'width:100%;border-radius:8px;-webkit-touch-callout:default;box-shadow:0 2px 12px rgba(0,0,0,0.1)';
+        const loading = document.getElementById('reviewCaptureLoading');
+        if (loading) loading.replaceWith(img);
+      }).catch(() => {
+        document.body.removeChild(captureDiv);
         const loading = document.getElementById('reviewCaptureLoading');
         if (loading) loading.textContent = '';
-      }
-    }, 500);
-  } else {
-    const loading = document.getElementById('reviewCaptureLoading');
-    if (loading) loading.textContent = '';
-  }
+      });
+    } catch(e) {
+      const loading = document.getElementById('reviewCaptureLoading');
+      if (loading) loading.textContent = '';
+    }
+  }, 300);
 }
 
 function closeReview() {
