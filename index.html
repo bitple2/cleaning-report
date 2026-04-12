@@ -718,6 +718,9 @@ async function init() {
 function setupRealtime(reportId) {
   sb.channel('report-' + reportId)
     .on('postgres_changes',
+      { event: '*', schema: 'public', table: 'cleaning_reports', filter: `id=eq.${reportId}` },
+      () => refreshData(reportId))
+    .on('postgres_changes',
       { event: '*', schema: 'public', table: 'report_entries', filter: `report_id=eq.${reportId}` },
       () => refreshData(reportId))
     .on('postgres_changes',
@@ -730,6 +733,17 @@ function setupRealtime(reportId) {
 }
 
 async function refreshData(reportId) {
+  // 리포트 기본 정보 갱신 (구역 순서/아이콘/숨김 등)
+  const { data: freshReport } = await sb
+    .from('cleaning_reports')
+    .select('*, bookings(*, customers(name), companies(name, logo_url))')
+    .eq('id', reportId)
+    .single();
+  if (freshReport) {
+    reportData = freshReport;
+    companyData = freshReport.bookings?.companies || null;
+  }
+
   const { data: entryData } = await sb
     .from('report_entries')
     .select('*, report_photos(*)')
