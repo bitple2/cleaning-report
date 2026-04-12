@@ -793,11 +793,19 @@ function render() {
 
   // 커스텀 구역 자동 감지 + 아이콘 맵
   const categoryIcons = reportData.category_icons || {};
+  const categoryOrder = reportData.category_order || [];
   const defaultKeys = new Set(CATEGORIES.map(c => c.key));
   const customCats = [];
+  // entries에서 커스텀 구역 감지
   for (const e of entries) {
     if (!defaultKeys.has(e.category) && !hiddenSet.has(e.category) && !customCats.find(c => c.key === e.category)) {
       customCats.push({ key: e.category, icon: categoryIcons[e.category] || '📁' });
+    }
+  }
+  // category_order에 있지만 entries에 없는 커스텀 구역도 추가
+  for (const key of categoryOrder) {
+    if (!defaultKeys.has(key) && !hiddenSet.has(key) && !customCats.find(c => c.key === key)) {
+      customCats.push({ key: key, icon: categoryIcons[key] || '📁' });
     }
   }
   // 기본 구역도 아이콘 오버라이드 적용
@@ -807,7 +815,6 @@ function render() {
   let allCategories = [...visibleCategories, ...customCats];
 
   // 저장된 순서 적용
-  const categoryOrder = reportData.category_order || [];
   if (categoryOrder.length > 0) {
     const ordered = [];
     for (const key of categoryOrder) {
