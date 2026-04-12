@@ -777,15 +777,34 @@ function render() {
   const hiddenSet = new Set(reportData.hidden_categories || []);
   const visibleCategories = CATEGORIES.filter(c => !hiddenSet.has(c.key));
 
-  // 커스텀 구역 자동 감지
+  // 커스텀 구역 자동 감지 + 아이콘 맵
+  const categoryIcons = reportData.category_icons || {};
   const defaultKeys = new Set(CATEGORIES.map(c => c.key));
   const customCats = [];
   for (const e of entries) {
     if (!defaultKeys.has(e.category) && !hiddenSet.has(e.category) && !customCats.find(c => c.key === e.category)) {
-      customCats.push({ key: e.category, icon: '📁' });
+      customCats.push({ key: e.category, icon: categoryIcons[e.category] || '📁' });
     }
   }
-  const allCategories = [...visibleCategories, ...customCats];
+  // 기본 구역도 아이콘 오버라이드 적용
+  visibleCategories.forEach(c => {
+    if (categoryIcons[c.key]) c.icon = categoryIcons[c.key];
+  });
+  let allCategories = [...visibleCategories, ...customCats];
+
+  // 저장된 순서 적용
+  const categoryOrder = reportData.category_order || [];
+  if (categoryOrder.length > 0) {
+    const ordered = [];
+    for (const key of categoryOrder) {
+      const cat = allCategories.find(c => c.key === key);
+      if (cat) ordered.push(cat);
+    }
+    for (const cat of allCategories) {
+      if (!ordered.find(c => c.key === cat.key)) ordered.push(cat);
+    }
+    allCategories = ordered;
+  }
 
   categoriesWithData = allCategories.map(cat => {
     const catEntries = entries.filter(e => e.category === cat.key);
