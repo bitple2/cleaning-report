@@ -765,6 +765,45 @@
     color: #8A8E9A;
   }
 
+  /* 감사 메시지 토스트 */
+  .review-thank-you {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    background: rgba(13, 27, 46, 0.95);
+    color: white;
+    padding: 28px 32px;
+    border-radius: 18px;
+    text-align: center;
+    z-index: 9999;
+    box-shadow: 0 20px 60px rgba(13, 27, 46, 0.4);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    min-width: 240px;
+  }
+  .review-thank-you.show {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  .review-thank-you-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  .review-thank-you-title {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .review-thank-you-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+  }
+
   /* 소개하기 */
   .share-bar {
     padding: 12px 12px 32px;
@@ -1006,18 +1045,32 @@ async function submitReview() {
     console.log('[review submit] 응답', result);
 
     if (result.error) {
-      alert('후기 등록 실패\n\n코드: ' + (result.error.code || '?') + '\n메시지: ' + (result.error.message || '?') + '\n힌트: ' + (result.error.hint || '-'));
+      // 중복 작성 (UNIQUE 제약 위반)
+      const isDuplicate = result.error.code === '23505'
+        || /duplicate|already exists|reviews_report_id/i.test(result.error.message || '');
+      if (isDuplicate) {
+        alert('이미 이 리포트에 후기가 등록되어 있어요.\n중복 작성은 불가능합니다.');
+      } else {
+        alert('후기 등록 실패\n\n코드: ' + (result.error.code || '?') + '\n메시지: ' + (result.error.message || '?') + '\n힌트: ' + (result.error.hint || '-'));
+      }
       btn.disabled = false;
       btn.textContent = originalText;
       return;
     }
 
-    await fetchExistingReview();
+    // RLS 때문에 익명 사용자는 SELECT 불가 → 로컬 payload로 직접 상태 구성
+    existingReview = {
+      ...payload,
+      created_at: new Date().toISOString(),
+    };
     render();
+
+    // 감사 메시지 showToast
+    showReviewThankYou();
     setTimeout(() => {
       const doneEl = document.querySelector('.review-done');
       if (doneEl) doneEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+    }, 200);
   } catch (err) {
     console.error('[review submit] 예외', err);
     alert('예외 발생: ' + (err?.message || String(err)));
@@ -1029,6 +1082,27 @@ async function submitReview() {
 function escapeHtml(s) {
   if (!s) return '';
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function showReviewThankYou() {
+  const existing = document.getElementById('reviewThankYou');
+  if (existing) existing.remove();
+  const el = document.createElement('div');
+  el.id = 'reviewThankYou';
+  el.className = 'review-thank-you';
+  el.innerHTML = `
+    <div class="review-thank-you-icon">✨</div>
+    <div class="review-thank-you-title">후기가 등록되었습니다</div>
+    <div class="review-thank-you-sub">소중한 후기 감사드립니다 🙏</div>
+  `;
+  document.body.appendChild(el);
+  // 진입 애니메이션
+  requestAnimationFrame(() => el.classList.add('show'));
+  // 2.8초 후 자동 제거
+  setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 300);
+  }, 2800);
 }
 
 const CATEGORIES = [
