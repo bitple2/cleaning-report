@@ -1054,11 +1054,12 @@ let entries = [];
 let defects = [];
 let currentTab = 'status'; // status | defects
 let categoriesWithData = [];
+let reportId = null; // 전역으로 승격 (다른 함수에서 접근 필요)
 
 // ===== 초기화 =====
 async function init() {
   const params = new URLSearchParams(window.location.search);
-  const reportId = params.get('id');
+  reportId = params.get('id');
 
   if (!reportId) {
     document.getElementById('app').innerHTML = `
