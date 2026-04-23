@@ -522,6 +522,249 @@
   }
   .pdf-save-btn:active { opacity: 0.8; }
 
+  /* 후기 작성 */
+  .review-section {
+    background: white;
+    margin-top: 8px;
+    padding: 28px 20px 20px;
+    border-top: 8px solid #F0EAD9;
+  }
+  .review-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 800;
+    color: #0F2442;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+  .review-sub {
+    text-align: center;
+    font-size: 12px;
+    color: #5A6478;
+    margin-bottom: 22px;
+  }
+  .star-rating {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+  .star {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: #E5E5DC;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .star.filled { color: #E8A33D; }
+  .review-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0F2442;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .review-label .optional {
+    color: #8A8E9A;
+    font-weight: 500;
+    font-size: 9px;
+    margin-left: 6px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .tags-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+  .tag-chip {
+    padding: 10px 6px;
+    background: white;
+    border: 1px solid #E5E5DC;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #5A6478;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tag-chip.selected {
+    background: #0D1B2E;
+    color: white;
+    border-color: #0D1B2E;
+  }
+  .tag-chip.selected::before { content: '✓ '; color: #C9A961; }
+  .review-textarea {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #E5E5DC;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #0D1B2E;
+    font-family: inherit;
+    font-weight: 500;
+    min-height: 80px;
+    margin-bottom: 22px;
+    resize: vertical;
+    box-sizing: border-box;
+    line-height: 1.6;
+  }
+  .review-textarea::placeholder { color: #8A8E9A; }
+  .name-options {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .name-option {
+    flex: 1;
+    padding: 11px;
+    background: white;
+    border: 1px solid #E5E5DC;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #5A6478;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .name-option.selected {
+    background: #0D1B2E;
+    color: white;
+    border-color: #0D1B2E;
+  }
+  .consent-row {
+    background: #F5F0E4;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 22px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .consent-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid #8A8E9A;
+    border-radius: 4px;
+    flex-shrink: 0;
+    position: relative;
+    background: white;
+    margin-top: 1px;
+  }
+  .consent-checkbox.checked {
+    background: #0D1B2E;
+    border-color: #0D1B2E;
+  }
+  .consent-checkbox.checked::after {
+    content: '✓';
+    position: absolute;
+    color: #C9A961;
+    font-size: 13px;
+    font-weight: 900;
+    top: -2px;
+    left: 2px;
+  }
+  .consent-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0D1B2E;
+    line-height: 1.5;
+  }
+  .consent-sub {
+    font-size: 10px;
+    color: #8A8E9A;
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+  .review-submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: #0D1B2E;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: -0.01em;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .review-submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .review-submit-btn:active:not(:disabled) { opacity: 0.85; }
+
+  /* 작성 완료 상태 */
+  .review-done {
+    background: white;
+    margin-top: 8px;
+    padding: 28px 20px 24px;
+    border-top: 8px solid #F0EAD9;
+    text-align: center;
+  }
+  .review-done-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #E0F9ED;
+    color: #00A65A;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .review-done-stars {
+    font-size: 22px;
+    color: #E8A33D;
+    letter-spacing: 4px;
+    margin-bottom: 14px;
+  }
+  .review-done-content {
+    font-size: 14px;
+    color: #0D1B2E;
+    line-height: 1.6;
+    font-weight: 500;
+    margin-bottom: 14px;
+    padding: 14px;
+    background: #F8F8F0;
+    border-radius: 10px;
+    text-align: left;
+  }
+  .review-done-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .review-done-tag {
+    padding: 4px 10px;
+    background: #F0EAD9;
+    border-radius: 14px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #5A6478;
+  }
+  .review-done-meta {
+    font-size: 11px;
+    color: #8A8E9A;
+  }
+
   /* 소개하기 */
   .share-bar {
     padding: 12px 12px 32px;
@@ -599,6 +842,177 @@ const SUPABASE_URL = 'https://iucicugxihxilcqtzrbk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1Y2ljdWd4aWh4aWxjcXR6cmJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2OTc0ODAsImV4cCI6MjA4NjI3MzQ4MH0.5_7_vNc7x2kU68ynssGhf2jPCevkE-OMfSfgmyrkZDA';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ===== 리뷰 상태 =====
+let existingReview = null;
+let reviewState = {
+  rating: 0,
+  tags: new Set(),
+  nameDisplay: 'masked',
+  marketingConsent: false,
+};
+const REVIEW_TAGS = ['꼼꼼함', '친절함', '실시간 리포트', '시간 엄수', '친환경', '하자 처리'];
+
+async function fetchExistingReview() {
+  try {
+    const { data } = await sb.from('reviews')
+      .select('*')
+      .eq('report_id', reportId)
+      .maybeSingle();
+    existingReview = data;
+  } catch (e) {
+    console.error('review fetch error', e);
+    existingReview = null;
+  }
+}
+
+function maskCustomerName(name) {
+  if (!name) return '고객';
+  if (name.length === 1) return name;
+  return name[0] + '○'.repeat(Math.max(1, name.length - 1));
+}
+
+function renderReviewDone() {
+  const r = existingReview;
+  const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+  const name = r.name_display === 'anonymous' ? '익명' : maskCustomerName(r.customer_name_snapshot);
+  const date = new Date(r.created_at).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const tagsHtml = Array.isArray(r.tags) && r.tags.length > 0
+    ? `<div class="review-done-tags">${r.tags.map(t => `<div class="review-done-tag">#${escapeHtml(t)}</div>`).join('')}</div>`
+    : '';
+  const contentHtml = r.content ? `<div class="review-done-content">${escapeHtml(r.content)}</div>` : '';
+  return `
+    <div class="review-done">
+      <div class="review-done-badge">✓ 후기가 등록되었어요</div>
+      <div class="review-done-stars">${stars}</div>
+      ${contentHtml}
+      ${tagsHtml}
+      <div class="review-done-meta">${escapeHtml(name)} 고객님 · ${date}</div>
+    </div>
+  `;
+}
+
+function renderReviewForm() {
+  const customerName = reportData?.bookings?.customers?.name || '';
+  const maskedDisplay = maskCustomerName(customerName);
+  return `
+    <div class="review-section">
+      <div class="review-title">✨ 청소 어떠셨어요?</div>
+      <div class="review-sub">사장님께 소중한 후기를 남겨주세요</div>
+
+      <div class="star-rating" id="starRating">
+        ${[1,2,3,4,5].map(i => `<span class="star" onclick="selectStar(${i})">★</span>`).join('')}
+      </div>
+
+      <div class="review-label">좋았던 점 <span class="optional">(선택)</span></div>
+      <div class="tags-grid">
+        ${REVIEW_TAGS.map(t => `<div class="tag-chip" onclick="toggleReviewTag(this, '${t}')">${t}</div>`).join('')}
+      </div>
+
+      <div class="review-label">한 줄 소감 <span class="optional">(선택)</span></div>
+      <textarea class="review-textarea" id="reviewContent" placeholder="사장님께 한 줄 남겨주세요" maxlength="500"></textarea>
+
+      <div class="review-label">이름 표시 방법</div>
+      <div class="name-options">
+        <div class="name-option selected" onclick="selectNameDisplay(this,'masked')">${escapeHtml(maskedDisplay)}</div>
+        <div class="name-option" onclick="selectNameDisplay(this,'anonymous')">익명</div>
+      </div>
+
+      <div class="consent-row" onclick="toggleConsent()">
+        <div class="consent-checkbox" id="consentCheckbox"></div>
+        <div>
+          <div class="consent-label">사장님 마케팅에 공개 동의 <span style="font-weight:500;color:#8A8E9A">(선택)</span></div>
+          <div class="consent-sub">미니 홈페이지·SNS 콘텐츠에 활용될 수 있습니다</div>
+        </div>
+      </div>
+
+      <button class="review-submit-btn" id="reviewSubmitBtn" disabled onclick="submitReview()">후기 남기기 →</button>
+    </div>
+  `;
+}
+
+function selectStar(n) {
+  reviewState.rating = n;
+  const stars = document.querySelectorAll('#starRating .star');
+  stars.forEach((s, i) => s.classList.toggle('filled', i < n));
+  document.getElementById('reviewSubmitBtn').disabled = !n;
+}
+
+function toggleReviewTag(el, tag) {
+  if (reviewState.tags.has(tag)) {
+    reviewState.tags.delete(tag);
+    el.classList.remove('selected');
+  } else {
+    reviewState.tags.add(tag);
+    el.classList.add('selected');
+  }
+}
+
+function selectNameDisplay(el, value) {
+  reviewState.nameDisplay = value;
+  document.querySelectorAll('.name-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function toggleConsent() {
+  reviewState.marketingConsent = !reviewState.marketingConsent;
+  document.getElementById('consentCheckbox').classList.toggle('checked', reviewState.marketingConsent);
+}
+
+async function submitReview() {
+  if (!reviewState.rating) return;
+  const btn = document.getElementById('reviewSubmitBtn');
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = '등록 중...';
+
+  const content = (document.getElementById('reviewContent')?.value || '').trim();
+  const customerName = reportData?.bookings?.customers?.name || '';
+  const serviceType = reportData?.bookings?.service_type || '';
+  const bookingId = reportData?.booking_id || null;
+  const companyId = reportData?.bookings?.company_id || reportData?.company_id || null;
+
+  if (!bookingId || !companyId) {
+    alert('리포트 정보를 불러올 수 없습니다. 새로고침 후 다시 시도해주세요.');
+    btn.disabled = false;
+    btn.textContent = originalText;
+    return;
+  }
+
+  const { error } = await sb.from('reviews').insert({
+    report_id: reportId,
+    booking_id: bookingId,
+    company_id: companyId,
+    rating: reviewState.rating,
+    content: content || null,
+    tags: Array.from(reviewState.tags),
+    name_display: reviewState.nameDisplay,
+    customer_name_snapshot: customerName,
+    service_type_snapshot: serviceType,
+    marketing_consent: reviewState.marketingConsent,
+  });
+
+  if (error) {
+    console.error('review insert error', error);
+    alert('후기 등록에 실패했습니다.\n' + (error.message || '잠시 후 다시 시도해주세요.'));
+    btn.disabled = false;
+    btn.textContent = originalText;
+    return;
+  }
+
+  await fetchExistingReview();
+  render();
+  // 등록 완료 애니메이션/스크롤
+  setTimeout(() => {
+    const doneEl = document.querySelector('.review-done');
+    if (doneEl) doneEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
 const CATEGORIES = [
   { key: '현관', icon: '🚪' },
@@ -690,6 +1104,7 @@ async function init() {
       }
     }
 
+    await fetchExistingReview();
     render();
     setupRealtime(reportId);
 
@@ -908,6 +1323,9 @@ function render() {
         </div>
       ` : ''}
     </div>
+
+    <!-- 후기 작성/조회 (완료된 리포트에서만 노출) -->
+    ${reportData?.status === 'completed' && totalPhotos > 0 ? (existingReview ? renderReviewDone() : renderReviewForm()) : ''}
 
     <!-- 소개하기 -->
     ${totalPhotos > 0 ? `
