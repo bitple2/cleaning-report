@@ -1012,16 +1012,8 @@ async function submitReview() {
     const bookingId = reportData?.booking_id || null;
     const companyId = reportData?.bookings?.company_id || reportData?.company_id || null;
 
-    console.log('[review submit] 시작', {
-      reportId, bookingId, companyId,
-      rating: reviewState.rating,
-      tags: Array.from(reviewState.tags),
-      nameDisplay: reviewState.nameDisplay,
-      consent: reviewState.marketingConsent,
-    });
-
     if (!bookingId || !companyId) {
-      alert('리포트 정보를 불러올 수 없습니다.\nbookingId: ' + bookingId + '\ncompanyId: ' + companyId);
+      alert('리포트 정보를 불러올 수 없습니다. 새로고침 후 다시 시도해주세요.');
       btn.disabled = false;
       btn.textContent = originalText;
       return;
@@ -1039,41 +1031,37 @@ async function submitReview() {
       service_type_snapshot: serviceType,
       marketing_consent: reviewState.marketingConsent,
     };
-    console.log('[review submit] payload', payload);
 
     const result = await sb.from('reviews').insert(payload);
-    console.log('[review submit] 응답', result);
 
     if (result.error) {
-      // 중복 작성 (UNIQUE 제약 위반)
       const isDuplicate = result.error.code === '23505'
         || /duplicate|already exists|reviews_report_id/i.test(result.error.message || '');
       if (isDuplicate) {
         alert('이미 이 리포트에 후기가 등록되어 있어요.\n중복 작성은 불가능합니다.');
       } else {
-        alert('후기 등록 실패\n\n코드: ' + (result.error.code || '?') + '\n메시지: ' + (result.error.message || '?') + '\n힌트: ' + (result.error.hint || '-'));
+        alert('후기 등록에 실패했습니다. 잠시 후 다시 시도해주세요.');
       }
       btn.disabled = false;
       btn.textContent = originalText;
       return;
     }
 
-    // RLS 때문에 익명 사용자는 SELECT 불가 → 로컬 payload로 직접 상태 구성
+    // RLS로 익명 SELECT 불가 → 로컬 payload로 상태 구성
     existingReview = {
       ...payload,
       created_at: new Date().toISOString(),
     };
     render();
 
-    // 감사 메시지 showToast
     showReviewThankYou();
     setTimeout(() => {
       const doneEl = document.querySelector('.review-done');
       if (doneEl) doneEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 200);
   } catch (err) {
-    console.error('[review submit] 예외', err);
-    alert('예외 발생: ' + (err?.message || String(err)));
+    console.error('review submit error', err);
+    alert('잠시 후 다시 시도해주세요.');
     btn.disabled = false;
     btn.textContent = originalText;
   }
