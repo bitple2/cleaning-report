@@ -890,7 +890,12 @@ let reviewState = {
   nameDisplay: 'masked',
   marketingConsent: false,
 };
-const REVIEW_TAGS = ['꼼꼼함', '친절함', '실시간 리포트', '시간 엄수', '친환경', '하자 처리'];
+const REVIEW_TAGS = [
+  // 품질 (6)
+  '꼼꼼함', '깔끔한 마무리', '구석까지 청소', '친환경 자재', '묵은 때 제거', '위생 관리',
+  // 서비스 (6)
+  '친절함', '시간 엄수', '실시간 리포트', '빠른 작업', '꼼꼼한 설명', '재예약 의사',
+];
 
 async function fetchExistingReview() {
   try {
@@ -951,11 +956,6 @@ function renderReviewForm() {
       <div class="review-label">한 줄 소감 <span class="optional">(선택)</span></div>
       <textarea class="review-textarea" id="reviewContent" placeholder="사장님께 한 줄 남겨주세요" maxlength="500"></textarea>
 
-      <div class="review-label">이름 표시 방법</div>
-      <div class="name-options">
-        <div class="name-option selected" onclick="selectNameDisplay(this,'masked')">${escapeHtml(maskedDisplay)}</div>
-        <div class="name-option" onclick="selectNameDisplay(this,'anonymous')">익명</div>
-      </div>
 
       <div class="consent-row" onclick="toggleConsent()">
         <div class="consent-checkbox" id="consentCheckbox"></div>
@@ -985,12 +985,6 @@ function toggleReviewTag(el, tag) {
     reviewState.tags.add(tag);
     el.classList.add('selected');
   }
-}
-
-function selectNameDisplay(el, value) {
-  reviewState.nameDisplay = value;
-  document.querySelectorAll('.name-option').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
 }
 
 function toggleConsent() {
