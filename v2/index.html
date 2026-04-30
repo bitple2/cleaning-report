@@ -580,30 +580,42 @@
     letter-spacing: 0;
   }
   .tags-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-bottom: 22px;
   }
   .tag-chip {
-    padding: 10px 6px;
-    background: white;
-    border: 1px solid #E5E5DC;
-    border-radius: 10px;
-    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 9px 14px;
+    background: #F5F1E8;
+    border: 1px solid transparent;
+    border-radius: 100px;
+    font-size: 13px;
     font-weight: 600;
     color: #5A6478;
-    text-align: center;
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s ease;
+  }
+  .tag-chip .tag-emoji {
+    font-size: 14px;
+    line-height: 1;
+  }
+  .tag-chip:hover {
+    background: #EBE5D5;
   }
   .tag-chip.selected {
     background: #0D1B2E;
     color: white;
     border-color: #0D1B2E;
   }
-  .tag-chip.selected::before { content: '✓ '; color: #C9A961; }
+  .tag-chip.selected .tag-emoji {
+    filter: none;
+  }
   .review-textarea {
     width: 100%;
     padding: 14px;
@@ -891,10 +903,17 @@ let reviewState = {
   marketingConsent: false,
 };
 const REVIEW_TAGS = [
-  // 품질 (6)
-  '꼼꼼함', '깔끔한 마무리', '구석까지 청소', '친환경 자재', '묵은 때 제거', '위생 관리',
+  // 품질 (3)
+  { tag: '꼼꼼함', emoji: '🔍' },
+  { tag: '깔끔한 마무리', emoji: '✨' },
+  { tag: '친환경 자재', emoji: '🌱' },
   // 서비스 (6)
-  '친절함', '시간 엄수', '실시간 리포트', '빠른 작업', '꼼꼼한 설명', '재예약 의사',
+  { tag: '친절함', emoji: '😊' },
+  { tag: '시간 엄수', emoji: '⏰' },
+  { tag: '실시간 리포트', emoji: '📱' },
+  { tag: '빠른 작업', emoji: '⚡' },
+  { tag: '꼼꼼한 설명', emoji: '💬' },
+  { tag: '재예약 의사', emoji: '🔁' },
 ];
 
 async function fetchExistingReview() {
@@ -950,7 +969,7 @@ function renderReviewForm() {
 
       <div class="review-label">좋았던 점 <span class="optional">(선택)</span></div>
       <div class="tags-grid">
-        ${REVIEW_TAGS.map(t => `<div class="tag-chip" onclick="toggleReviewTag(this, '${t}')">${t}</div>`).join('')}
+        ${REVIEW_TAGS.map(t => `<div class="tag-chip" onclick="toggleReviewTag(this, '${t.tag}')"><span class="tag-emoji">${t.emoji}</span>${t.tag}</div>`).join('')}
       </div>
 
       <div class="review-label">한 줄 소감 <span class="optional">(선택)</span></div>
