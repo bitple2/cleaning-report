@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>리디렉트 중...</title>
+<meta name="robots" content="noindex">
+<script>
+  // /verify/{CODE} → /verify/?c={CODE} 로 변환
+  // GitHub Pages는 정적 호스팅이라 path 라우팅을 직접 지원하지 않으므로
+  // 404 페이지에서 path를 읽고 query로 변환해 index.html에 위임
+  (function() {
+    const path = window.location.pathname || '';
+    const m = path.match(/\/verify\/([A-Z0-9]{3,8})\/?$/i);
+    if (m) {
+      const code = m[1].toUpperCase();
+      window.location.replace('/verify/?c=' + code);
+    } else {
+      // 진짜 404인 경우: 클리닝매니저 홈으로
+      window.location.replace('/');
+    }
+  })();
+</script>
+</head>
+<body>
+  <p style="font-family:sans-serif;text-align:center;padding:60px 20px;color:#6B7280;font-size:13px;">
+    잠시만 기다려주세요...
+  </p>
+</body>
+</html>
