@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리디렉트 중...</title>
+<meta name="robots" content="noindex">
+<script>
+  // GitHub Pages 404 핸들러 — path 기반 라우팅 처리
+  // /verify/{CODE} → /verify/?c={CODE} 로 자동 변환
+  // 기타 404는 홈으로
+  (function() {
+    const path = window.location.pathname || '';
+    const m = path.match(/^\/verify\/([A-Z0-9]{3,8})\/?$/i);
+    if (m) {
+      const code = m[1].toUpperCase();
+      window.location.replace('/verify/?c=' + code);
+      return;
+    }
+    // 진짜 404 — 홈으로
+    window.location.replace('/');
+  })();
+</script>
+</head>
+<body>
+  <div style="font-family:-apple-system,'Noto Sans KR',sans-serif;text-align:center;padding:80px 20px;color:#6B7280;">
+    <p style="font-size:14px;">잠시만 기다려주세요...</p>
+  </div>
+</body>
+</html>
