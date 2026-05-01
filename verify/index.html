@@ -24,21 +24,31 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --navy-deep: #0F2442;
+    --navy-deep: #1a2a3a;
     --navy: #1E3A5F;
-    --gold: #C9A961;
-    --cream-warm: #F5EFE1;
-    --text: #0D1B2E;
-    --text-soft: #3A3F4B;
-    --text-subtle: #6B7280;
-    --text-muted: #9CA3AF;
-    --border: #E5E7EB;
-    --border-soft: #F0EBDF;
+    --light-blue: #7ec8e3;
+    --light-blue-soft: #E8F4FD;
+    --tag-bg: #EFF6FF;
+    --tag-text: #2563EB;
+    --rating-bg: #FFF8EC;
+    --rating-text: #FF9500;
+    --rating-stars: #FFBB33;
+    --green: #4CAF50;
+    --green-bg: #F0FFF4;
+    --green-bg-soft: rgba(76,175,80,0.15);
+    --green-border: rgba(76,175,80,0.3);
+    --bg: #F5F0E8;
+    --text: #111;
+    --text-soft: #555;
+    --text-subtle: #999;
+    --text-muted: #bbb;
+    --border-soft: #F0F0F0;
+    --section-bg: #FAFAFA;
   }
 
   html, body {
-    background: #F9FAFB;
-    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
     color: var(--text);
     -webkit-font-smoothing: antialiased;
     line-height: 1.5;
@@ -46,255 +56,394 @@
 
   body {
     min-height: 100vh;
-    padding: 0 0 60px;
   }
 
   .container {
     max-width: 480px;
     margin: 0 auto;
-    padding: 0 16px;
+    background: var(--bg);
+    min-height: 100vh;
   }
 
-  /* === 상단 브랜드 바 === */
-  .brand-bar {
-    padding: 18px 4px;
+  /* ===== 다크 헤더 (떠있는 카드 느낌) ===== */
+  .top-header {
+    background: var(--navy-deep);
+    margin: 16px 16px 0;
+    padding: 22px 24px 56px;
+    border-radius: 28px;
+    position: relative;
+    z-index: 0;
+    box-shadow: 0 12px 32px rgba(15, 36, 66, 0.18);
+  }
+  .top-bar {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
+    justify-content: space-between;
+    margin-bottom: 20px;
   }
-  .brand-bar a {
-    text-decoration: none;
-    color: var(--navy-deep);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: -0.2px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .brand-bar .check {
-    color: var(--gold);
-    font-weight: 800;
-  }
-
-  /* === 카드 공통 === */
-  .card {
-    background: white;
-    border: 1px solid rgba(15, 36, 66, 0.08);
-    border-radius: 18px;
-    padding: 24px 22px;
-    margin-bottom: 12px;
-    box-shadow: 0 4px 20px rgba(15, 36, 66, 0.04);
-  }
-
-  /* === 메인 후기 카드 === */
-  .review-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--cream-warm);
-    color: var(--navy);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-    padding: 6px 11px;
-    border-radius: 100px;
-    margin-bottom: 18px;
-  }
-  .review-badge .check {
-    color: var(--gold);
-    font-weight: 800;
-    font-size: 12px;
-  }
-
-  .stars {
-    color: var(--gold);
-    font-size: 22px;
-    letter-spacing: 2px;
-    margin-bottom: 14px;
-    line-height: 1;
-  }
-  .stars .empty {
-    color: var(--border);
-  }
-
-  .review-content {
-    font-size: 15px;
-    color: var(--text);
-    line-height: 1.7;
-    font-weight: 500;
-    letter-spacing: -0.2px;
-    word-break: keep-all;
-    margin-bottom: 14px;
-    white-space: pre-wrap;
-  }
-
-  .review-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-bottom: 18px;
-  }
-  .review-tag {
-    background: rgba(15, 36, 66, 0.05);
-    color: var(--text-soft);
-    font-size: 11.5px;
-    font-weight: 600;
-    padding: 5px 11px;
-    border-radius: 6px;
-    letter-spacing: -0.1px;
-  }
-
-  .hairline {
-    height: 1px;
-    background: var(--border-soft);
-    margin: 14px 0;
-  }
-
-  .meta-block {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-  .meta-customer {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--navy-deep);
-    letter-spacing: -0.2px;
-  }
-  .meta-date {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 500;
-  }
-
-  .business-block {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-  .business-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-soft);
-    letter-spacing: -0.2px;
-  }
-  .business-service {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 500;
-  }
-
-  /* === 검증 정보 카드 === */
-  .verify-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-muted);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-  }
-
-  .evidence {
-    list-style: none;
-    margin-bottom: 18px;
-  }
-  .evidence li {
+  .brand {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 9px 0;
-    font-size: 13px;
-    color: var(--text-soft);
-    font-weight: 500;
-    border-bottom: 1px solid var(--border-soft);
+    text-decoration: none;
   }
-  .evidence li:last-child {
-    border-bottom: none;
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
-  .evidence .check-icon {
-    color: var(--gold);
-    font-weight: 800;
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-  .evidence .evidence-value {
-    margin-left: auto;
-    color: var(--navy-deep);
+  .brand-name {
+    font-size: 15px;
     font-weight: 700;
-    font-feature-settings: "tnum";
+    color: #fff;
+    letter-spacing: -0.2px;
+  }
+  .brand-en {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.4px;
+  }
+  /* VERIFIED REVIEW 앞 골드 인증 마크 (Material Icons.verified_rounded와 동일) */
+  /* 다크 네이비 배경에서 명확히 보이도록 밝은 골드 톤 사용 */
+  .verified-mark {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    display: inline-block;
+    margin-right: 7px;
+  }
+  .verified-mark path {
+    fill: #E8C46B;
+  }
+  .verified-eyebrow-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
   }
 
-  .cert-section {
-    background: var(--cream-warm);
-    border-radius: 12px;
-    padding: 16px 18px;
+  .verified-banner {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 16px 20px;
+  }
+  .verified-eyebrow {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.5px;
+  }
+  .verified-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+  .verified-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* ===== 메인 카드 (오버랩) ===== */
+  .main-card {
+    margin: -36px 16px 0;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 비즈니스 + 별점 섹션 */
+  .biz-section {
+    padding: 24px 24px 18px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .biz-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .biz-logo {
+    width: 44px;
+    height: 44px;
+    background: var(--light-blue-soft);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .biz-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .biz-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .biz-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .biz-service {
+    font-size: 13px;
+    color: var(--text-subtle);
+    letter-spacing: -0.1px;
+  }
+
+  .rating-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .stars {
+    font-size: 28px;
+    color: var(--rating-stars);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .stars .empty {
+    color: #E5E5E5;
+  }
+  .rating-chip {
+    background: var(--rating-bg);
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+  .rating-chip-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--rating-text);
+  }
+
+  /* 본문 */
+  .content-section {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .content-text {
+    font-size: 15px;
+    color: #222;
+    line-height: 1.75;
+    letter-spacing: -0.2px;
+    word-break: keep-all;
+    white-space: pre-wrap;
+  }
+
+  /* 태그 */
+  .tags-section {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag-pill {
+    padding: 7px 14px;
+    border-radius: 100px;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: -0.1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* 작성자 */
+  .author-section {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .author-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .author-avatar {
+    width: 36px;
+    height: 36px;
+    background: #F5F5F5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .author-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .author-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .author-date {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .author-verified {
+    background: var(--green-bg);
+    padding: 4px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .author-verified-icon {
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .author-verified-text {
+    font-size: 11px;
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  /* 검증 정보 */
+  .verify-section {
+    padding: 20px 24px;
+    background: var(--section-bg);
+  }
+  .verify-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-subtle);
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+  }
+  .evidence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .evidence-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .evidence-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .evidence-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .check-box {
+    width: 18px;
+    height: 18px;
+    background: var(--navy-deep);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .check-box-icon {
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .evidence-text {
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+  .evidence-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .evidence-value.green {
+    color: var(--green);
+  }
+  .evidence-sub {
+    padding-left: 26px;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* 인증번호 박스 */
+  .cert-box {
+    background: var(--navy-deep);
+    border-radius: 16px;
+    padding: 20px;
     text-align: center;
-    margin-top: 6px;
   }
   .cert-label {
-    font-size: 10px;
-    color: var(--text-subtle);
-    font-weight: 700;
-    letter-spacing: 1.5px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
     text-transform: uppercase;
-    margin-bottom: 6px;
   }
   .cert-code {
     font-family: 'Menlo', 'SF Mono', monospace;
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--navy-deep);
-    letter-spacing: 1px;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--light-blue);
+    letter-spacing: 6px;
   }
 
-  /* === 푸터 === */
+  /* 푸터 */
   .footer {
-    padding: 0 8px;
-    margin-top: 18px;
+    padding: 20px 24px;
     text-align: center;
   }
-  .footer-info {
-    font-size: 11.5px;
-    color: var(--text-muted);
+  .footer-text {
+    font-size: 12px;
+    color: #aaa;
     line-height: 1.6;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
-  .footer-link {
+  .footer-disclaimer {
     font-size: 11px;
-    color: var(--text-subtle);
-    font-weight: 600;
-    text-decoration: none;
-    letter-spacing: -0.1px;
-  }
-  .footer-link::before {
-    content: "🔗 ";
-    font-size: 9px;
+    color: #c5c5c5;
+    line-height: 1.6;
   }
 
-  /* === 상태별 화면 === */
+  /* ===== 상태 메시지 (404, hidden, error) ===== */
   .state-message {
     padding: 80px 24px;
     text-align: center;
   }
-  .state-message .icon {
+  .state-icon {
     font-size: 36px;
     margin-bottom: 16px;
   }
-  .state-message .title {
+  .state-title {
     font-size: 16px;
     font-weight: 700;
-    color: var(--navy-deep);
+    color: var(--text);
     margin-bottom: 8px;
-    letter-spacing: -0.3px;
   }
-  .state-message .desc {
+  .state-desc {
     font-size: 13px;
-    color: var(--text-muted);
+    color: var(--text-subtle);
     line-height: 1.6;
   }
-  .state-message .home-btn {
+  .home-btn {
     display: inline-block;
     margin-top: 24px;
     padding: 10px 22px;
@@ -307,7 +456,7 @@
     letter-spacing: -0.1px;
   }
 
-  /* === 로딩 skeleton === */
+  /* 로딩 skeleton */
   .skeleton {
     background: linear-gradient(90deg, #F0F0F0 0%, #F8F8F8 50%, #F0F0F0 100%);
     background-size: 200% 100%;
@@ -318,59 +467,55 @@
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
   }
-  .skeleton-line { height: 14px; margin-bottom: 10px; }
-  .skeleton-stars { height: 22px; width: 140px; margin-bottom: 14px; }
-  .skeleton-content { height: 60px; margin-bottom: 14px; }
-  .skeleton-tag { height: 24px; width: 60px; display: inline-block; margin-right: 5px; }
+  .loading-state {
+    padding: 60px 24px;
+    text-align: center;
+  }
+  .loading-state .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #E5E5E5;
+    border-top-color: var(--navy-deep);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .loading-text {
+    font-size: 13px;
+    color: var(--text-subtle);
+  }
 </style>
 </head>
 <body>
-  <div class="container">
-    <header class="brand-bar">
-      <a href="/">
-        <span class="check">✓</span>
-        <span>클리닝매니저</span>
-      </a>
-    </header>
-
-    <main id="app">
-      <!-- 로딩 skeleton -->
-      <div class="card">
-        <div class="skeleton skeleton-line" style="width:40%"></div>
-        <div class="skeleton skeleton-stars"></div>
-        <div class="skeleton skeleton-content"></div>
-        <div>
-          <span class="skeleton skeleton-tag"></span>
-          <span class="skeleton skeleton-tag"></span>
-          <span class="skeleton skeleton-tag"></span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="skeleton skeleton-line" style="width:30%; margin-bottom:14px"></div>
-        <div class="skeleton skeleton-line" style="width:80%"></div>
-        <div class="skeleton skeleton-line" style="width:70%"></div>
-        <div class="skeleton skeleton-line" style="width:75%"></div>
-      </div>
-    </main>
+  <div class="container" id="container">
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <div class="loading-text">인증 정보를 확인하고 있어요...</div>
+    </div>
   </div>
+
+<!-- 클리닝매니저 로고는 /assets/cm_logo.png 사용 (앱 splash 동일) -->
 
 <script>
 const SUPABASE_URL = 'https://iucicugxihxilcqtzrbk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1Y2ljdWd4aWh4aWxjcXR6cmJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2OTc0ODAsImV4cCI6MjA4NjI3MzQ4MH0.5_7_vNc7x2kU68ynssGhf2jPCevkE-OMfSfgmyrkZDA';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ===== Cert code 추출 =====
-// 지원: /verify/ZY25  또는  /verify/?c=ZY25
-function getCertCode() {
-  // 1) Path 기반: /verify/{code}
-  const pathMatch = window.location.pathname.match(/\/verify\/([A-Z0-9]{4})\/?$/i);
-  if (pathMatch) return pathMatch[1].toUpperCase();
-  // 2) Query 기반: ?c=ZY25
-  const params = new URLSearchParams(window.location.search);
-  const c = params.get('c');
-  if (c) return c.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  return null;
-}
+// 태그 → 이모지 매핑 (앱과 동기화)
+const TAG_EMOJI = {
+  '꼼꼼함': '🔍',
+  '깔끔한 마무리': '✨',
+  '친환경 자재': '🌱',
+  '친절함': '😊',
+  '시간 엄수': '⏰',
+  '실시간 리포트': '📱',
+  '빠른 작업': '⚡',
+  '꼼꼼한 설명': '💬',
+  '재예약 의사': '🔁',
+};
 
 // ===== 유틸 =====
 function escapeHtml(s) {
@@ -379,22 +524,33 @@ function escapeHtml(s) {
 }
 
 function maskName(name) {
-  if (!name) return '고객';
+  if (!name) return null;
   if (name.length === 1) return name;
   if (name.length === 2) return name[0] + '○';
   return name[0] + '○'.repeat(name.length - 2) + name[name.length - 1];
 }
 
-function extractDistrict(address) {
-  if (!address) return '';
-  const m = address.match(/(\S+구|\S+군|\S+시)/);
-  return m ? m[1] : '';
-}
-
 function fmtDate(iso) {
   if (!iso) return '';
   const d = new Date(iso);
-  return d.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\s/g, '').replace(/\.$/, '');
+  return d.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
+    .replace(/\s/g, '').replace(/\.$/, '');
+}
+
+function getCertCode() {
+  // /verify/ZY25 또는 /verify/?c=ZY25
+  const pathMatch = window.location.pathname.match(/\/verify\/([A-Z0-9]{4})\/?$/i);
+  if (pathMatch) return pathMatch[1].toUpperCase();
+  const params = new URLSearchParams(window.location.search);
+  const c = params.get('c');
+  if (c) return c.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  return null;
+}
+
+function cmLogo(size = 'large') {
+  // 앱 splash 로고와 동일 (/assets/cm_logo.png)
+  const w = size === 'small' ? 36 : 38;
+  return `<img src="/assets/cm_logo.png" alt="클리닝매니저" style="width:${w}px;height:${w}px;object-fit:contain;display:block;" />`;
 }
 
 function renderStars(rating) {
@@ -402,24 +558,24 @@ function renderStars(rating) {
   return '★'.repeat(r) + '<span class="empty">' + '★'.repeat(5 - r) + '</span>';
 }
 
-// ===== 상태별 렌더 =====
+// ===== 상태 렌더 =====
 function renderError(title, desc) {
-  document.getElementById('app').innerHTML = `
+  document.getElementById('container').innerHTML = `
     <div class="state-message">
-      <div class="icon">🔍</div>
-      <div class="title">${escapeHtml(title)}</div>
-      <div class="desc">${escapeHtml(desc)}</div>
+      <div class="state-icon">🔍</div>
+      <div class="state-title">${escapeHtml(title)}</div>
+      <div class="state-desc">${escapeHtml(desc)}</div>
       <a class="home-btn" href="/">홈으로</a>
     </div>
   `;
 }
 
 function renderHidden(certCode) {
-  document.getElementById('app').innerHTML = `
+  document.getElementById('container').innerHTML = `
     <div class="state-message">
-      <div class="icon">🔒</div>
-      <div class="title">비공개 처리된 후기</div>
-      <div class="desc">이 후기는 현재 비공개 상태입니다.<br>인증번호 #${escapeHtml(certCode)}</div>
+      <div class="state-icon">🔒</div>
+      <div class="state-title">비공개 처리된 후기</div>
+      <div class="state-desc">이 후기는 현재 비공개 상태입니다.<br>인증번호 #${escapeHtml(certCode)}</div>
       <a class="home-btn" href="/">홈으로</a>
     </div>
   `;
@@ -427,94 +583,186 @@ function renderHidden(certCode) {
 
 function renderCert(data) {
   const r = data.review;
-  const business = data.business;
+  const businessName = data.business?.name || '업체';
+  const businessLogo = data.business?.logo_url;
   const evidence = data.evidence;
 
-  const customerName = r.name_display === 'anonymous' ? '익명' : maskName(r.customer_name_snapshot || '');
-  const district = extractDistrict(r.bookings?.address || '');
-  const businessLine = business + (district ? ` · ${district}` : '');
+  const customerName = (r.name_display === 'anonymous')
+    ? '익명'
+    : (maskName(r.customer_name_snapshot) || null);
+  const authorDisplay = customerName ? `${customerName} 고객님` : '고객님';
+
   const serviceDate = fmtDate(r.bookings?.scheduled_date);
   const createdDate = fmtDate(r.created_at);
   const wasEdited = r.updated_at && (new Date(r.updated_at) - new Date(r.created_at)) > 60000;
-  const updatedDate = wasEdited ? fmtDate(r.updated_at) : null;
-  const certCode = (r.cert_code || '').replace('#', '');
 
-  const tagsHtml = Array.isArray(r.tags) && r.tags.length > 0
-    ? `<div class="review-tags">${r.tags.map(t => `<span class="review-tag">${escapeHtml(t)}</span>`).join('')}</div>`
+  const certCode = (r.cert_code || '').replace('#', '');
+  const ratingNum = (parseInt(r.rating) || 0).toFixed(1);
+
+  document.title = `${authorDisplay}의 인증 후기 #${certCode} - 클리닝매니저`;
+
+  // 태그 HTML (이모지 포함)
+  const tagsHtml = (Array.isArray(r.tags) && r.tags.length > 0)
+    ? r.tags.map(t => `
+        <span class="tag-pill">
+          <span>${TAG_EMOJI[t] || ''}</span>
+          ${escapeHtml(t)}
+        </span>
+      `).join('')
     : '';
 
-  document.title = `${customerName} 고객님의 인증 후기 #${certCode} - 클리닝매니저`;
+  // 업체 로고 (있으면 img, 없으면 클리닝매니저 기본 SVG)
+  const bizLogoHtml = businessLogo
+    ? `<img src="${escapeHtml(businessLogo)}" alt="${escapeHtml(businessName)}" onerror="this.style.display='none';this.parentElement.innerHTML=cmLogo('small');">`
+    : cmLogo('small');
 
-  document.getElementById('app').innerHTML = `
-    <article class="card">
-      <div class="review-badge">
-        <span class="check">✓</span>
-        CLEANING MANAGER 인증 후기
+  document.getElementById('container').innerHTML = `
+    <!-- 다크 헤더 -->
+    <header class="top-header">
+      <div class="top-bar">
+        <a class="brand" href="/">
+          ${cmLogo('large')}
+          <div class="brand-text">
+            <div class="brand-name">클리닝매니저</div>
+            <div class="brand-en">청소업체 운영 시스템</div>
+          </div>
+        </a>
       </div>
-
-      <div class="stars">${renderStars(r.rating)}</div>
-
-      ${r.content ? `<p class="review-content">${escapeHtml(r.content)}</p>` : ''}
-
-      ${tagsHtml}
-
-      <div class="hairline"></div>
-
-      <div class="meta-block">
-        <div class="meta-customer">${escapeHtml(customerName)} 고객님</div>
-        <div class="meta-date">${createdDate} 작성${wasEdited ? ` · ${updatedDate} 수정` : ''}</div>
+      <div class="verified-banner">
+        <div class="verified-eyebrow-row">
+          <svg class="verified-mark" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72 3.1 5.53l.34 3.69L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"/>
+          </svg>
+          <span class="verified-eyebrow">VERIFIED REVIEW</span>
+        </div>
+        <div class="verified-title">실제 서비스 완료 후 수집된 후기</div>
+        <div class="verified-sub">클리닝매니저 시스템이 검증한 진짜 후기입니다</div>
       </div>
+    </header>
 
-      <div class="hairline"></div>
+    <!-- 메인 카드 -->
+    <article class="main-card">
+      <!-- 비즈니스 + 별점 -->
+      <section class="biz-section">
+        <div class="biz-row">
+          <div class="biz-logo">${bizLogoHtml}</div>
+          <div class="biz-info">
+            <div class="biz-name">${escapeHtml(businessName)}</div>
+            <div class="biz-service">${escapeHtml(r.service_type_snapshot || '')}${serviceDate ? ` · ${serviceDate}` : ''}</div>
+          </div>
+        </div>
+        <div class="rating-row">
+          <span class="stars">${renderStars(r.rating)}</span>
+          <div class="rating-chip">
+            <span class="rating-chip-text">${ratingNum}</span>
+          </div>
+        </div>
+      </section>
 
-      <div class="business-block">
-        <div class="business-name">${escapeHtml(businessLine)}</div>
-        <div class="business-service">${escapeHtml(r.service_type_snapshot || '')}${serviceDate ? ` · ${serviceDate}` : ''}</div>
-      </div>
+      <!-- 본문 -->
+      ${r.content ? `
+        <section class="content-section">
+          <p class="content-text">${escapeHtml(r.content)}</p>
+        </section>
+      ` : ''}
+
+      <!-- 태그 -->
+      ${tagsHtml ? `
+        <section class="tags-section">
+          <div class="tags-row">${tagsHtml}</div>
+        </section>
+      ` : ''}
+
+      <!-- 작성자 -->
+      <section class="author-section">
+        <div class="author-info">
+          <div class="author-avatar">👤</div>
+          <div class="author-meta">
+            <div class="author-name">${escapeHtml(authorDisplay)}</div>
+            <div class="author-date">${createdDate} 작성${wasEdited ? ' · 수정됨' : ''}</div>
+          </div>
+        </div>
+        <div class="author-verified">
+          <span class="author-verified-icon">✓</span>
+          <span class="author-verified-text">본인 작성</span>
+        </div>
+      </section>
+
+      <!-- 검증 정보 -->
+      <section class="verify-section">
+        <div class="verify-title">검증된 청소 정보</div>
+        <div class="evidence-list">
+          ${evidence.itemCount != null ? `
+            <div class="evidence-item">
+              <div class="evidence-row">
+                <div class="evidence-label">
+                  <div class="check-box"><span class="check-box-icon">✓</span></div>
+                  <span class="evidence-text">청소 완료 구역</span>
+                </div>
+                <span class="evidence-value">${evidence.itemCount}구역</span>
+              </div>
+            </div>
+          ` : ''}
+
+          ${evidence.photoCount != null ? `
+            <div class="evidence-item">
+              <div class="evidence-row">
+                <div class="evidence-label">
+                  <div class="check-box"><span class="check-box-icon">✓</span></div>
+                  <span class="evidence-text">구역별 전/후 사진</span>
+                </div>
+                <span class="evidence-value">${evidence.photoCount}장</span>
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="evidence-item">
+            <div class="evidence-row">
+              <div class="evidence-label">
+                <div class="check-box"><span class="check-box-icon">✓</span></div>
+                <span class="evidence-text">고객만 작성 가능</span>
+              </div>
+              <span class="evidence-value green">위변조 불가</span>
+            </div>
+            <div class="evidence-sub">카카오톡으로 전송된 개인 링크로 본인만 작성할 수 있어요</div>
+          </div>
+
+          <div class="evidence-item">
+            <div class="evidence-row">
+              <div class="evidence-label">
+                <div class="check-box"><span class="check-box-icon">✓</span></div>
+                <span class="evidence-text">고객만 수정 가능</span>
+              </div>
+              <span class="evidence-value">30일 이내</span>
+            </div>
+            <div class="evidence-sub">해당 링크로 접속한 고객 본인만 수정할 수 있어요</div>
+          </div>
+        </div>
+
+        <!-- 인증번호 박스 -->
+        <div class="cert-box">
+          <div class="cert-label">인증번호</div>
+          <div class="cert-code">#${escapeHtml(certCode)}</div>
+        </div>
+      </section>
     </article>
 
-    <article class="card">
-      <div class="verify-title">검증된 청소 정보</div>
-      <ul class="evidence">
-        ${evidence.itemCount != null ? `
-          <li>
-            <span class="check-icon">✓</span>
-            <span>청소 항목 완료</span>
-            <span class="evidence-value">${evidence.itemCount}건</span>
-          </li>` : ''}
-        ${evidence.photoCount != null ? `
-          <li>
-            <span class="check-icon">✓</span>
-            <span>현장 사진 업로드</span>
-            <span class="evidence-value">${evidence.photoCount}장</span>
-          </li>` : ''}
-        <li>
-          <span class="check-icon">✓</span>
-          <span>1리포트당 1후기 시스템</span>
-          <span class="evidence-value">중복 차단</span>
-        </li>
-        <li>
-          <span class="check-icon">✓</span>
-          <span>수정 가능 기간</span>
-          <span class="evidence-value">30일 이내</span>
-        </li>
-      </ul>
-
-      <div class="cert-section">
-        <div class="cert-label">인증번호</div>
-        <div class="cert-code">#${escapeHtml(certCode)}</div>
-      </div>
-    </article>
-
+    <!-- 푸터 -->
     <footer class="footer">
-      <p class="footer-info">
-        이 후기는 클리닝매니저 시스템에서<br>
-        검증된 실제 고객의 후기입니다.
+      <p class="footer-text">
+        이 페이지는 클리닝매니저가 발급한<br>
+        공식 후기 인증 페이지입니다
       </p>
-      <a class="footer-link" href="/">cleaningmanager.kr</a>
+      <p class="footer-disclaimer">
+        본 서비스는 ${escapeHtml(businessName)}이 제공하며,<br>
+        클리닝매니저는 후기 검증 시스템입니다
+      </p>
     </footer>
   `;
 }
+
+// 클리닝매니저 로고 SVG는 글로벌에서 접근 가능해야 함
+window.cmLogo = cmLogo;
 
 // ===== 메인 진입점 =====
 async function init() {
@@ -533,7 +781,7 @@ async function init() {
         cert_code, customer_name_snapshot, service_type_snapshot, name_display,
         report_id, booking_id,
         bookings ( scheduled_date, address ),
-        companies ( name )
+        companies ( name, logo_url )
       `)
       .eq('cert_code', '#' + certCode)
       .maybeSingle();
@@ -564,11 +812,9 @@ async function init() {
         : Promise.resolve({ count: null }),
     ]);
 
-    const business = review.companies?.name || '';
-
     renderCert({
       review,
-      business,
+      business: review.companies || {},
       evidence: {
         itemCount: itemRes.count,
         photoCount: photoRes.count,
