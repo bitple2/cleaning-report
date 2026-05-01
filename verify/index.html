@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>인증 후기 - 클리닝매니저</title>
+<meta name="description" content="클리닝매니저 시스템에서 검증된 실제 고객의 후기입니다.">
+
+<!-- OG / Twitter -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="✓ 클리닝매니저 인증 후기">
+<meta property="og:description" content="시스템에서 검증된 실제 고객의 청소 후기입니다.">
+<meta property="og:site_name" content="클리닝매니저">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="✓ 클리닝매니저 인증 후기">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy-deep: #0F2442;
+    --navy: #1E3A5F;
+    --gold: #C9A961;
+    --cream-warm: #F5EFE1;
+    --text: #0D1B2E;
+    --text-soft: #3A3F4B;
+    --text-subtle: #6B7280;
+    --text-muted: #9CA3AF;
+    --border: #E5E7EB;
+    --border-soft: #F0EBDF;
+  }
+
+  html, body {
+    background: #F9FAFB;
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  /* === 상단 브랜드 바 === */
+  .brand-bar {
+    padding: 18px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .brand-bar a {
+    text-decoration: none;
+    color: var(--navy-deep);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .brand-bar .check {
+    color: var(--gold);
+    font-weight: 800;
+  }
+
+  /* === 카드 공통 === */
+  .card {
+    background: white;
+    border: 1px solid rgba(15, 36, 66, 0.08);
+    border-radius: 18px;
+    padding: 24px 22px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 20px rgba(15, 36, 66, 0.04);
+  }
+
+  /* === 메인 후기 카드 === */
+  .review-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--cream-warm);
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 6px 11px;
+    border-radius: 100px;
+    margin-bottom: 18px;
+  }
+  .review-badge .check {
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 12px;
+  }
+
+  .stars {
+    color: var(--gold);
+    font-size: 22px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    line-height: 1;
+  }
+  .stars .empty {
+    color: var(--border);
+  }
+
+  .review-content {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.7;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+    word-break: keep-all;
+    margin-bottom: 14px;
+    white-space: pre-wrap;
+  }
+
+  .review-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 18px;
+  }
+  .review-tag {
+    background: rgba(15, 36, 66, 0.05);
+    color: var(--text-soft);
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 5px 11px;
+    border-radius: 6px;
+    letter-spacing: -0.1px;
+  }
+
+  .hairline {
+    height: 1px;
+    background: var(--border-soft);
+    margin: 14px 0;
+  }
+
+  .meta-block {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .meta-customer {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy-deep);
+    letter-spacing: -0.2px;
+  }
+  .meta-date {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .business-block {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .business-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-soft);
+    letter-spacing: -0.2px;
+  }
+  .business-service {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* === 검증 정보 카드 === */
+  .verify-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .evidence {
+    list-style: none;
+    margin-bottom: 18px;
+  }
+  .evidence li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    font-size: 13px;
+    color: var(--text-soft);
+    font-weight: 500;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .evidence li:last-child {
+    border-bottom: none;
+  }
+  .evidence .check-icon {
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .evidence .evidence-value {
+    margin-left: auto;
+    color: var(--navy-deep);
+    font-weight: 700;
+    font-feature-settings: "tnum";
+  }
+
+  .cert-section {
+    background: var(--cream-warm);
+    border-radius: 12px;
+    padding: 16px 18px;
+    text-align: center;
+    margin-top: 6px;
+  }
+  .cert-label {
+    font-size: 10px;
+    color: var(--text-subtle);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .cert-code {
+    font-family: 'Menlo', 'SF Mono', monospace;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--navy-deep);
+    letter-spacing: 1px;
+  }
+
+  /* === 푸터 === */
+  .footer {
+    padding: 0 8px;
+    margin-top: 18px;
+    text-align: center;
+  }
+  .footer-info {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .footer-link {
+    font-size: 11px;
+    color: var(--text-subtle);
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: -0.1px;
+  }
+  .footer-link::before {
+    content: "🔗 ";
+    font-size: 9px;
+  }
+
+  /* === 상태별 화면 === */
+  .state-message {
+    padding: 80px 24px;
+    text-align: center;
+  }
+  .state-message .icon {
+    font-size: 36px;
+    margin-bottom: 16px;
+  }
+  .state-message .title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy-deep);
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  .state-message .desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .state-message .home-btn {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 10px 22px;
+    background: var(--navy-deep);
+    color: white;
+    text-decoration: none;
+    border-radius: 100px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: -0.1px;
+  }
+
+  /* === 로딩 skeleton === */
+  .skeleton {
+    background: linear-gradient(90deg, #F0F0F0 0%, #F8F8F8 50%, #F0F0F0 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease infinite;
+    border-radius: 6px;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .skeleton-line { height: 14px; margin-bottom: 10px; }
+  .skeleton-stars { height: 22px; width: 140px; margin-bottom: 14px; }
+  .skeleton-content { height: 60px; margin-bottom: 14px; }
+  .skeleton-tag { height: 24px; width: 60px; display: inline-block; margin-right: 5px; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="brand-bar">
+      <a href="/">
+        <span class="check">✓</span>
+        <span>클리닝매니저</span>
+      </a>
+    </header>
+
+    <main id="app">
+      <!-- 로딩 skeleton -->
+      <div class="card">
+        <div class="skeleton skeleton-line" style="width:40%"></div>
+        <div class="skeleton skeleton-stars"></div>
+        <div class="skeleton skeleton-content"></div>
+        <div>
+          <span class="skeleton skeleton-tag"></span>
+          <span class="skeleton skeleton-tag"></span>
+          <span class="skeleton skeleton-tag"></span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skeleton skeleton-line" style="width:30%; margin-bottom:14px"></div>
+        <div class="skeleton skeleton-line" style="width:80%"></div>
+        <div class="skeleton skeleton-line" style="width:70%"></div>
+        <div class="skeleton skeleton-line" style="width:75%"></div>
+      </div>
+    </main>
+  </div>
+
+<script>
+const SUPABASE_URL = 'https://iucicugxihxilcqtzrbk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1Y2ljdWd4aWh4aWxjcXR6cmJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2OTc0ODAsImV4cCI6MjA4NjI3MzQ4MH0.5_7_vNc7x2kU68ynssGhf2jPCevkE-OMfSfgmyrkZDA';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ===== Cert code 추출 =====
+// 지원: /verify/ZY25  또는  /verify/?c=ZY25
+function getCertCode() {
+  // 1) Path 기반: /verify/{code}
+  const pathMatch = window.location.pathname.match(/\/verify\/([A-Z0-9]{4})\/?$/i);
+  if (pathMatch) return pathMatch[1].toUpperCase();
+  // 2) Query 기반: ?c=ZY25
+  const params = new URLSearchParams(window.location.search);
+  const c = params.get('c');
+  if (c) return c.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  return null;
+}
+
+// ===== 유틸 =====
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function maskName(name) {
+  if (!name) return '고객';
+  if (name.length === 1) return name;
+  if (name.length === 2) return name[0] + '○';
+  return name[0] + '○'.repeat(name.length - 2) + name[name.length - 1];
+}
+
+function extractDistrict(address) {
+  if (!address) return '';
+  const m = address.match(/(\S+구|\S+군|\S+시)/);
+  return m ? m[1] : '';
+}
+
+function fmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\s/g, '').replace(/\.$/, '');
+}
+
+function renderStars(rating) {
+  const r = Math.max(0, Math.min(5, parseInt(rating) || 0));
+  return '★'.repeat(r) + '<span class="empty">' + '★'.repeat(5 - r) + '</span>';
+}
+
+// ===== 상태별 렌더 =====
+function renderError(title, desc) {
+  document.getElementById('app').innerHTML = `
+    <div class="state-message">
+      <div class="icon">🔍</div>
+      <div class="title">${escapeHtml(title)}</div>
+      <div class="desc">${escapeHtml(desc)}</div>
+      <a class="home-btn" href="/">홈으로</a>
+    </div>
+  `;
+}
+
+function renderHidden(certCode) {
+  document.getElementById('app').innerHTML = `
+    <div class="state-message">
+      <div class="icon">🔒</div>
+      <div class="title">비공개 처리된 후기</div>
+      <div class="desc">이 후기는 현재 비공개 상태입니다.<br>인증번호 #${escapeHtml(certCode)}</div>
+      <a class="home-btn" href="/">홈으로</a>
+    </div>
+  `;
+}
+
+function renderCert(data) {
+  const r = data.review;
+  const business = data.business;
+  const evidence = data.evidence;
+
+  const customerName = r.name_display === 'anonymous' ? '익명' : maskName(r.customer_name_snapshot || '');
+  const district = extractDistrict(r.bookings?.address || '');
+  const businessLine = business + (district ? ` · ${district}` : '');
+  const serviceDate = fmtDate(r.bookings?.scheduled_date);
+  const createdDate = fmtDate(r.created_at);
+  const wasEdited = r.updated_at && (new Date(r.updated_at) - new Date(r.created_at)) > 60000;
+  const updatedDate = wasEdited ? fmtDate(r.updated_at) : null;
+  const certCode = (r.cert_code || '').replace('#', '');
+
+  const tagsHtml = Array.isArray(r.tags) && r.tags.length > 0
+    ? `<div class="review-tags">${r.tags.map(t => `<span class="review-tag">${escapeHtml(t)}</span>`).join('')}</div>`
+    : '';
+
+  document.title = `${customerName} 고객님의 인증 후기 #${certCode} - 클리닝매니저`;
+
+  document.getElementById('app').innerHTML = `
+    <article class="card">
+      <div class="review-badge">
+        <span class="check">✓</span>
+        CLEANING MANAGER 인증 후기
+      </div>
+
+      <div class="stars">${renderStars(r.rating)}</div>
+
+      ${r.content ? `<p class="review-content">${escapeHtml(r.content)}</p>` : ''}
+
+      ${tagsHtml}
+
+      <div class="hairline"></div>
+
+      <div class="meta-block">
+        <div class="meta-customer">${escapeHtml(customerName)} 고객님</div>
+        <div class="meta-date">${createdDate} 작성${wasEdited ? ` · ${updatedDate} 수정` : ''}</div>
+      </div>
+
+      <div class="hairline"></div>
+
+      <div class="business-block">
+        <div class="business-name">${escapeHtml(businessLine)}</div>
+        <div class="business-service">${escapeHtml(r.service_type_snapshot || '')}${serviceDate ? ` · ${serviceDate}` : ''}</div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="verify-title">검증된 청소 정보</div>
+      <ul class="evidence">
+        ${evidence.itemCount != null ? `
+          <li>
+            <span class="check-icon">✓</span>
+            <span>청소 항목 완료</span>
+            <span class="evidence-value">${evidence.itemCount}건</span>
+          </li>` : ''}
+        ${evidence.photoCount != null ? `
+          <li>
+            <span class="check-icon">✓</span>
+            <span>현장 사진 업로드</span>
+            <span class="evidence-value">${evidence.photoCount}장</span>
+          </li>` : ''}
+        <li>
+          <span class="check-icon">✓</span>
+          <span>1리포트당 1후기 시스템</span>
+          <span class="evidence-value">중복 차단</span>
+        </li>
+        <li>
+          <span class="check-icon">✓</span>
+          <span>수정 가능 기간</span>
+          <span class="evidence-value">30일 이내</span>
+        </li>
+      </ul>
+
+      <div class="cert-section">
+        <div class="cert-label">인증번호</div>
+        <div class="cert-code">#${escapeHtml(certCode)}</div>
+      </div>
+    </article>
+
+    <footer class="footer">
+      <p class="footer-info">
+        이 후기는 클리닝매니저 시스템에서<br>
+        검증된 실제 고객의 후기입니다.
+      </p>
+      <a class="footer-link" href="/">cleaningmanager.kr</a>
+    </footer>
+  `;
+}
+
+// ===== 메인 진입점 =====
+async function init() {
+  const certCode = getCertCode();
+  if (!certCode) {
+    renderError('인증번호를 찾을 수 없어요', '올바른 인증 URL로 접속해주세요.');
+    return;
+  }
+
+  try {
+    // 1) 후기 + 예약·업체 조인 조회
+    const { data: review, error } = await sb
+      .from('reviews')
+      .select(`
+        rating, content, tags, created_at, updated_at, is_hidden,
+        cert_code, customer_name_snapshot, service_type_snapshot, name_display,
+        report_id, booking_id,
+        bookings ( scheduled_date, address ),
+        companies ( name )
+      `)
+      .eq('cert_code', '#' + certCode)
+      .maybeSingle();
+
+    if (error) {
+      console.error('cert query error', error);
+      renderError('조회 중 문제가 발생했어요', '잠시 후 다시 시도해주세요.');
+      return;
+    }
+
+    if (!review) {
+      renderError('인증번호를 찾을 수 없어요', `#${certCode}는 유효하지 않은 인증번호입니다.`);
+      return;
+    }
+
+    if (review.is_hidden) {
+      renderHidden(certCode);
+      return;
+    }
+
+    // 2) 검증 정보용 카운트 (병렬)
+    const [itemRes, photoRes] = await Promise.all([
+      review.report_id
+        ? sb.from('report_entries').select('id', { count: 'exact', head: true }).eq('report_id', review.report_id)
+        : Promise.resolve({ count: null }),
+      review.report_id
+        ? sb.from('report_photos').select('id', { count: 'exact', head: true }).eq('report_id', review.report_id)
+        : Promise.resolve({ count: null }),
+    ]);
+
+    const business = review.companies?.name || '';
+
+    renderCert({
+      review,
+      business,
+      evidence: {
+        itemCount: itemRes.count,
+        photoCount: photoRes.count,
+      },
+    });
+  } catch (e) {
+    console.error('cert init error', e);
+    renderError('조회 중 문제가 발생했어요', '잠시 후 다시 시도해주세요.');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
