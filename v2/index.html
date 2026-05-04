@@ -1161,6 +1161,7 @@ async function submitReview() {
 
     // === 신규 모드: INSERT (기존 로직) ===
     const customerName = reportData?.bookings?.customer_name || reportData?.bookings?.customers?.name || '';
+    const customerPhone = reportData?.bookings?.customer_phone || reportData?.bookings?.customers?.phone || '';
     const serviceType = reportData?.bookings?.service_type || '';
     const bookingId = reportData?.booking_id || null;
     const companyId = reportData?.bookings?.company_id || reportData?.company_id || null;
@@ -1181,6 +1182,7 @@ async function submitReview() {
       tags: Array.from(reviewState.tags),
       name_display: reviewState.nameDisplay,
       customer_name_snapshot: customerName,
+      customer_phone_snapshot: customerPhone || null,
       service_type_snapshot: serviceType,
       marketing_consent: reviewState.marketingConsent,
     };
@@ -1291,7 +1293,7 @@ async function init() {
     // 리포트 기본 정보 (bookings → customers, companies 조인)
     const { data: report } = await sb
       .from('cleaning_reports')
-      .select('*, bookings(*, customers(name), companies(name, logo_url))')
+      .select('*, bookings(*, customers(name, phone), companies(name, logo_url))')
       .eq('id', reportId)
       .single();
 

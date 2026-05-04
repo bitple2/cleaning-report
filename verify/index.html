@@ -523,6 +523,17 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+function maskPhoneTail(phone) {
+  if (!phone) return '';
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length < 2) return '';
+  const last2 = digits.slice(-2);
+  if (digits.length >= 11) {
+    return `(${digits.substring(0, 3)}-****-**${last2})`;
+  }
+  return `(****-**${last2})`;
+}
+
 function maskName(name) {
   if (!name) return null;
   if (name.length === 1) return name;
@@ -590,7 +601,10 @@ function renderCert(data) {
   const customerName = (r.name_display === 'anonymous')
     ? '익명'
     : (maskName(r.customer_name_snapshot) || null);
-  const authorDisplay = customerName ? `${customerName} 고객님` : '고객님';
+  const phoneTail = (r.name_display === 'anonymous') ? '' : maskPhoneTail(r.customer_phone_snapshot);
+  const authorDisplay = customerName
+    ? `${customerName} 고객님${phoneTail ? ' ' + phoneTail : ''}`
+    : '고객님';
 
   const serviceDate = fmtDate(r.bookings?.scheduled_date);
   const createdDate = fmtDate(r.created_at);
@@ -778,7 +792,7 @@ async function init() {
       .from('reviews')
       .select(`
         rating, content, tags, created_at, updated_at, is_hidden,
-        cert_code, customer_name_snapshot, service_type_snapshot, name_display,
+        cert_code, customer_name_snapshot, customer_phone_snapshot, service_type_snapshot, name_display,
         report_id, booking_id,
         bookings ( scheduled_date, address ),
         companies ( name, logo_url )
