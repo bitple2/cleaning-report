@@ -889,28 +889,11 @@
     font-weight: 500;
   }
 
-  /* 소개하기 */
+  /* 하단 안내 + 푸터 */
   .share-bar {
     padding: 12px 12px 32px;
     text-align: center;
   }
-  .share-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    background: white;
-    color: #1a1a1a;
-    border: 1.5px solid #E5E5DC;
-    padding: 12px 28px;
-    border-radius: 14px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    letter-spacing: -0.3px;
-  }
-  .share-btn:active { background: #f5f5f0; }
 
   /* 프린트용 CSS */
   @media print {
@@ -1641,14 +1624,10 @@ function render() {
       ? ((existingReview && !editMode) ? renderReviewDone() : renderReviewForm())
       : ''}
 
-    <!-- 소개하기 -->
+    <!-- 하단 안내 + 푸터 -->
     ${totalPhotos > 0 ? `
       <div class="share-bar">
-        <div style="text-align:center;font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px">✨ 청소가 마음에 드셨나요?</div>
-        <button class="share-btn" onclick="shareReportLink()">
-          🔗 지인에게 소개하기
-        </button>
-        <div style="text-align:center;font-size:11px;color:#94a3b8;margin-top:12px;line-height:1.6">사진은 꾹 눌러 저장, 리포트 화면은 캡쳐하여<br>후기에 활용해주시면 사장님에게 큰 힘이 됩니다</div>
+        <div style="text-align:center;font-size:12px;color:#94a3b8;line-height:1.7">사진은 꾹 눌러 저장, 리포트 화면은 캡쳐하여<br>기타 SNS 후기 작성에 활용해주셔도 좋습니다</div>
         <div style="text-align:right;font-size:9px;color:#c4c4c4;margin-top:8px;padding-right:4px">Powered by 클리닝매니저</div>
       </div>
     ` : ''}
@@ -2023,17 +2002,6 @@ window.addEventListener('popstate', function(e) {
 if (isInAppBrowser()) {
   const hint = document.getElementById('inAppHint');
   if (hint) hint.style.display = 'block';
-}
-
-function shareReportLink() {
-  const url = window.location.href;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => {
-      showToast('리포트가 복사되었습니다');
-    });
-  } else {
-    showToast('링크 복사에 실패했습니다');
-  }
 }
 
 // 시작
