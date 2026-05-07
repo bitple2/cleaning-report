@@ -579,39 +579,55 @@
     text-transform: none;
     letter-spacing: 0;
   }
+  .tag-category-label {
+    font-size: 11px;
+    color: #8A8E9A;
+    font-weight: 500;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    letter-spacing: -0.1px;
+  }
+  .tag-category-label:first-of-type {
+    margin-top: 0;
+  }
   .tags-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .tags-grid:last-of-type {
     margin-bottom: 22px;
   }
   .tag-chip {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 9px 14px;
-    background: #F5F1E8;
-    border: 1px solid transparent;
+    padding: 8px 13px;
+    background: white;
+    border: 1px solid #E5E7EB;
     border-radius: 100px;
     font-size: 13px;
-    font-weight: 600;
-    color: #5A6478;
+    font-weight: 500;
+    color: #4A5568;
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     transition: all 0.15s ease;
   }
   .tag-chip .tag-emoji {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1;
   }
   .tag-chip:hover {
-    background: #EBE5D5;
+    background: #F9FAFB;
+    border-color: #D1D5DB;
   }
   .tag-chip.selected {
     background: #0D1B2E;
     color: white;
     border-color: #0D1B2E;
+    font-weight: 600;
   }
   .tag-chip.selected .tag-emoji {
     filter: none;
@@ -974,19 +990,20 @@ function isEditable(review) {
   const days = (Date.now() - new Date(review.created_at)) / (1000 * 60 * 60 * 24);
   return days <= 30;
 }
-const REVIEW_TAGS = [
-  // 품질 (3)
-  { tag: '꼼꼼함', emoji: '🔍' },
-  { tag: '깔끔한 마무리', emoji: '✨' },
-  { tag: '친환경 자재', emoji: '🌱' },
-  // 서비스 (6)
-  { tag: '친절함', emoji: '😊' },
-  { tag: '시간 엄수', emoji: '⏰' },
-  { tag: '실시간 리포트', emoji: '📱' },
-  { tag: '빠른 작업', emoji: '⚡' },
-  { tag: '꼼꼼한 설명', emoji: '💬' },
-  { tag: '재예약 의사', emoji: '🔁' },
-];
+const REVIEW_TAGS = {
+  '청소 품질': [
+    { tag: '꼼꼼함', emoji: '🔍' },
+    { tag: '깔끔한 마무리', emoji: '✨' },
+    { tag: '친환경 자재', emoji: '🌿' },
+  ],
+  '서비스': [
+    { tag: '친절함', emoji: '😊' },
+    { tag: '시간 엄수', emoji: '⏰' },
+    { tag: '실시간 리포트', emoji: '📱' },
+    { tag: '꼼꼼한 설명', emoji: '💬' },
+    { tag: '재예약 의사', emoji: '❤️' },
+  ],
+};
 
 async function fetchExistingReview() {
   try {
@@ -1058,12 +1075,15 @@ function renderReviewForm() {
       </div>
 
       <div class="review-label">좋았던 점 <span class="optional">(선택)</span></div>
-      <div class="tags-grid">
-        ${REVIEW_TAGS.map(t => `<div class="tag-chip ${reviewState.tags.has(t.tag) ? 'selected' : ''}" onclick="toggleReviewTag(this, '${t.tag}')"><span class="tag-emoji">${t.emoji}</span>${t.tag}</div>`).join('')}
-      </div>
+      ${Object.entries(REVIEW_TAGS).map(([category, tags]) => `
+        <div class="tag-category-label">${category}</div>
+        <div class="tags-grid">
+          ${tags.map(t => `<div class="tag-chip ${reviewState.tags.has(t.tag) ? 'selected' : ''}" onclick="toggleReviewTag(this, '${t.tag}')"><span class="tag-emoji">${t.emoji}</span>${t.tag}</div>`).join('')}
+        </div>
+      `).join('')}
 
       <div class="review-label">한 줄 소감 <span class="optional">(선택)</span></div>
-      <textarea class="review-textarea" id="reviewContent" placeholder="사장님께 한 줄 남겨주세요" maxlength="500">${escapeHtml(initialContent)}</textarea>
+      <textarea class="review-textarea" id="reviewContent" placeholder="오늘 청소 어떠셨나요?" maxlength="500">${escapeHtml(initialContent)}</textarea>
 
 
       <div class="consent-row" onclick="toggleConsent()">
@@ -1075,7 +1095,7 @@ function renderReviewForm() {
       </div>
 
       <button class="review-submit-btn" id="reviewSubmitBtn" ${submitDisabled ? 'disabled' : ''} onclick="submitReview()">
-        ${isEdit ? '수정하기 →' : '후기 남기기 →'}
+        ${submitDisabled ? '별점을 선택해주세요' : (isEdit ? '수정하기 →' : '후기 남기기 →')}
       </button>
 
       ${isEdit ? `
@@ -1089,7 +1109,13 @@ function selectStar(n) {
   reviewState.rating = n;
   const stars = document.querySelectorAll('#starRating .star');
   stars.forEach((s, i) => s.classList.toggle('filled', i < n));
-  document.getElementById('reviewSubmitBtn').disabled = !n;
+  const btn = document.getElementById('reviewSubmitBtn');
+  btn.disabled = !n;
+  // 별점 선택 시 버튼 텍스트도 동적 갱신
+  const isEdit = editMode && !!existingReview;
+  btn.textContent = !n
+    ? '별점을 선택해주세요'
+    : (isEdit ? '수정하기 →' : '후기 남기기 →');
 }
 
 function toggleReviewTag(el, tag) {
