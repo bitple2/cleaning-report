@@ -1584,9 +1584,12 @@ function render() {
           <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px">${booking?.scheduled_date || ''}</div>
         </div>
       </div>
-      <div onclick="var f=this.querySelector('.customer-full');var m=this.querySelector('.customer-masked');if(f.style.display==='none'){f.style.display='inline';m.style.display='none'}else{f.style.display='none';m.style.display='inline'}" style="margin-top:10px;cursor:pointer;font-size:12px;color:rgba(255,255,255,0.5)">
-        <span class="customer-masked">${(booking?.customer_name || booking?.customers?.name || '고객').charAt(0)}*님 ▸</span>
-        <span class="customer-full" style="display:none;color:rgba(255,255,255,0.85);font-weight:600">${booking?.customer_name || booking?.customers?.name || '고객'}님 ◂</span>
+      <div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.5)">
+        <span onclick="var f=this.parentNode.querySelector('.customer-full');var m=this.parentNode.querySelector('.customer-masked');if(f.style.display==='none'){f.style.display='inline';m.style.display='none'}else{f.style.display='none';m.style.display='inline'}" style="cursor:pointer">
+          <span class="customer-masked">${(booking?.customer_name || booking?.customers?.name || '고객').charAt(0)}*님 ▸</span>
+          <span class="customer-full" style="display:none;color:rgba(255,255,255,0.85);font-weight:600">${booking?.customer_name || booking?.customers?.name || '고객'}님 ◂</span>
+        </span>
+        ${reportData?.customer_phone_tail ? `<span style="margin-left:6px">010-****-**${reportData.customer_phone_tail}</span>` : ''}
       </div>
     </div>
 
