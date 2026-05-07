@@ -571,11 +571,11 @@
     text-transform: uppercase;
     margin-bottom: 10px;
   }
-  .review-label .optional {
-    color: #8A8E9A;
-    font-weight: 500;
+  .optional {
+    color: #C5C9D1;
+    font-weight: 400;
     font-size: 9px;
-    margin-left: 6px;
+    margin-left: 4px;
     text-transform: none;
     letter-spacing: 0;
   }
@@ -641,13 +641,23 @@
     color: #0D1B2E;
     font-family: inherit;
     font-weight: 500;
-    min-height: 80px;
-    margin-bottom: 22px;
+    min-height: 140px;
+    margin-bottom: 6px;
     resize: vertical;
     box-sizing: border-box;
     line-height: 1.6;
   }
   .review-textarea::placeholder { color: #8A8E9A; }
+  .review-length-hint {
+    font-size: 11px;
+    color: #C5C9D1;
+    text-align: right;
+    margin-bottom: 22px;
+    min-height: 14px;
+  }
+  .review-length-hint.warn {
+    color: #E8A33D;
+  }
   .name-options {
     display: flex;
     gap: 6px;
@@ -1082,14 +1092,15 @@ function renderReviewForm() {
         </div>
       `).join('')}
 
-      <div class="review-label">한 줄 소감 <span class="optional">(선택)</span></div>
-      <textarea class="review-textarea" id="reviewContent" placeholder="오늘 청소 어떠셨나요?" maxlength="500">${escapeHtml(initialContent)}</textarea>
+      <div class="review-label">후기 작성란 <span class="optional">(선택)</span></div>
+      <textarea class="review-textarea" id="reviewContent" placeholder="청소 받은 경험을 들려주세요" maxlength="500" oninput="updateReviewLength()">${escapeHtml(initialContent)}</textarea>
+      <div class="review-length-hint" id="reviewLengthHint"></div>
 
 
       <div class="consent-row" onclick="toggleConsent()">
         <div class="consent-checkbox ${reviewState.marketingConsent ? 'checked' : ''}" id="consentCheckbox"></div>
         <div>
-          <div class="consent-label">사장님 마케팅에 공개 동의 <span style="font-weight:500;color:#8A8E9A">(선택)</span></div>
+          <div class="consent-label">사장님 마케팅에 공개 동의 <span class="optional">(선택)</span></div>
           <div class="consent-sub">미니 홈페이지·SNS 콘텐츠에 활용될 수 있습니다</div>
         </div>
       </div>
@@ -1109,13 +1120,46 @@ function selectStar(n) {
   reviewState.rating = n;
   const stars = document.querySelectorAll('#starRating .star');
   stars.forEach((s, i) => s.classList.toggle('filled', i < n));
+  updateReviewLength();
+}
+
+// 후기 길이 + 별점 상태에 따라 버튼 텍스트·활성 상태 갱신
+function updateReviewLength() {
+  const content = (document.getElementById('reviewContent')?.value || '').trim();
+  const len = content.length;
+  const hint = document.getElementById('reviewLengthHint');
   const btn = document.getElementById('reviewSubmitBtn');
-  btn.disabled = !n;
-  // 별점 선택 시 버튼 텍스트도 동적 갱신
   const isEdit = editMode && !!existingReview;
-  btn.textContent = !n
-    ? '별점을 선택해주세요'
-    : (isEdit ? '수정하기 →' : '후기 남기기 →');
+
+  // 길이 안내 — 1~9자일 때만 안내 표시 (0자 또는 10자+ 는 OK)
+  if (hint) {
+    if (len === 0) {
+      hint.textContent = '';
+      hint.classList.remove('warn');
+    } else if (len < 10) {
+      hint.textContent = `최소 10자 이상 작성해주세요 (${len}/10)`;
+      hint.classList.add('warn');
+    } else {
+      hint.textContent = `${len}자`;
+      hint.classList.remove('warn');
+    }
+  }
+
+  // 등록 가능 조건: 별점 1+ AND (후기 비어있거나 10자 이상)
+  const ratingOk = reviewState.rating > 0;
+  const contentOk = len === 0 || len >= 10;
+  const canSubmit = ratingOk && contentOk;
+
+  if (btn) {
+    btn.disabled = !canSubmit;
+    if (!ratingOk) {
+      btn.textContent = '별점을 선택해주세요';
+    } else if (!contentOk) {
+      btn.textContent = '10자 이상 작성해주세요';
+    } else {
+      btn.textContent = isEdit ? '수정하기 →' : '후기 남기기 →';
+    }
+  }
 }
 
 function toggleReviewTag(el, tag) {
@@ -1135,6 +1179,12 @@ function toggleConsent() {
 
 async function submitReview() {
   if (!reviewState.rating) return;
+  const content = (document.getElementById('reviewContent')?.value || '').trim();
+  // 빈 후기는 OK, 작성했다면 10자 이상 (안전장치)
+  if (content.length > 0 && content.length < 10) {
+    alert('후기는 10자 이상 작성해주세요.');
+    return;
+  }
   const btn = document.getElementById('reviewSubmitBtn');
   btn.disabled = true;
   const originalText = btn.textContent;
@@ -1142,7 +1192,6 @@ async function submitReview() {
   btn.textContent = isEdit ? '수정 중...' : '등록 중...';
 
   try {
-    const content = (document.getElementById('reviewContent')?.value || '').trim();
 
     if (isEdit) {
       // === 수정 모드: UPDATE ===
