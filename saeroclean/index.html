@@ -69,13 +69,12 @@
       backdrop-filter: saturate(180%) blur(12px);
     }
     .nav-logo {
-      font-size: 19px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: #fff;
-      transition: color 0.3s;
+      height: 36px;
+      width: auto;
+      display: block;
+      transition: height 0.3s;
     }
-    .nav.scrolled .nav-logo { color: var(--ink); }
+    .nav.scrolled .nav-logo { height: 32px; }
     .nav-right { display: flex; align-items: center; gap: 28px; }
     .nav-links { display: flex; gap: 26px; }
     .nav-links a {
@@ -163,6 +162,23 @@
       font-weight: 400;
       color: rgba(255,255,255,0.78);
       letter-spacing: -0.01em;
+    }
+    .hero-brand {
+      margin-top: 34px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      color: #fff;
+    }
+    .hero-brand::before {
+      content: '';
+      width: 28px;
+      height: 1px;
+      background: rgba(255,255,255,0.45);
     }
     .scroll-cue {
       position: absolute;
@@ -483,14 +499,12 @@
       height: 38px;
       border-radius: 10px;
       background: #F1EFE8;
-      color: #233547;
-      font-size: 16px;
-      font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
+    .trust-logo img { width: 28px; height: 28px; display: block; }
     .trust-co-name { font-size: 15.5px; font-weight: 800; letter-spacing: -0.03em; color: #111; }
     .trust-co-meta { font-size: 11px; color: #999; font-weight: 500; margin-top: 2px; }
     .trust-stars { display: flex; align-items: center; gap: 9px; margin-top: 18px; }
@@ -755,7 +769,15 @@
 
     /* ─── 푸터 ─── */
     .footer { background: var(--ink); color: #fff; padding: 80px 0 40px; }
-    .footer-brand { font-size: 24px; font-weight: 900; letter-spacing: -0.04em; }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+    .footer-logo { width: 36px; height: 36px; display: block; }
     .footer-slogan {
       font-size: 13px;
       color: rgba(255,255,255,0.5);
@@ -811,17 +833,12 @@
       width: 36px;
       height: 36px;
       background: #fff;
-      color: var(--ink);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 9.5px;
-      font-weight: 900;
-      line-height: 1.08;
-      letter-spacing: -0.05em;
-      text-align: center;
     }
+    .fab-logo img { width: 23px; height: 23px; display: block; }
     .fab-text { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
 
     /* ─── 견적 위저드 모달 ─── */
@@ -989,7 +1006,7 @@
   </svg>
 
   <nav class="nav" id="nav">
-    <div class="nav-logo">새로클린</div>
+    <img class="nav-logo" src="logo_mark.png" alt="새로클린">
     <div class="nav-right">
       <div class="nav-links">
         <a href="#services">서비스</a>
@@ -1009,6 +1026,7 @@
       <div class="hero-eyebrow">Premium Cleaning</div>
       <h1>보이지 않는 곳까지<br>완벽하게.</h1>
       <p class="hero-sub">하루 한 집, 외주 없이 직접 시공하는 입주·이사 청소 전문</p>
+      <div class="hero-brand">새로클린</div>
     </div>
     <div class="scroll-cue">Scroll</div>
   </header>
@@ -1169,7 +1187,7 @@
           </div>
           <div class="trust-body">
             <div class="trust-company">
-              <div class="trust-logo">새</div>
+              <div class="trust-logo"><img src="logo_mark.png" alt=""></div>
               <div>
                 <div class="trust-co-name">새로클린</div>
                 <div class="trust-co-meta">입주청소 · 2026.04.10 · 마포구</div>
@@ -1210,7 +1228,7 @@
           </div>
           <div class="trust-body">
             <div class="trust-company">
-              <div class="trust-logo">새</div>
+              <div class="trust-logo"><img src="logo_mark.png" alt=""></div>
               <div>
                 <div class="trust-co-name">새로클린</div>
                 <div class="trust-co-meta">이사청소 · 2026.04.07 · 은평구</div>
@@ -1251,7 +1269,7 @@
           </div>
           <div class="trust-body">
             <div class="trust-company">
-              <div class="trust-logo">새</div>
+              <div class="trust-logo"><img src="logo_mark.png" alt=""></div>
               <div>
                 <div class="trust-co-name">새로클린</div>
                 <div class="trust-co-meta">입주청소 · 2026.04.03 · 서대문구</div>
@@ -1391,7 +1409,10 @@
   <!-- ═══ 푸터 ═══ -->
   <footer class="footer">
     <div class="wrap">
-      <div class="footer-brand">새로클린</div>
+      <div class="footer-brand">
+        <img src="logo_mark.png" alt="" class="footer-logo">
+        <span>새로클린</span>
+      </div>
       <div class="footer-slogan">하루 한 집, 외주 없이 직접 시공하는<br>입주·이사 청소 전문</div>
 
       <div class="footer-contact">
@@ -1410,7 +1431,7 @@
 
   <!-- ═══ 플로팅 견적 버튼 ═══ -->
   <button class="fab" id="fab" onclick="openQuote()">
-    <span class="fab-logo">새로<br>클린</span>
+    <span class="fab-logo"><img src="logo_mark.png" alt=""></span>
     <span class="fab-text">견적 문의하기</span>
   </button>
 
