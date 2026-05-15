@@ -318,25 +318,19 @@
       margin-bottom: 6px;
     }
     .service-tag {
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--gray-2);
       font-weight: 500;
-      margin-bottom: 26px;
     }
-    .service-price-cap {
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      color: var(--gray);
-      font-weight: 700;
-      text-transform: uppercase;
+    .service-incl {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--gray-2);
+      line-height: 1.65;
+      letter-spacing: -0.02em;
     }
-    .service-price {
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      margin-top: 4px;
-    }
-    .service-price span { font-size: 13px; font-weight: 600; color: var(--gray-2); }
     .service-note {
       margin-top: 32px;
       font-size: 12.5px;
@@ -386,60 +380,202 @@
       color: #fff;
     }
 
-    /* ─── 후기 ─── */
-    .reviews-head {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    .reviews-rating {
-      text-align: right;
-    }
-    .reviews-rating-stars { font-size: 15px; letter-spacing: 3px; color: var(--ink); }
-    .reviews-rating-text { font-size: 12px; color: var(--gray-2); font-weight: 600; margin-top: 4px; }
-    .review-grid {
+    /* ─── 인증 후기 ─── */
+    .verify-points {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 48px;
+      gap: 14px;
+      margin-top: 38px;
     }
-    .review {
+    .verify-point {
+      display: flex;
+      gap: 13px;
+      padding: 22px 20px;
+      background: var(--sand);
+    }
+    .verify-point-mark {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: #1A2A3A;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .verify-point h4 { font-size: 14px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 5px; }
+    .verify-point p { font-size: 12.5px; color: var(--gray-2); line-height: 1.62; }
+
+    /* 신뢰 디자인 인증 카드 */
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 44px;
+    }
+    .trust-card {
+      background: #1A2A3A;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 22px 50px rgba(15,15,15,0.16);
+    }
+    .trust-head { padding: 24px 22px 20px; }
+    .trust-verified {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .trust-seal {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #E8C46B;
+      color: #1A2A3A;
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .trust-verified-text {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: #fff;
+    }
+    .trust-head-main {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 5px;
+    }
+    .trust-head-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: -0.01em;
+      margin-bottom: 17px;
+    }
+    .trust-issuer {
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+    }
+    .trust-issuer strong { color: rgba(255,255,255,0.78); font-weight: 700; }
+    .trust-body {
       background: #fff;
-      border: 1px solid var(--line);
-      padding: 30px 26px;
+      border-radius: 16px 16px 0 0;
+      padding: 22px;
+      flex: 1;
       display: flex;
       flex-direction: column;
     }
-    .review-stars { font-size: 13px; letter-spacing: 3px; color: var(--ink); margin-bottom: 16px; }
-    .review-text {
-      font-size: 14.5px;
+    .trust-company { display: flex; align-items: center; gap: 12px; }
+    .trust-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #F1EFE8;
+      color: #233547;
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .trust-co-name { font-size: 15.5px; font-weight: 800; letter-spacing: -0.03em; color: #111; }
+    .trust-co-meta { font-size: 11px; color: #999; font-weight: 500; margin-top: 2px; }
+    .trust-stars { display: flex; align-items: center; gap: 9px; margin-top: 18px; }
+    .trust-star { font-size: 16px; color: #FFBB33; letter-spacing: 1px; }
+    .trust-rating {
+      font-size: 11px;
+      font-weight: 800;
+      color: #1A2A3A;
+      background: #F1EFE8;
+      padding: 4px 9px;
+      border-radius: 20px;
+    }
+    .trust-text {
+      font-size: 13.5px;
       font-weight: 500;
-      line-height: 1.7;
+      color: #111;
+      line-height: 1.72;
       letter-spacing: -0.02em;
-      color: var(--ink-2);
+      margin-top: 16px;
       flex: 1;
     }
-    .review-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 22px;
-      padding-top: 16px;
-      border-top: 1px solid var(--line);
+    .trust-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+    .trust-tag {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #1A2A3A;
+      background: #F1EFE8;
+      padding: 6px 11px;
+      border-radius: 20px;
     }
-    .review-author { font-size: 12.5px; font-weight: 700; }
-    .review-context { font-size: 11.5px; color: var(--gray); font-weight: 500; }
-    .reviews-more {
+    .trust-divider { height: 1px; background: #F0F0F0; margin: 16px 0; }
+    .trust-foot { display: flex; gap: 12px; align-items: flex-start; }
+    .trust-foot-info { flex: 1; min-width: 0; }
+    .trust-author {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #1A2A3A;
+      background: #F1EFE8;
+      padding: 6px 10px;
+      border-radius: 6px;
+      letter-spacing: -0.02em;
+    }
+    .trust-author-check { color: #C9A24B; font-weight: 900; }
+    .trust-cert {
       display: inline-block;
+      margin-top: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #233547;
+      background: #F1EFE8;
+      padding: 4px 9px;
+      border-radius: 5px;
+      font-family: 'Menlo', monospace;
+      letter-spacing: 0.05em;
+    }
+    .trust-url {
+      font-size: 9.5px;
+      color: #6B6B68;
+      font-family: 'Menlo', monospace;
+      margin-top: 8px;
+      word-break: break-all;
+    }
+    .trust-qr-hint { font-size: 9px; color: #AAA; margin-top: 5px; }
+    .trust-qr { width: 58px; height: 58px; flex-shrink: 0; }
+
+    .reviews-foot {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
       margin-top: 40px;
+    }
+    .reviews-foot-stars { font-size: 14px; color: #FFBB33; letter-spacing: 2px; }
+    .reviews-foot-text { font-size: 12.5px; color: var(--gray-2); font-weight: 600; }
+    .reviews-more {
       font-size: 13px;
       font-weight: 700;
       color: var(--ink);
       text-decoration: none;
       border-bottom: 1.5px solid var(--ink);
       padding-bottom: 3px;
+      margin-left: auto;
     }
 
     /* ─── 예약 ─── */
@@ -807,7 +943,8 @@
       .heading { font-size: 27px; }
       .stat { padding: 38px 10px; }
       .stat-num { font-size: 38px; }
-      .service-grid, .review-grid { grid-template-columns: 1fr; }
+      .service-grid { grid-template-columns: 1fr; }
+      .verify-points, .trust-grid { grid-template-columns: 1fr; }
       .booking-grid { grid-template-columns: 1fr; gap: 32px; }
       .promise-grid { grid-template-columns: 1fr; }
       .nav-links { display: none; }
@@ -827,6 +964,30 @@
 
   <div class="demo-bar">예시 페이지 — 실제 서비스 출시 전 디자인 미리보기입니다</div>
 
+  <!-- 인증 QR (신뢰 디자인 카드용) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="qr" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#fff"/>
+      <g fill="#1A2A3A">
+        <path fill-rule="evenodd" d="M6 6h26v26H6Z M11 11h16v16H11Z"/>
+        <rect x="13" y="13" width="12" height="12"/>
+        <path fill-rule="evenodd" d="M68 6h26v26H68Z M73 11h16v16H73Z"/>
+        <rect x="75" y="13" width="12" height="12"/>
+        <path fill-rule="evenodd" d="M6 68h26v26H6Z M11 73h16v16H11Z"/>
+        <rect x="13" y="75" width="12" height="12"/>
+        <rect x="38" y="8" width="6" height="6"/><rect x="50" y="8" width="6" height="6"/><rect x="62" y="8" width="6" height="6"/>
+        <rect x="44" y="16" width="6" height="6"/><rect x="56" y="16" width="6" height="6"/>
+        <rect x="38" y="24" width="6" height="6"/><rect x="52" y="24" width="6" height="6"/><rect x="62" y="24" width="6" height="6"/>
+        <rect x="8" y="40" width="6" height="6"/><rect x="20" y="40" width="6" height="6"/><rect x="34" y="40" width="6" height="6"/><rect x="46" y="40" width="6" height="6"/><rect x="58" y="40" width="6" height="6"/><rect x="70" y="40" width="6" height="6"/><rect x="84" y="40" width="6" height="6"/>
+        <rect x="14" y="50" width="6" height="6"/><rect x="28" y="50" width="6" height="6"/><rect x="52" y="50" width="6" height="6"/><rect x="66" y="50" width="6" height="6"/><rect x="80" y="50" width="6" height="6"/>
+        <rect x="8" y="60" width="6" height="6"/><rect x="22" y="60" width="6" height="6"/><rect x="40" y="60" width="6" height="6"/><rect x="54" y="60" width="6" height="6"/><rect x="72" y="60" width="6" height="6"/><rect x="86" y="60" width="6" height="6"/>
+        <rect x="40" y="70" width="6" height="6"/><rect x="54" y="70" width="6" height="6"/><rect x="68" y="70" width="6" height="6"/><rect x="82" y="70" width="6" height="6"/>
+        <rect x="46" y="80" width="6" height="6"/><rect x="62" y="80" width="6" height="6"/><rect x="76" y="80" width="6" height="6"/><rect x="88" y="80" width="6" height="6"/>
+        <rect x="40" y="88" width="6" height="6"/><rect x="54" y="88" width="6" height="6"/><rect x="70" y="88" width="6" height="6"/>
+      </g>
+    </symbol>
+  </svg>
+
   <nav class="nav" id="nav">
     <div class="nav-logo">새로클린</div>
     <div class="nav-right">
@@ -842,7 +1003,7 @@
   <!-- ═══ 히어로 ═══ -->
   <header class="hero">
     <video autoplay muted loop playsinline
-      src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/videos/hero_video2.mp4"></video>
+      src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/videos/hero_video3.mp4"></video>
     <div class="hero-overlay"></div>
     <div class="hero-inner">
       <div class="hero-eyebrow">Premium Cleaning</div>
@@ -926,24 +1087,21 @@
         <div class="service">
           <div class="service-name">입주청소</div>
           <div class="service-tag">새 집 입주 전 전체 청소</div>
-          <div class="service-price-cap">From</div>
-          <div class="service-price">15,000원 <span>/ 평</span></div>
+          <div class="service-incl">주방 · 욕실 · 거실 · 방 · 창틀 · 베란다 전 구역</div>
         </div>
         <div class="service">
           <div class="service-name">이사청소</div>
           <div class="service-tag">이사 전후 빈 집 청소</div>
-          <div class="service-price-cap">From</div>
-          <div class="service-price">13,000원 <span>/ 평</span></div>
+          <div class="service-incl">바닥 · 벽 · 수납장 내부 · 욕실 · 베란다 마무리</div>
         </div>
         <div class="service">
           <div class="service-name">거주청소</div>
           <div class="service-tag">생활 중인 집 전문 청소</div>
-          <div class="service-price-cap">From</div>
-          <div class="service-price">12,000원 <span>/ 평</span></div>
+          <div class="service-incl">주방·욕실 집중 · 생활 먼지 · 정리 정돈</div>
         </div>
       </div>
       <p class="service-note">
-        평수·옵션에 따라 금액이 달라질 수 있습니다. 정확한 견적은 전화 또는 예약 폼으로 안내드립니다.
+        평수와 옵션에 따라 견적이 달라집니다. 우측 하단 <strong>견적 문의하기</strong>로 무료 견적을 받아보세요.
       </p>
     </div>
   </section>
@@ -963,47 +1121,171 @@
     </div>
   </section>
 
-  <!-- ═══ 후기 ═══ -->
+  <!-- ═══ 인증 후기 ═══ -->
   <section class="section" id="reviews">
     <div class="wrap">
-      <div class="reviews-head">
-        <div>
-          <div class="eyebrow">Reviews</div>
-          <h2 class="heading">고객이 전하는 말</h2>
+      <div class="eyebrow">Verified Reviews</div>
+      <h2 class="heading">고객이 전하는 말</h2>
+      <p class="lead">
+        새로클린의 모든 후기는 <strong>클리닝매니저</strong>가 인증한 후기입니다.
+        청소가 실제로 완료된 뒤 서비스를 받은 고객 본인만 남길 수 있어,
+        광고용으로 만들어진 가짜 후기와는 다릅니다.
+      </p>
+
+      <div class="verify-points">
+        <div class="verify-point">
+          <div class="verify-point-mark">✓</div>
+          <div>
+            <h4>고객 본인만 작성</h4>
+            <p>실제 청소를 받은 고객이 본인 인증을 거친 뒤에만 후기를 남깁니다.</p>
+          </div>
         </div>
-        <div class="reviews-rating">
-          <div class="reviews-rating-stars">★★★★★</div>
-          <div class="reviews-rating-text">인증 후기 247건 · 평균 4.9</div>
+        <div class="verify-point">
+          <div class="verify-point-mark">✓</div>
+          <div>
+            <h4>위·변조 불가</h4>
+            <p>작성자·연락처·청소 내역이 시스템에 기록되어 수정할 수 없습니다.</p>
+          </div>
+        </div>
+        <div class="verify-point">
+          <div class="verify-point-mark">✓</div>
+          <div>
+            <h4>QR로 진위 확인</h4>
+            <p>후기마다 고유 인증번호와 QR이 발급돼 누구나 진짜임을 확인합니다.</p>
+          </div>
         </div>
       </div>
 
-      <div class="review-grid">
-        <div class="review">
-          <div class="review-stars">★★★★★</div>
-          <div class="review-text">너무 꼼꼼하시고 신뢰가 갑니다. 실시간으로 사진도 보내주시고 감동이에요.</div>
-          <div class="review-meta">
-            <span class="review-author">김○○ 고객님</span>
-            <span class="review-context">입주 34평</span>
+      <div class="trust-grid">
+        <article class="trust-card">
+          <div class="trust-head">
+            <div class="trust-verified">
+              <span class="trust-seal">✓</span>
+              <span class="trust-verified-text">VERIFIED REVIEW</span>
+            </div>
+            <div class="trust-head-main">실제 서비스 완료 후 수집된 후기</div>
+            <div class="trust-head-sub">시스템이 검증한 진짜 후기입니다</div>
+            <div class="trust-issuer">인증 발행 · <strong>클리닝매니저</strong></div>
           </div>
-        </div>
-        <div class="review">
-          <div class="review-stars">★★★★★</div>
-          <div class="review-text">이사 가는 집 청소 맡겼는데 전후 사진 다 보내주시고, 하자 체크까지 꼼꼼하게 해주셨어요.</div>
-          <div class="review-meta">
-            <span class="review-author">정○○ 고객님</span>
-            <span class="review-context">이사 28평</span>
+          <div class="trust-body">
+            <div class="trust-company">
+              <div class="trust-logo">새</div>
+              <div>
+                <div class="trust-co-name">새로클린</div>
+                <div class="trust-co-meta">입주청소 · 2026.04.10 · 마포구</div>
+              </div>
+            </div>
+            <div class="trust-stars">
+              <span class="trust-star">★★★★★</span>
+              <span class="trust-rating">5.0</span>
+            </div>
+            <p class="trust-text">꼼꼼하게 작업해주시고 실시간으로 사진도 보내주셔서 믿음이 갔어요. 새 집이 한층 더 깨끗해진 것 같아 만족스럽습니다.</p>
+            <div class="trust-tags">
+              <span class="trust-tag">🔍 꼼꼼함</span>
+              <span class="trust-tag">📱 실시간 리포트</span>
+              <span class="trust-tag">✨ 깔끔한 마무리</span>
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-foot">
+              <div class="trust-foot-info">
+                <div class="trust-author"><span class="trust-author-check">✓</span> 김○○ 010-****-**12 · 본인작성</div>
+                <div class="trust-cert">#A1B2C3</div>
+                <div class="trust-url">cleaningmanager.kr/verify/A1B2C3</div>
+                <div class="trust-qr-hint">카메라로 QR을 찍어 진위 확인</div>
+              </div>
+              <svg class="trust-qr"><use href="#qr"/></svg>
+            </div>
           </div>
-        </div>
-        <div class="review">
-          <div class="review-stars">★★★★★</div>
-          <div class="review-text">친환경 세제 쓰신다고 해서 맡겼는데 정말 만족해요. 아이 있는 집이라 더 안심됐어요.</div>
-          <div class="review-meta">
-            <span class="review-author">박○○ 고객님</span>
-            <span class="review-context">입주 42평</span>
+        </article>
+
+        <article class="trust-card">
+          <div class="trust-head">
+            <div class="trust-verified">
+              <span class="trust-seal">✓</span>
+              <span class="trust-verified-text">VERIFIED REVIEW</span>
+            </div>
+            <div class="trust-head-main">실제 서비스 완료 후 수집된 후기</div>
+            <div class="trust-head-sub">시스템이 검증한 진짜 후기입니다</div>
+            <div class="trust-issuer">인증 발행 · <strong>클리닝매니저</strong></div>
           </div>
-        </div>
+          <div class="trust-body">
+            <div class="trust-company">
+              <div class="trust-logo">새</div>
+              <div>
+                <div class="trust-co-name">새로클린</div>
+                <div class="trust-co-meta">이사청소 · 2026.04.07 · 은평구</div>
+              </div>
+            </div>
+            <div class="trust-stars">
+              <span class="trust-star">★★★★★</span>
+              <span class="trust-rating">5.0</span>
+            </div>
+            <p class="trust-text">이사 가는 집 청소를 맡겼는데 전후 사진에 하자 체크까지 꼼꼼하게 해주셨어요. 다음에도 꼭 부탁드릴게요.</p>
+            <div class="trust-tags">
+              <span class="trust-tag">🔍 꼼꼼함</span>
+              <span class="trust-tag">😊 친절함</span>
+              <span class="trust-tag">⏰ 시간 엄수</span>
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-foot">
+              <div class="trust-foot-info">
+                <div class="trust-author"><span class="trust-author-check">✓</span> 정○○ 010-****-**45 · 본인작성</div>
+                <div class="trust-cert">#D4E5F6</div>
+                <div class="trust-url">cleaningmanager.kr/verify/D4E5F6</div>
+                <div class="trust-qr-hint">카메라로 QR을 찍어 진위 확인</div>
+              </div>
+              <svg class="trust-qr"><use href="#qr"/></svg>
+            </div>
+          </div>
+        </article>
+
+        <article class="trust-card">
+          <div class="trust-head">
+            <div class="trust-verified">
+              <span class="trust-seal">✓</span>
+              <span class="trust-verified-text">VERIFIED REVIEW</span>
+            </div>
+            <div class="trust-head-main">실제 서비스 완료 후 수집된 후기</div>
+            <div class="trust-head-sub">시스템이 검증한 진짜 후기입니다</div>
+            <div class="trust-issuer">인증 발행 · <strong>클리닝매니저</strong></div>
+          </div>
+          <div class="trust-body">
+            <div class="trust-company">
+              <div class="trust-logo">새</div>
+              <div>
+                <div class="trust-co-name">새로클린</div>
+                <div class="trust-co-meta">입주청소 · 2026.04.03 · 서대문구</div>
+              </div>
+            </div>
+            <div class="trust-stars">
+              <span class="trust-star">★★★★★</span>
+              <span class="trust-rating">5.0</span>
+            </div>
+            <p class="trust-text">친환경 세제를 쓰신다고 해서 맡겼는데 정말 만족스러워요. 아이가 있는 집이라 더 안심이 됐습니다.</p>
+            <div class="trust-tags">
+              <span class="trust-tag">🌱 친환경 자재</span>
+              <span class="trust-tag">😊 친절함</span>
+              <span class="trust-tag">🔁 재예약 의사</span>
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-foot">
+              <div class="trust-foot-info">
+                <div class="trust-author"><span class="trust-author-check">✓</span> 박○○ 010-****-**88 · 본인작성</div>
+                <div class="trust-cert">#G7H8J9</div>
+                <div class="trust-url">cleaningmanager.kr/verify/G7H8J9</div>
+                <div class="trust-qr-hint">카메라로 QR을 찍어 진위 확인</div>
+              </div>
+              <svg class="trust-qr"><use href="#qr"/></svg>
+            </div>
+          </div>
+        </article>
       </div>
-      <a href="#" class="reviews-more" onclick="return false;">후기 244건 더 보기 →</a>
+
+      <div class="reviews-foot">
+        <span class="reviews-foot-stars">★★★★★</span>
+        <span class="reviews-foot-text">인증 후기 247건 · 평균 4.9</span>
+        <a href="#" class="reviews-more" onclick="return false;">후기 더 보기 →</a>
+      </div>
     </div>
   </section>
 
