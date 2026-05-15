@@ -163,23 +163,6 @@
       font-weight: 400;
       color: rgba(255,255,255,0.78);
       letter-spacing: -0.01em;
-      margin-bottom: 38px;
-    }
-    .hero-btn {
-      display: inline-block;
-      background: #fff;
-      color: var(--ink);
-      font-size: 15px;
-      font-weight: 700;
-      padding: 16px 34px;
-      border-radius: 50px;
-      text-decoration: none;
-      letter-spacing: -0.01em;
-      transition: transform 0.25s, box-shadow 0.25s;
-    }
-    .hero-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 34px rgba(0,0,0,0.35);
     }
     .scroll-cue {
       position: absolute;
@@ -665,6 +648,159 @@
       color: rgba(255,255,255,0.35);
     }
 
+    /* ─── 플로팅 견적 버튼 ─── */
+    .fab {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 55;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      padding: 10px 22px 10px 11px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 10px 30px rgba(15,15,15,0.34);
+      transition: transform 0.22s, box-shadow 0.22s;
+    }
+    .fab:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(15,15,15,0.44);
+    }
+    .fab-logo {
+      width: 36px;
+      height: 36px;
+      background: #fff;
+      color: var(--ink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9.5px;
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+      text-align: center;
+    }
+    .fab-text { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
+
+    /* ─── 견적 위저드 모달 ─── */
+    .quote-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15,15,15,0.58);
+      padding: 20px;
+    }
+    .quote-modal.open { display: flex; }
+    .quote-panel {
+      background: #fff;
+      width: min(460px, 100%);
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 6px;
+      overflow: hidden;
+      animation: panelIn 0.3s ease both;
+    }
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
+    }
+    .quote-top {
+      position: relative;
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .quote-close {
+      position: absolute;
+      top: 15px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 17px;
+      color: var(--gray-2);
+      cursor: pointer;
+      line-height: 1;
+    }
+    .quote-step-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      font-weight: 800;
+      color: var(--gray);
+      text-transform: uppercase;
+      margin-bottom: 11px;
+    }
+    .quote-progress {
+      height: 3px;
+      background: var(--line);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .quote-progress-bar {
+      height: 100%;
+      width: 33%;
+      background: var(--ink);
+      transition: width 0.35s ease;
+    }
+    .quote-body { padding: 26px 24px; overflow-y: auto; flex: 1; }
+    .quote-q {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.36;
+      margin-bottom: 22px;
+    }
+    .quote-options { display: flex; flex-direction: column; gap: 10px; }
+    .quote-opt {
+      border: 1.5px solid var(--line);
+      padding: 17px 18px;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s;
+    }
+    .quote-opt:hover { border-color: var(--gray); }
+    .quote-opt.selected { border-color: var(--ink); background: var(--sand); }
+    .quote-opt-name { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
+    .quote-opt-desc { font-size: 12px; color: var(--gray-2); margin-top: 3px; }
+    .quote-foot {
+      display: flex;
+      gap: 10px;
+      padding: 16px 20px;
+      border-top: 1px solid var(--line);
+    }
+    .quote-back, .quote-next {
+      padding: 14px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--ink);
+    }
+    .quote-back { flex: 0 0 92px; background: #fff; color: var(--ink); }
+    .quote-back:disabled { opacity: 0.3; cursor: default; }
+    .quote-next { flex: 1; background: var(--ink); color: #fff; }
+    .quote-done-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      font-size: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 4px auto 20px;
+    }
+
     @media (max-width: 860px) {
       .section { padding: 76px 0; }
       .hero h1 { font-size: 38px; }
@@ -681,6 +817,9 @@
       .hero h1 { font-size: 32px; }
       .wrap { padding: 0 18px; }
       .field-row, .checks { grid-template-columns: 1fr; }
+      .fab { bottom: 16px; right: 16px; padding: 9px 18px 9px 10px; }
+      .fab-logo { width: 32px; height: 32px; }
+      .fab-text { font-size: 13px; }
     }
   </style>
 </head>
@@ -696,7 +835,7 @@
         <a href="#reviews">후기</a>
         <a href="#booking">예약</a>
       </div>
-      <a href="#booking" class="nav-cta">무료 견적 받기</a>
+      <a href="#" class="nav-cta" onclick="openQuote();return false;">견적 문의하기</a>
     </div>
   </nav>
 
@@ -709,7 +848,6 @@
       <div class="hero-eyebrow">Premium Cleaning</div>
       <h1>보이지 않는 곳까지<br>완벽하게.</h1>
       <p class="hero-sub">하루 한 집, 외주 없이 직접 시공하는 입주·이사 청소 전문</p>
-      <a href="#booking" class="hero-btn">무료 견적 받기</a>
     </div>
     <div class="scroll-cue">Scroll</div>
   </header>
@@ -988,7 +1126,143 @@
     </div>
   </footer>
 
+  <!-- ═══ 플로팅 견적 버튼 ═══ -->
+  <button class="fab" id="fab" onclick="openQuote()">
+    <span class="fab-logo">새로<br>클린</span>
+    <span class="fab-text">견적 문의하기</span>
+  </button>
+
+  <!-- ═══ 견적 위저드 모달 ═══ -->
+  <div class="quote-modal" id="quote-modal" onclick="if(event.target===this)closeQuote()">
+    <div class="quote-panel">
+      <div class="quote-top">
+        <button class="quote-close" onclick="closeQuote()">✕</button>
+        <div class="quote-step-label" id="quote-step-label">Step 1 / 3</div>
+        <div class="quote-progress"><div class="quote-progress-bar" id="quote-progress-bar"></div></div>
+      </div>
+
+      <div class="quote-body">
+        <!-- 1단계: 서비스 종류 -->
+        <div class="quote-step" id="quote-step-1" data-step="1">
+          <div class="quote-q">어떤 청소가 필요하세요?</div>
+          <div class="quote-options">
+            <div class="quote-opt" onclick="selectService(this,'입주청소')">
+              <div class="quote-opt-name">입주청소</div>
+              <div class="quote-opt-desc">새 집 입주 전 전체 청소</div>
+            </div>
+            <div class="quote-opt" onclick="selectService(this,'이사청소')">
+              <div class="quote-opt-name">이사청소</div>
+              <div class="quote-opt-desc">이사 전후 빈 집 청소</div>
+            </div>
+            <div class="quote-opt" onclick="selectService(this,'거주청소')">
+              <div class="quote-opt-name">거주청소</div>
+              <div class="quote-opt-desc">생활 중인 집 전문 청소</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2단계: 평수 · 희망 날짜 -->
+        <div class="quote-step" id="quote-step-2" data-step="2" style="display:none;">
+          <div class="quote-q">평수와 희망 날짜를<br>알려주세요</div>
+          <div class="field">
+            <label class="field-label">평수 <span class="req">*</span></label>
+            <input type="text" id="q-size" class="input" placeholder="예: 34평">
+          </div>
+          <div class="field">
+            <label class="field-label">희망 날짜</label>
+            <input type="date" id="q-date" class="input">
+            <div style="font-size:11px;color:var(--gray);margin-top:7px;">날짜가 미정이면 비워두셔도 됩니다.</div>
+          </div>
+        </div>
+
+        <!-- 3단계: 연락처 -->
+        <div class="quote-step" id="quote-step-3" data-step="3" style="display:none;">
+          <div class="quote-q">어디로 견적을<br>보내드릴까요?</div>
+          <div class="field">
+            <label class="field-label">성함 <span class="req">*</span></label>
+            <input type="text" id="q-name" class="input" placeholder="홍길동">
+          </div>
+          <div class="field">
+            <label class="field-label">연락처 <span class="req">*</span></label>
+            <input type="text" id="q-phone" class="input" placeholder="010-1234-5678">
+          </div>
+          <div style="font-size:12.5px;color:var(--gray-2);line-height:1.7;margin-top:6px;">
+            입력하신 연락처로 사장님이 직접 견적을 안내드립니다.
+          </div>
+        </div>
+
+        <!-- 완료 -->
+        <div class="quote-step" id="quote-done" data-step="done" style="display:none;text-align:center;padding:14px 0;">
+          <div class="quote-done-icon">✓</div>
+          <div style="font-size:19px;font-weight:900;letter-spacing:-0.03em;margin-bottom:10px;">견적 문의가 접수되었습니다</div>
+          <div style="font-size:13px;color:var(--gray-2);line-height:1.75;margin-bottom:26px;">입력하신 연락처로 사장님이<br>직접 견적을 안내드립니다.</div>
+          <button class="quote-next" style="width:100%;" onclick="closeQuote()">확인</button>
+        </div>
+      </div>
+
+      <div class="quote-foot" id="quote-foot">
+        <button class="quote-back" id="quote-back" onclick="quotePrev()">이전</button>
+        <button class="quote-next" id="quote-next" onclick="quoteNext()">다음</button>
+      </div>
+    </div>
+  </div>
+
 <script>
+// ── 견적 위저드 ──
+var quoteStep = 1;
+var quoteData = { service: '' };
+
+function openQuote() {
+  document.getElementById('quote-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('fab').style.display = 'none';
+  showQuoteStep(1);
+}
+function closeQuote() {
+  document.getElementById('quote-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('fab').style.display = 'flex';
+}
+function showQuoteStep(s) {
+  quoteStep = s;
+  [1,2,3].forEach(function(n) {
+    document.getElementById('quote-step-' + n).style.display = (n===s) ? 'block' : 'none';
+  });
+  document.getElementById('quote-done').style.display = 'none';
+  document.getElementById('quote-foot').style.display = 'flex';
+  document.getElementById('quote-step-label').textContent = 'Step ' + s + ' / 3';
+  document.getElementById('quote-progress-bar').style.width = (s * 33.34) + '%';
+  document.getElementById('quote-back').disabled = (s === 1);
+  document.getElementById('quote-next').textContent = (s === 3) ? '견적 문의 보내기' : '다음';
+}
+function selectService(el, val) {
+  var opts = document.querySelectorAll('#quote-step-1 .quote-opt');
+  for (var i=0; i<opts.length; i++) opts[i].classList.remove('selected');
+  el.classList.add('selected');
+  quoteData.service = val;
+}
+function quoteNext() {
+  if (quoteStep === 1) {
+    if (!quoteData.service) { alert('청소 종류를 선택해주세요'); return; }
+    showQuoteStep(2);
+  } else if (quoteStep === 2) {
+    if (!document.getElementById('q-size').value.trim()) { alert('평수를 입력해주세요'); return; }
+    showQuoteStep(3);
+  } else if (quoteStep === 3) {
+    var n = document.getElementById('q-name').value.trim();
+    var p = document.getElementById('q-phone').value.trim();
+    if (!n || !p) { alert('성함과 연락처를 입력해주세요'); return; }
+    [1,2,3].forEach(function(x) { document.getElementById('quote-step-' + x).style.display = 'none'; });
+    document.getElementById('quote-done').style.display = 'block';
+    document.getElementById('quote-foot').style.display = 'none';
+    document.getElementById('quote-step-label').textContent = '완료';
+    document.getElementById('quote-progress-bar').style.width = '100%';
+  }
+}
+function quotePrev() {
+  if (quoteStep > 1) showQuoteStep(quoteStep - 1);
+}
+
 // ── 네비게이션 스크롤 ──
 var nav = document.getElementById('nav');
 window.addEventListener('scroll', function() {
