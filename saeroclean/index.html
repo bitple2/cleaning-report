@@ -279,6 +279,56 @@
       font-weight: 400;
     }
 
+    /* 스크롤 리빌 */
+    .js-reveal .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .js-reveal .reveal.in { opacity: 1; transform: none; }
+
+    /* About 강조 + 대표 약속 */
+    .about-em { position: relative; display: inline-block; }
+    .about-em::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 4px;
+      background: var(--ink);
+      transform-origin: left;
+    }
+    .js-reveal .about-em::after {
+      transform: scaleX(0);
+      transition: transform 0.75s 0.45s cubic-bezier(0.2,0.7,0.2,1);
+    }
+    .js-reveal .heading.in .about-em::after { transform: scaleX(1); }
+    .about-pledge {
+      margin-top: 40px;
+      max-width: 600px;
+      padding: 26px 30px;
+      background: var(--sand);
+      border-left: 3px solid var(--ink);
+    }
+    .about-pledge-quote {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+    .about-pledge-sign {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-2);
+    }
+    .about-pledge-rule { width: 26px; height: 1px; background: var(--gray); }
+
     .report-link {
       display: flex;
       align-items: center;
@@ -290,12 +340,27 @@
       color: #fff;
       text-decoration: none;
       border-radius: 4px;
-      transition: transform 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .report-link:hover { transform: translateY(-2px); }
+    .report-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(15,15,15,0.22);
+    }
+    .report-link-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      background: #fff;
+      padding: 4px 9px;
+      border-radius: 3px;
+      margin-bottom: 9px;
+    }
     .report-link-title { font-size: 14px; font-weight: 700; letter-spacing: -0.02em; }
     .report-link-desc { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
-    .report-link-arrow { font-size: 18px; color: #fff; }
+    .report-link-arrow { font-size: 18px; color: #fff; transition: transform 0.22s; }
+    .report-link:hover .report-link-arrow { transform: translateX(5px); }
 
     /* ─── 서비스 ─── */
     .service-grid {
@@ -1041,13 +1106,16 @@
   <!-- ═══ 소개 / 약속 ═══ -->
   <section class="section" id="about">
     <div class="wrap">
-      <div class="eyebrow">About</div>
-      <h2 class="heading">외주 없이,<br>우리가 직접 합니다.</h2>
-      <p class="lead">
-        하루에 한 집만 맡습니다. 서두르지 않고, 보이지 않는 곳까지
-        꼼꼼하게. 작업하는 사람이 곧 책임지는 사람입니다.
-        청소가 진행되는 동안 구역별 사진을 실시간으로 보내드립니다.
+      <div class="eyebrow reveal">About</div>
+      <h2 class="heading reveal">외주 없이,<br><span class="about-em">우리가 직접</span> 합니다.</h2>
+      <p class="lead reveal">
+        하루에 한 집만 맡습니다. 서두르지 않고 보이지 않는 곳까지 꼼꼼하게,
+        작업하는 사람이 곧 책임지는 사람입니다.
       </p>
+      <div class="about-pledge reveal">
+        <div class="about-pledge-quote">"맡겨주신 집, 대표가 직접 끝까지 책임지겠습니다."</div>
+        <div class="about-pledge-sign"><span class="about-pledge-rule"></span>클린시온 대표 드림</div>
+      </div>
 
       <div class="promise-grid">
         <div class="promise">
@@ -1074,8 +1142,9 @@
 
       <a href="https://cleaningmanager.kr/?id=e6029117-dcca-4d25-948c-32a3c73b6962" target="_blank" class="report-link">
         <div>
-          <div class="report-link-title">실제 청소 리포트 예시 보기</div>
-          <div class="report-link-desc">입주청소 42평 · 구역별 전·후 사진</div>
+          <span class="report-link-badge">실제 전달 리포트</span>
+          <div class="report-link-title">클린시온이 고객에게 보낸 작업 리포트</div>
+          <div class="report-link-desc">입주청소 42평 · 구역별 전·후 사진 전체 공개</div>
         </div>
         <span class="report-link-arrow">→</span>
       </a>
@@ -1599,6 +1668,25 @@ window.addEventListener('scroll', function() {
     });
   }, { threshold: 0.4 });
   obs.observe(stats);
+})();
+
+// ── 스크롤 리빌 ──
+(function() {
+  if (!('IntersectionObserver' in window)) return;
+  document.documentElement.classList.add('js-reveal');
+  var items = document.querySelectorAll('.reveal');
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(en) {
+      if (en.isIntersecting) {
+        en.target.classList.add('in');
+        obs.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.18 });
+  items.forEach(function(el, i) {
+    el.style.transitionDelay = (i * 0.09) + 's';
+    obs.observe(el);
+  });
 })();
 
 // ── 캘린더 ──
