@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>새로클린 — 입주·이사 청소 전문</title>
-  <meta name="description" content="하루 한 집, 외주 없이 직접 작업하는 프리미엄 입주·이사 청소 전문 새로클린.">
+  <title>클린시온 — 입주·이사 청소 전문</title>
+  <meta name="description" content="하루 한집, 대표가 직접 작업하는 프리미엄 입주·이사 청소 전문 클린시온.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -88,20 +88,6 @@
     .nav.scrolled .nav-links a { color: var(--gray-2); }
     .nav-links a:hover { color: #fff; }
     .nav.scrolled .nav-links a:hover { color: var(--ink); }
-    .nav-cta {
-      font-size: 13px;
-      font-weight: 700;
-      padding: 9px 18px;
-      border-radius: 50px;
-      background: #fff;
-      color: var(--ink);
-      text-decoration: none;
-      letter-spacing: -0.01em;
-      transition: all 0.25s;
-      border: 1px solid transparent;
-    }
-    .nav.scrolled .nav-cta { background: var(--ink); color: #fff; }
-    .nav-cta:hover { opacity: 0.85; }
 
     /* ─── 히어로 ─── */
     .hero {
@@ -163,6 +149,7 @@
       color: rgba(255,255,255,0.78);
       letter-spacing: -0.01em;
     }
+    .br-m { display: none; }
     .hero-brand {
       margin-top: 34px;
       display: inline-flex;
@@ -957,6 +944,7 @@
     @media (max-width: 860px) {
       .section { padding: 76px 0; }
       .hero h1 { font-size: 38px; }
+      .br-m { display: inline; }
       .heading { font-size: 27px; }
       .stat { padding: 38px 10px; }
       .stat-num { font-size: 38px; }
@@ -1006,14 +994,13 @@
   </svg>
 
   <nav class="nav" id="nav">
-    <img class="nav-logo" src="logo_mark.png" alt="새로클린">
+    <img class="nav-logo" src="logo_mark.png" alt="클린시온">
     <div class="nav-right">
       <div class="nav-links">
         <a href="#services">서비스</a>
         <a href="#reviews">후기</a>
         <a href="#booking">예약</a>
       </div>
-      <a href="#" class="nav-cta" onclick="openQuote();return false;">견적 문의하기</a>
     </div>
   </nav>
 
@@ -1025,8 +1012,8 @@
     <div class="hero-inner">
       <div class="hero-eyebrow">Premium Cleaning</div>
       <h1>보이지 않는 곳까지<br>완벽하게.</h1>
-      <p class="hero-sub">하루 한 집, 외주 없이 직접 작업하는 입주·이사 청소 전문</p>
-      <div class="hero-brand">새로클린</div>
+      <p class="hero-sub">하루 한집, <br class="br-m">대표가 직접 작업하는 입주·이사 청소 전문</p>
+      <div class="hero-brand">클린시온</div>
     </div>
     <div class="scroll-cue">Scroll</div>
   </header>
@@ -1145,7 +1132,7 @@
       <div class="eyebrow">Verified Reviews</div>
       <h2 class="heading">고객이 전하는 말</h2>
       <p class="lead">
-        새로클린의 모든 후기는 <strong>클리닝매니저</strong>가 인증한 후기입니다.
+        클린시온의 모든 후기는 <strong>클리닝매니저</strong>가 인증한 후기입니다.
         청소가 실제로 완료된 뒤 서비스를 받은 고객 본인만 남길 수 있어,
         광고용으로 만들어진 가짜 후기와는 다릅니다.
       </p>
@@ -1189,7 +1176,7 @@
             <div class="trust-company">
               <div class="trust-logo"><img src="logo_mark.png" alt=""></div>
               <div>
-                <div class="trust-co-name">새로클린</div>
+                <div class="trust-co-name">클린시온</div>
                 <div class="trust-co-meta">입주청소 · 2026.04.10 · 마포구</div>
               </div>
             </div>
@@ -1230,7 +1217,7 @@
             <div class="trust-company">
               <div class="trust-logo"><img src="logo_mark.png" alt=""></div>
               <div>
-                <div class="trust-co-name">새로클린</div>
+                <div class="trust-co-name">클린시온</div>
                 <div class="trust-co-meta">이사청소 · 2026.04.07 · 은평구</div>
               </div>
             </div>
@@ -1271,7 +1258,7 @@
             <div class="trust-company">
               <div class="trust-logo"><img src="logo_mark.png" alt=""></div>
               <div>
-                <div class="trust-co-name">새로클린</div>
+                <div class="trust-co-name">클린시온</div>
                 <div class="trust-co-meta">입주청소 · 2026.04.03 · 서대문구</div>
               </div>
             </div>
@@ -1411,19 +1398,19 @@
     <div class="wrap">
       <div class="footer-brand">
         <img src="logo_mark.png" alt="" class="footer-logo">
-        <span>새로클린</span>
+        <span>클린시온</span>
       </div>
-      <div class="footer-slogan">하루 한 집, 외주 없이 직접 작업하는<br>입주·이사 청소 전문</div>
+      <div class="footer-slogan">하루 한집, 대표가 직접 작업하는<br>입주·이사 청소 전문</div>
 
       <div class="footer-contact">
         <div class="footer-row"><span class="footer-row-label">전화 문의</span><span class="footer-row-value">010-9876-5432</span></div>
-        <div class="footer-row"><span class="footer-row-label">카카오톡</span><span class="footer-row-value">@새로클린</span></div>
+        <div class="footer-row"><span class="footer-row-label">카카오톡</span><span class="footer-row-value">@클린시온</span></div>
         <div class="footer-row"><span class="footer-row-label">서비스 지역</span><span class="footer-row-value">서울 서부 · 경기 서부</span></div>
         <div class="footer-row"><span class="footer-row-label">사업자등록번호</span><span class="footer-row-value">123-45-67890</span></div>
       </div>
 
       <div class="footer-bottom">
-        <span>© 2026 새로클린. All rights reserved.</span>
+        <span>© 2026 클린시온. All rights reserved.</span>
         <span>예시 페이지 · 출시 전 디자인 미리보기</span>
       </div>
     </div>
