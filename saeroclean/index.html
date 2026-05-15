@@ -635,18 +635,68 @@
     .trust-qr-hint { font-size: 9px; color: #AAA; margin-top: 5px; }
     .trust-qr { width: 58px; height: 58px; flex-shrink: 0; }
 
-    .review-image-wrap {
+    .review-slider { position: relative; margin-top: 40px; }
+    .review-track {
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      padding: 28px 0;
+    }
+    .review-track::-webkit-scrollbar { display: none; }
+    .review-slide {
+      flex: 0 0 auto;
+      width: min(420px, 84vw);
+      scroll-snap-align: start;
       display: flex;
       justify-content: center;
-      margin-top: 44px;
     }
     .review-image {
       width: 100%;
-      max-width: 420px;
       height: auto;
       border-radius: 14px;
-      filter: drop-shadow(0 22px 48px rgba(15,15,15,0.22));
+      filter: drop-shadow(0 16px 34px rgba(15,15,15,0.20));
     }
+    .review-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(15,15,15,0.14);
+      transition: transform 0.18s;
+    }
+    .review-arrow:hover { transform: translateY(-50%) scale(1.08); }
+    .review-arrow-prev { left: -8px; }
+    .review-arrow-next { right: -8px; }
+    .review-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .review-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--line);
+      cursor: pointer;
+      transition: background 0.2s, width 0.2s;
+    }
+    .review-dot.active { width: 22px; border-radius: 5px; background: var(--ink); }
 
     .reviews-foot {
       display: flex;
@@ -1037,6 +1087,7 @@
       .booking-grid { grid-template-columns: 1fr; gap: 32px; }
       .promise-grid { grid-template-columns: 1fr; }
       .nav-links { display: none; }
+      .review-arrow { display: none; }
       .gallery-item { width: 200px; height: 250px; }
     }
     @media (max-width: 480px) {
@@ -1249,8 +1300,19 @@
         </div>
       </div>
 
-      <div class="review-image-wrap">
-        <img src="review_2B9J.png" alt="클린시온 인증 후기 카드" class="review-image">
+      <div class="review-slider">
+        <button class="review-arrow review-arrow-prev" aria-label="이전 후기" onclick="reviewSlide(-1)">‹</button>
+        <div class="review-track" id="review-track">
+          <div class="review-slide"><img src="review_2B9J.png" alt="클린시온 인증 후기 카드" class="review-image"></div>
+          <div class="review-slide"><img src="review_2B9J.png" alt="클린시온 인증 후기 카드" class="review-image"></div>
+          <div class="review-slide"><img src="review_2B9J.png" alt="클린시온 인증 후기 카드" class="review-image"></div>
+        </div>
+        <button class="review-arrow review-arrow-next" aria-label="다음 후기" onclick="reviewSlide(1)">›</button>
+      </div>
+      <div class="review-dots" id="review-dots">
+        <span class="review-dot active"></span>
+        <span class="review-dot"></span>
+        <span class="review-dot"></span>
       </div>
 
       <div class="reviews-foot">
@@ -1583,6 +1645,39 @@ window.addEventListener('scroll', function() {
   items.forEach(function(el, i) {
     el.style.transitionDelay = (i * 0.09) + 's';
     obs.observe(el);
+  });
+})();
+
+// ── 후기 슬라이더 ──
+(function() {
+  var track = document.getElementById('review-track');
+  if (!track) return;
+  var slides = track.children;
+  var dots = document.querySelectorAll('#review-dots .review-dot');
+  var idx = 0;
+  function update() {
+    for (var d = 0; d < dots.length; d++) dots[d].classList.toggle('active', d === idx);
+  }
+  function go(i) {
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    track.scrollTo({ left: slides[idx].offsetLeft, behavior: 'smooth' });
+    update();
+  }
+  window.reviewSlide = function(dir) { go(idx + dir); };
+  for (var i = 0; i < dots.length; i++) {
+    (function(n) { dots[n].addEventListener('click', function() { go(n); }); })(i);
+  }
+  var t;
+  track.addEventListener('scroll', function() {
+    clearTimeout(t);
+    t = setTimeout(function() {
+      var near = 0, best = 1e9;
+      for (var i = 0; i < slides.length; i++) {
+        var d = Math.abs(slides[i].offsetLeft - track.scrollLeft);
+        if (d < best) { best = d; near = i; }
+      }
+      idx = near; update();
+    }, 90);
   });
 })();
 
