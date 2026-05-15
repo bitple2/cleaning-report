@@ -1036,15 +1036,15 @@
     <div class="wrap">
       <div class="stats">
         <div class="stat">
-          <div class="stat-num">347</div>
+          <div class="stat-num" data-target="347">347</div>
           <div class="stat-label">누적 작업</div>
         </div>
         <div class="stat">
-          <div class="stat-num">4.9</div>
+          <div class="stat-num" data-target="4.9" data-decimals="1">4.9</div>
           <div class="stat-label">평균 만족도</div>
         </div>
         <div class="stat">
-          <div class="stat-num">100%</div>
+          <div class="stat-num" data-target="100" data-suffix="%">100%</div>
           <div class="stat-label">직접 작업</div>
         </div>
       </div>
@@ -1572,6 +1572,47 @@ window.addEventListener('scroll', function() {
   if (window.scrollY > 60) nav.classList.add('scrolled');
   else nav.classList.remove('scrolled');
 });
+
+// ── 지표 카운트업 ──
+(function() {
+  var stats = document.querySelector('.stats');
+  if (!stats || !('IntersectionObserver' in window)) return;
+  var nums = stats.querySelectorAll('.stat-num');
+  nums.forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(12px)';
+    el.dataset.decimals = el.dataset.decimals || '0';
+  });
+  function run(el, delay) {
+    setTimeout(function() {
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      var target = parseFloat(el.dataset.target);
+      var dec = parseInt(el.dataset.decimals, 10);
+      var suffix = el.dataset.suffix || '';
+      var dur = 1500, t0 = null;
+      function tick(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / dur, 1);
+        var e = 1 - Math.pow(1 - p, 3);
+        el.textContent = (target * e).toFixed(dec) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = target.toFixed(dec) + suffix;
+      }
+      requestAnimationFrame(tick);
+    }, delay);
+  }
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(en) {
+      if (en.isIntersecting) {
+        nums.forEach(function(el, i) { run(el, i * 140); });
+        obs.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+  obs.observe(stats);
+})();
 
 // ── 캘린더 ──
 var today = new Date();
