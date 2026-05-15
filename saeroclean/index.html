@@ -305,12 +305,19 @@
       transition: transform 0.75s 0.45s cubic-bezier(0.2,0.7,0.2,1);
     }
     .js-reveal .heading.in .about-em::after { transform: scaleX(1); }
+    #about .eyebrow,
+    #about .heading { text-align: center; }
+    #about .lead {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
     .about-pledge {
-      margin-top: 40px;
+      margin: 40px auto 0;
       max-width: 600px;
-      padding: 26px 30px;
+      padding: 28px 30px;
       background: var(--sand);
-      border-left: 3px solid var(--ink);
+      text-align: center;
     }
     .about-pledge-quote {
       font-size: 17px;
@@ -323,6 +330,7 @@
       margin-top: 16px;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 11px;
       font-size: 13px;
       font-weight: 600;
