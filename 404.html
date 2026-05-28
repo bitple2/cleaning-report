@@ -3,28 +3,200 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>리디렉트 중...</title>
+<title>잠시만요...</title>
 <meta name="robots" content="noindex">
-<script>
-  // GitHub Pages 404 핸들러 — path 기반 라우팅 처리
-  // /verify/{CODE} → /verify/?c={CODE} 로 자동 변환
-  // 기타 404는 홈으로
-  (function() {
-    const path = window.location.pathname || '';
-    const m = path.match(/^\/verify\/([A-Z0-9]{3,8})\/?$/i);
-    if (m) {
-      const code = m[1].toUpperCase();
-      window.location.replace('/verify/?c=' + code);
-      return;
-    }
-    // 진짜 404 — 홈으로
-    window.location.replace('/');
-  })();
-</script>
+<style>
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    color: #6B7280; background: #fff;
+  }
+  .msg { text-align: center; padding: 56px 24px; max-width: 460px; }
+  .msg h1 { font-size: 19px; font-weight: 800; color: #111; letter-spacing: -0.03em; margin-bottom: 12px; }
+  .msg p { font-size: 13.5px; line-height: 1.75; color: #6B675F; }
+  .msg a { display: inline-block; margin-top: 22px; color: #1B2D4F; font-weight: 700; text-decoration: none; font-size: 13px; }
+  .msg a:hover { text-decoration: underline; }
+</style>
 </head>
 <body>
-  <div style="font-family:-apple-system,'Noto Sans KR',sans-serif;text-align:center;padding:80px 20px;color:#6B7280;">
-    <p style="font-size:14px;">잠시만 기다려주세요...</p>
-  </div>
+<div class="msg" id="loading">
+  <p style="font-size:13px;">잠시만 기다려주세요...</p>
+</div>
+
+<script>
+(function() {
+  const SB_URL = 'https://iucicugxihxilcqtzrbk.supabase.co';
+  const SB_ANON = 'sb_publishable_-_GTb-cNnVnC1gcVHoKlWw_5FztAXMy';
+  const TEMPLATE_PATH = '/saeroclean/';
+  const TRIAL_DAYS = 30;
+
+  const path = window.location.pathname || '';
+
+  // ─── 1. /verify/CODE → 기존 라우팅 보존 ───
+  const verifyMatch = path.match(/^\/verify\/([A-Z0-9]{3,8})\/?$/i);
+  if (verifyMatch) {
+    window.location.replace('/verify/?c=' + verifyMatch[1].toUpperCase());
+    return;
+  }
+
+  // ─── 2. /SLUG/ → 회사 미니홈피 렌더 ───
+  const slugMatch = path.match(/^\/([a-z0-9-]{3,30})\/?$/);
+  if (slugMatch) {
+    handleSlug(slugMatch[1]);
+    return;
+  }
+
+  // ─── 3. 진짜 404 ───
+  goHome();
+
+  async function handleSlug(slug) {
+    try {
+      const qs = new URLSearchParams({
+        slug: 'eq.' + slug,
+        is_published: 'eq.true',
+        select: '*,company:companies(id,name,is_paid)'
+      }).toString();
+      const resp = await fetch(SB_URL + '/rest/v1/company_homepages?' + qs, {
+        headers: {
+          'apikey': SB_ANON,
+          'Authorization': 'Bearer ' + SB_ANON,
+          'Accept': 'application/json'
+        }
+      });
+      if (!resp.ok) { showNotFound(); return; }
+      const rows = await resp.json();
+      if (!rows.length) { showNotFound(); return; }
+
+      const row = rows[0];
+      const company = row.company || {};
+
+      // 체험 만료 체크
+      if (!company.is_paid && row.created_at) {
+        const created = new Date(row.created_at).getTime();
+        const days = (Date.now() - created) / 86400000;
+        if (days > TRIAL_DAYS) { showExpired(company.name); return; }
+      }
+
+      await renderHomepage(row, company);
+    } catch (e) {
+      console.error('homepage render error:', e);
+      showNotFound();
+    }
+  }
+
+  async function renderHomepage(row, company) {
+    const resp = await fetch(TEMPLATE_PATH + 'index.html');
+    if (!resp.ok) { showNotFound(); return; }
+    const html = await resp.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+
+    // 상대경로 → 절대경로(/saeroclean/...)
+    doc.querySelectorAll('[src], [href]').forEach(function(el) {
+      ['src', 'href'].forEach(function(attr) {
+        const v = el.getAttribute(attr);
+        if (!v) return;
+        if (/^(https?:|data:|javascript:|mailto:|tel:|#|\/)/i.test(v)) return;
+        el.setAttribute(attr, TEMPLATE_PATH + v);
+      });
+    });
+
+    // 인라인 style의 url(...)도 동일하게 처리
+    doc.querySelectorAll('[style]').forEach(function(el) {
+      const s = el.getAttribute('style');
+      if (s && /url\(/.test(s)) {
+        el.setAttribute('style', s.replace(/url\(\s*(['"]?)(?!https?:|data:|\/)([^)'"]+)\1\s*\)/gi,
+          function(_, q, p) { return 'url(' + q + TEMPLATE_PATH + p + q + ')'; }));
+      }
+    });
+
+    // <style> 태그 내부 url() 처리 (hero_poster.jpg 등)
+    doc.querySelectorAll('style').forEach(function(el) {
+      el.textContent = el.textContent.replace(/url\(\s*(['"]?)(?!https?:|data:|\/)([^)'"]+)\1\s*\)/gi,
+        function(_, q, p) { return 'url(' + q + TEMPLATE_PATH + p + q + ')'; });
+    });
+
+    // 데모 안내바 제거
+    const demoBar = doc.querySelector('.demo-bar');
+    if (demoBar) demoBar.remove();
+
+    // 섹션 노출/숨김 (section_visibility)
+    const vis = row.section_visibility || {};
+    const sectionMap = {
+      report: '#report',
+      differentiators: '#diff',
+      services: '#services',
+      standards: '#standards',
+      portfolio: '#portfolio',
+      owner: '#owner'
+    };
+    Object.keys(sectionMap).forEach(function(key) {
+      if (vis[key] === false) {
+        const el = doc.querySelector(sectionMap[key]);
+        if (el) el.remove();
+      }
+    });
+
+    // 회사명 반영 — 타이틀 + 네비 브랜드 + 히어로 브랜드
+    if (company.name) {
+      const t = doc.querySelector('title');
+      if (t) t.textContent = company.name;
+      doc.querySelectorAll('.nav-brand, .hero-brand').forEach(function(el) {
+        el.textContent = company.name;
+      });
+    }
+
+    // (Phase B-3+에서 추가될 항목들)
+    // - hero_video_url, hero_poster_url
+    // - hero_headline, hero_sub
+    // - standards_images[] → #standards 갤러리
+    // - owner_photo_url, owner_quote, owner_bio
+    // - booking modal의 company_id
+
+    // 내부 #hash 앵커 클릭 시 페이지 이동 없이 스크롤
+    const scrollScript = doc.createElement('script');
+    scrollScript.textContent =
+      "document.addEventListener('click', function(e) {" +
+      "  var a = e.target.closest('a[href^=\"#\"]');" +
+      "  if (!a) return;" +
+      "  var id = a.getAttribute('href').slice(1);" +
+      "  if (!id) return;" +
+      "  var t = document.getElementById(id);" +
+      "  if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }" +
+      "});";
+    doc.body.appendChild(scrollScript);
+
+    // 문서 교체 (URL은 그대로 /SLUG/ 유지)
+    const finalHtml = '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+    document.open();
+    document.write(finalHtml);
+    document.close();
+  }
+
+  function showNotFound() {
+    document.body.innerHTML =
+      '<div class="msg">' +
+      '<h1>페이지를 찾을 수 없어요</h1>' +
+      '<p>주소가 정확한지 다시 확인해주세요.</p>' +
+      '<a href="/">홈으로 이동</a>' +
+      '</div>';
+    document.title = '페이지 없음';
+  }
+
+  function showExpired(name) {
+    document.body.innerHTML =
+      '<div class="msg">' +
+      '<h1>' + (name ? name + '의 ' : '') + '홈페이지가 잠시 비공개 상태예요</h1>' +
+      '<p>업체 사장님께서 곧 정상화하실 예정입니다.<br>잠시 후 다시 방문해주세요.</p>' +
+      '</div>';
+    document.title = '일시 비공개';
+  }
+
+  function goHome() {
+    window.location.replace('/');
+  }
+})();
+</script>
 </body>
 </html>
