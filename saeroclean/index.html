@@ -376,6 +376,101 @@
       font-weight: 400;
     }
 
+    /* ─── 서비스 ─── */
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 52px;
+    }
+    .service {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 34px 28px;
+      border-radius: 4px;
+      text-align: left;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .service:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(15,15,15,0.08);
+    }
+    .service-name {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+    .service-tag {
+      font-size: 12.5px;
+      color: var(--gray-2);
+      font-weight: 500;
+    }
+    .service-incl {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--gray-2);
+      line-height: 1.7;
+      letter-spacing: -0.02em;
+    }
+    .service-note {
+      margin-top: 28px;
+      font-size: 12.5px;
+      color: var(--gray-2);
+      line-height: 1.7;
+    }
+
+    /* ─── 작업의 기준 (갤러리) ─── */
+    .gallery-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      margin: 48px 0 0;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+    }
+    .gallery-scroll::-webkit-scrollbar { display: none; }
+    .gallery-item {
+      flex-shrink: 0;
+      width: 260px;
+      height: 320px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+    .gallery-item:nth-child(1) { background: linear-gradient(155deg,#2a2a2a,#0d0d0d); }
+    .gallery-item:nth-child(2) { background: linear-gradient(155deg,#3a3733,#161412); }
+    .gallery-item:nth-child(3) { background: linear-gradient(155deg,#2d2f33,#101113); }
+    .gallery-item:nth-child(4) { background: linear-gradient(155deg,#363330,#171513); }
+    .gallery-item:nth-child(5) { background: linear-gradient(155deg,#28292b,#0e0f10); }
+    .gallery-num {
+      position: absolute;
+      top: 18px;
+      left: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.4);
+    }
+    .gallery-label {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    .gallery-note {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+    }
+
     /* ─── 실제 작업 리포트 ─── */
     .report-card {
       display: block;
@@ -907,6 +1002,8 @@
       .stat { padding: 38px 10px; }
       .stat-num { font-size: 38px; }
       .diff-grid { grid-template-columns: 1fr; }
+      .service-grid { grid-template-columns: 1fr; }
+      .gallery-item { width: 200px; height: 250px; }
       .portfolio-grid { grid-template-columns: 1fr; gap: 18px; }
       .verify-points { grid-template-columns: 1fr; }
       .nav-links { display: none; }
@@ -933,6 +1030,7 @@
     <div class="nav-right">
       <div class="nav-links">
         <a href="#diff">차별점</a>
+        <a href="#services">서비스</a>
         <a href="#portfolio">포트폴리오</a>
         <a href="#reviews">후기</a>
       </div>
@@ -1017,6 +1115,51 @@
           <p>청소 전후를 한눈에 비교할 수 있는 인증 리포트를 작업 직후 보내드립니다.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ═══ 서비스 ═══ -->
+  <section class="section sand" id="services">
+    <div class="wrap center">
+      <div class="eyebrow">Services</div>
+      <h2 class="heading">서비스 안내.</h2>
+      <p class="lead">평수와 옵션에 따라 견적이 달라집니다. 정확한 금액은 무료 견적 문의로 안내드립니다.</p>
+
+      <div class="service-grid">
+        <div class="service">
+          <div class="service-name">입주청소</div>
+          <div class="service-tag">새 집 입주 전 전체 청소</div>
+          <div class="service-incl">주방 · 욕실 · 거실 · 방 · 창틀 · 베란다 전 구역</div>
+        </div>
+        <div class="service">
+          <div class="service-name">이사청소</div>
+          <div class="service-tag">이사 전후 빈 집 청소</div>
+          <div class="service-incl">바닥 · 벽 · 수납장 내부 · 욕실 · 베란다 마무리</div>
+        </div>
+        <div class="service">
+          <div class="service-name">거주청소</div>
+          <div class="service-tag">생활 중인 집 전문 청소</div>
+          <div class="service-incl">주방·욕실 집중 · 생활 먼지 · 정리 정돈</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 작업의 기준 (갤러리) ═══ -->
+  <section class="section ink" id="standards">
+    <div class="wrap">
+      <div class="eyebrow">Standards</div>
+      <h2 class="heading">작업의 기준.</h2>
+      <p class="lead">전용 장비·친환경 세제·작업 현장 — 대표가 직접 고르고 매일 점검합니다.</p>
+
+      <div class="gallery-scroll">
+        <div class="gallery-item"><span class="gallery-num">01</span><span class="gallery-label">전용 장비</span></div>
+        <div class="gallery-item"><span class="gallery-num">02</span><span class="gallery-label">친환경 세제</span></div>
+        <div class="gallery-item"><span class="gallery-num">03</span><span class="gallery-label">전문 작업자</span></div>
+        <div class="gallery-item"><span class="gallery-num">04</span><span class="gallery-label">작업 현장</span></div>
+        <div class="gallery-item"><span class="gallery-num">05</span><span class="gallery-label">완성된 공간</span></div>
+      </div>
+      <p class="gallery-note">※ 이미지는 데모용 자리표시이며, 출시 시 사장님이 직접 등록한 사진으로 채워집니다.</p>
     </div>
   </section>
 
