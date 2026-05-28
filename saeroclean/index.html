@@ -933,6 +933,118 @@
       margin-bottom: 22px;
     }
 
+    /* ─── 예약폼 모달 (캘린더·예약금 안내) ─── */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .cal {
+      background: var(--sand);
+      border-radius: 6px;
+      padding: 16px;
+      margin-top: 8px;
+    }
+    .cal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .cal-head button {
+      background: none;
+      border: none;
+      color: var(--gray-2);
+      font-size: 15px;
+      cursor: pointer;
+      padding: 4px 10px;
+      font-family: inherit;
+    }
+    .cal-title { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
+    .cal-dow {
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+      gap: 2px;
+      margin-bottom: 6px;
+    }
+    .cal-dow div {
+      text-align: center;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--gray-2);
+      padding: 4px 0;
+    }
+    .cal-dow div:first-child { color: #C0392B; }
+    .cal-dow div:last-child { color: #2C5AA0; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+    .cal-grid .day {
+      text-align: center;
+      padding: 8px 2px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: background 0.15s;
+    }
+    .cal-grid .day.selected { background: var(--ink); color: #fff; }
+    .cal-grid .day.past { color: #CFCBC2; cursor: default; }
+    .cal-grid .day.closed { background: var(--sand-2); color: var(--gray); cursor: default; }
+    .cal-grid .day.sun { color: #C0392B; }
+    .cal-grid .day.sat { color: #2C5AA0; }
+    .cal-grid .day:not(.selected):not(.past):not(.closed):hover { background: #fff; }
+    .selected-date {
+      display: none;
+      margin-top: 10px;
+      padding: 11px 14px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 4px;
+    }
+    .deposit-info {
+      margin: 18px 0 14px;
+      padding: 16px 18px;
+      background: var(--sand);
+      border-radius: 6px;
+      border-left: 3px solid var(--ink);
+    }
+    .deposit-info-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--gray-2);
+      margin-bottom: 8px;
+    }
+    .deposit-info-text {
+      font-size: 12.5px;
+      color: var(--ink-2);
+      line-height: 1.75;
+      font-weight: 500;
+    }
+    .alt-action {
+      margin-top: 14px;
+      text-align: center;
+    }
+    .alt-action a {
+      font-size: 12.5px;
+      color: var(--gray-2);
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 2px;
+      letter-spacing: -0.01em;
+    }
+    .alt-action a:hover { color: var(--ink); border-color: var(--ink); }
+
+    .booking-context {
+      margin: -6px 0 16px;
+      padding: 12px 14px;
+      background: var(--sand);
+      border-radius: 6px;
+      font-size: 12.5px;
+      color: var(--ink-2);
+      line-height: 1.65;
+    }
+    .booking-context strong { font-weight: 800; }
+
     /* ─── 스크롤 리빌 ─── */
     .js-reveal .reveal {
       opacity: 0;
@@ -997,7 +1109,7 @@
       <p class="hero-sub">하루 한집, <br class="br-m">대표가 직접 작업하는 입주·이사 청소 전문</p>
       <div class="hero-ctas">
         <a href="#" class="btn btn-primary" onclick="openQuote();return false;">무료 견적 문의</a>
-        <a href="tel:010-9876-5432" class="btn btn-ghost">바로 전화하기</a>
+        <a href="#" class="btn btn-ghost" onclick="openBooking();return false;">예약폼 작성하기</a>
       </div>
     </div>
     <div class="scroll-cue">Scroll</div>
@@ -1248,7 +1360,7 @@
         <p>성함과 연락처만 남겨주시면<br>대표가 직접 확인 후 연락드립니다.</p>
         <div class="final-cta-ctas">
           <a href="#" class="btn btn-primary" onclick="openQuote();return false;">무료 견적 문의</a>
-          <a href="tel:010-9876-5432" class="btn btn-ghost">바로 전화하기</a>
+          <a href="#" class="btn btn-ghost" onclick="openBooking();return false;">예약폼 작성하기</a>
         </div>
       </div>
     </div>
@@ -1279,6 +1391,103 @@
     <button class="btn btn-quote" onclick="openQuote()">무료 견적 문의</button>
   </div>
 
+  <!-- ═══ 예약폼 모달 ═══ -->
+  <div class="quote-modal" id="booking-modal" onclick="if(event.target===this)closeBooking()">
+    <div class="quote-panel" style="width:min(540px, 100%);">
+      <div class="quote-top">
+        <button class="quote-close" onclick="closeBooking()">✕</button>
+        <div class="quote-eyebrow">예약폼 작성하기</div>
+        <div class="quote-q">날짜와 정보를 입력해주세요</div>
+        <div class="quote-q-sub">원하시는 날짜·평수·서비스 선택 → 사장님 확인 후 예약금 입금 시 확정됩니다.</div>
+      </div>
+
+      <div class="quote-body" id="booking-body">
+        <div class="booking-context" id="booking-context" style="display:none;">
+          <strong>통화 안내받으신 예약을 확정하기 위한 폼</strong>입니다. 입력하신 정보가 사장님 앱의 새 예약으로 들어갑니다.
+        </div>
+
+        <div class="field">
+          <label class="field-label">희망 날짜 <span class="req">*</span></label>
+          <div class="cal">
+            <div class="cal-head">
+              <button onclick="bookingMonth(-1)">◀</button>
+              <div class="cal-title" id="b-cal-title"></div>
+              <button onclick="bookingMonth(1)">▶</button>
+            </div>
+            <div class="cal-dow"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
+            <div class="cal-grid" id="b-cal-grid"></div>
+          </div>
+          <div class="selected-date" id="b-selected-date"></div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">희망 시간</label>
+          <select id="b-time" class="input">
+            <option>오전 9시</option>
+            <option>오전 10시</option>
+            <option>오전 11시</option>
+            <option>오후 1시</option>
+            <option>오후 2시</option>
+            <option>시간 미정</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field-label">성함 <span class="req">*</span></label>
+          <input type="text" id="b-name" class="input" placeholder="홍길동">
+        </div>
+
+        <div class="field">
+          <label class="field-label">연락처 <span class="req">*</span></label>
+          <input type="text" id="b-phone" class="input" placeholder="010-1234-5678" inputmode="numeric">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">평수 <span class="req">*</span></label>
+            <input type="text" id="b-size" class="input" placeholder="34평">
+          </div>
+          <div class="field">
+            <label class="field-label">서비스 <span class="req">*</span></label>
+            <select id="b-service" class="input">
+              <option>입주청소</option>
+              <option>이사청소</option>
+              <option>거주청소</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">특이사항 <span class="req">(선택)</span></label>
+          <textarea id="b-memo" class="textarea" placeholder="아이가 있어서 친환경 세제 부탁드려요"></textarea>
+        </div>
+
+        <div class="deposit-info">
+          <div class="deposit-info-label">예약금 안내</div>
+          <div class="deposit-info-text">
+            신청 완료 후 사장님이 확인하여 <strong>카카오톡으로 예약금 계좌를 안내</strong>드립니다.
+            예약금 입금이 확인되면 예약이 최종 확정됩니다.
+          </div>
+        </div>
+
+        <div class="alt-action">
+          <a href="tel:010-9876-5432">또는 바로 전화하기 →</a>
+        </div>
+      </div>
+
+      <div class="quote-foot" id="booking-foot">
+        <button class="quote-submit" onclick="submitBooking()">예약 신청 보내기</button>
+      </div>
+
+      <div class="quote-done" id="booking-done" style="display:none;padding:34px 24px 28px;">
+        <div class="quote-done-icon">✓</div>
+        <h3>예약 신청이 접수되었습니다</h3>
+        <p>사장님이 확인 후 카카오톡으로<br>예약금 계좌를 안내드립니다.</p>
+        <button class="quote-submit" onclick="closeBooking()">확인</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ 견적 위저드 모달 (1-step) ═══ -->
   <div class="quote-modal" id="quote-modal" onclick="if(event.target===this)closeQuote()">
     <div class="quote-panel">
@@ -1304,6 +1513,9 @@
         </div>
         <div class="quote-note">
           접수되면 <strong>"문의 접수, 곧 연락드릴게요"</strong> 알림톡이 자동으로 갑니다. 작업 중이라 통화가 어려우시면 폼을 남겨주세요.
+        </div>
+        <div class="alt-action">
+          <a href="tel:010-9876-5432">또는 바로 전화하기 →</a>
         </div>
       </div>
 
@@ -1450,6 +1662,101 @@ onScroll();
     el.style.transitionDelay = (i * 0.09) + 's';
     obs.observe(el);
   });
+})();
+
+// ── 예약폼 모달 ──
+(function() {
+  var modal = document.getElementById('booking-modal');
+  if (!modal) return;
+  var today = new Date();
+  var curYear = today.getFullYear();
+  var curMonth = today.getMonth();
+  var selected = null;
+
+  function renderCal() {
+    var months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+    document.getElementById('b-cal-title').textContent = curYear + '년 ' + months[curMonth];
+    var grid = document.getElementById('b-cal-grid');
+    grid.innerHTML = '';
+    var first = new Date(curYear, curMonth, 1).getDay();
+    var days = new Date(curYear, curMonth+1, 0).getDate();
+    for (var i = 0; i < first; i++) grid.appendChild(document.createElement('div'));
+    var todayKey = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    for (var d = 1; d <= days; d++) {
+      var date = new Date(curYear, curMonth, d);
+      var el = document.createElement('div');
+      el.className = 'day';
+      el.textContent = d;
+      var classes = [];
+      if (date < todayKey) classes.push('past');
+      else if (date.getDay() === 0) classes.push('sun');
+      else if (date.getDay() === 6) classes.push('sat');
+      if (selected && date.getTime() === selected.getTime()) classes.push('selected');
+      el.className = 'day ' + classes.join(' ');
+      if (!classes.includes('past') && !classes.includes('closed')) {
+        (function(dt) {
+          el.addEventListener('click', function() {
+            selected = dt;
+            renderCal();
+            var dows = ['일','월','화','수','목','금','토'];
+            var disp = document.getElementById('b-selected-date');
+            disp.style.display = 'block';
+            disp.textContent = '✓  ' + dt.getFullYear() + '.' + String(dt.getMonth()+1).padStart(2,'0') + '.' + String(dt.getDate()).padStart(2,'0') + ' (' + dows[dt.getDay()] + ') 선택됨';
+          });
+        })(date);
+      }
+      grid.appendChild(el);
+    }
+  }
+
+  window.bookingMonth = function(dir) {
+    curMonth += dir;
+    if (curMonth > 11) { curMonth = 0; curYear++; }
+    if (curMonth < 0) { curMonth = 11; curYear--; }
+    renderCal();
+  };
+
+  window.openBooking = function(opts) {
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('booking-context').style.display = (opts && opts.fromLink) ? 'block' : 'none';
+    renderCal();
+  };
+
+  window.closeBooking = function() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(function() {
+      document.getElementById('booking-body').style.display = 'block';
+      document.getElementById('booking-foot').style.display = 'block';
+      document.getElementById('booking-done').style.display = 'none';
+      document.getElementById('b-name').value = '';
+      document.getElementById('b-phone').value = '';
+      document.getElementById('b-size').value = '';
+      document.getElementById('b-memo').value = '';
+      document.getElementById('b-selected-date').style.display = 'none';
+      selected = null;
+      curYear = today.getFullYear(); curMonth = today.getMonth();
+    }, 320);
+  };
+
+  window.submitBooking = function() {
+    if (!selected) { alert('희망 날짜를 선택해주세요'); return; }
+    var name = document.getElementById('b-name').value.trim();
+    var phone = document.getElementById('b-phone').value.trim();
+    var size = document.getElementById('b-size').value.trim();
+    if (!name || !phone || !size) { alert('성함·연락처·평수를 모두 입력해주세요'); return; }
+    document.getElementById('booking-body').style.display = 'none';
+    document.getElementById('booking-foot').style.display = 'none';
+    document.getElementById('booking-done').style.display = 'block';
+  };
+
+  // URL 파라미터 ?b=1 → 예약폼 자동 열림 (사장님이 통화 후 보낸 링크)
+  if (new URLSearchParams(location.search).get('b') === '1') {
+    window.addEventListener('load', function() {
+      setTimeout(function() { openBooking({ fromLink: true }); }, 350);
+    });
+  }
 })();
 
 // ── 후기 슬라이더 ──
