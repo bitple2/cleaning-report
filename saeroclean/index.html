@@ -1442,6 +1442,11 @@
           <input type="text" id="b-phone" class="input" placeholder="010-1234-5678" inputmode="numeric">
         </div>
 
+        <div class="field">
+          <label class="field-label">주소 <span class="req">*</span></label>
+          <input type="text" id="b-address" class="input" placeholder="예) 인천 서구 청라동 OO아파트 101동 1001호">
+        </div>
+
         <div class="field-row">
           <div class="field">
             <label class="field-label">평수 <span class="req">*</span></label>
@@ -1455,6 +1460,21 @@
               <option>거주청소</option>
             </select>
           </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">어떻게 알게 되셨나요? <span class="req">(선택)</span></label>
+          <select id="b-source" class="input">
+            <option value="">선택해주세요</option>
+            <option value="sns:인스타">인스타그램</option>
+            <option value="sns:네이버">네이버 검색·블로그</option>
+            <option value="sns:스레드">스레드</option>
+            <option value="platform:숨고">숨고</option>
+            <option value="platform:미소">미소</option>
+            <option value="referral:고객 소개">지인 소개</option>
+            <option value="referral:재예약">재예약 (이전 이용)</option>
+            <option value="etc:미니 홈페이지">기타</option>
+          </select>
         </div>
 
         <div class="field">
@@ -1732,8 +1752,10 @@ onScroll();
       document.getElementById('booking-done').style.display = 'none';
       document.getElementById('b-name').value = '';
       document.getElementById('b-phone').value = '';
+      document.getElementById('b-address').value = '';
       document.getElementById('b-size').value = '';
       document.getElementById('b-memo').value = '';
+      document.getElementById('b-source').value = '';
       document.getElementById('b-selected-date').style.display = 'none';
       selected = null;
       curYear = today.getFullYear(); curMonth = today.getMonth();
@@ -1744,8 +1766,15 @@ onScroll();
     if (!selected) { alert('희망 날짜를 선택해주세요'); return; }
     var name = document.getElementById('b-name').value.trim();
     var phone = document.getElementById('b-phone').value.trim();
+    var address = document.getElementById('b-address').value.trim();
     var size = document.getElementById('b-size').value.trim();
-    if (!name || !phone || !size) { alert('성함·연락처·평수를 모두 입력해주세요'); return; }
+    if (!name || !phone || !address || !size) {
+      alert('성함·연락처·주소·평수를 모두 입력해주세요');
+      return;
+    }
+    // Phase 2 데이터 연동 시 사용할 payload (booking_sources 매핑):
+    // - 출처 미선택 → source_category='기타', source='미니 홈페이지' (자동 태그)
+    // - 출처 선택 시 'cat:source' 형식 분해 → source_category·source 각각 매핑
     document.getElementById('booking-body').style.display = 'none';
     document.getElementById('booking-foot').style.display = 'none';
     document.getElementById('booking-done').style.display = 'block';
