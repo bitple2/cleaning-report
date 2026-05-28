@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>새로클린 — 입주·이사 청소 전문</title>
-  <meta name="description" content="하루 한집, 대표가 직접 작업하는 프리미엄 입주·이사 청소 전문 새로클린.">
+  <title>새로클린 — 하루 한집, 기록으로 증명하는 프리미엄 청소</title>
+  <meta name="description" content="하루 한집, 대표가 직접 책임지는 입주·이사 청소 전문 새로클린. 작업 리포트로 청소 전 과정을 투명하게 보여드립니다.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -68,15 +68,17 @@
       padding: 14px 24px;
       backdrop-filter: saturate(180%) blur(12px);
     }
-    .nav-logo {
-      height: 36px;
-      width: auto;
-      display: none;
-      transition: height 0.3s;
+    .nav-brand {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #fff;
+      transition: color 0.3s;
+      text-decoration: none;
     }
-    .nav.scrolled .nav-logo { height: 32px; }
-    .nav-right { display: flex; align-items: center; gap: 28px; }
-    .nav-links { display: flex; gap: 26px; }
+    .nav.scrolled .nav-brand { color: var(--ink); }
+    .nav-right { display: flex; align-items: center; gap: 26px; }
+    .nav-links { display: flex; gap: 24px; }
     .nav-links a {
       font-size: 13px;
       font-weight: 600;
@@ -116,19 +118,21 @@
       position: absolute;
       inset: 0;
       background: linear-gradient(180deg,
-        rgba(15,15,15,0.46) 0%,
-        rgba(15,15,15,0.28) 42%,
-        rgba(15,15,15,0.66) 100%);
+        rgba(15,15,15,0.52) 0%,
+        rgba(15,15,15,0.32) 42%,
+        rgba(15,15,15,0.72) 100%);
     }
     .hero-inner {
       position: relative;
       z-index: 2;
-      padding: 120px 24px 100px;
+      padding: 130px 24px 110px;
+      width: 100%;
+      max-width: 760px;
       animation: rise 1s ease both;
     }
     @keyframes rise {
       from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: none; }
     }
     .hero-eyebrow {
       font-size: 11px;
@@ -136,43 +140,75 @@
       color: rgba(255,255,255,0.7);
       font-weight: 600;
       text-transform: uppercase;
-      margin-bottom: 26px;
+      margin-bottom: 20px;
+    }
+    .hero-brand {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #fff;
+      margin-bottom: 30px;
     }
     .hero h1 {
-      font-size: 46px;
+      font-size: 44px;
       font-weight: 900;
       letter-spacing: -0.045em;
-      line-height: 1.16;
+      line-height: 1.18;
       color: #fff;
       margin-bottom: 22px;
     }
     .hero-sub {
       font-size: 16px;
       font-weight: 400;
-      color: rgba(255,255,255,0.78);
+      color: rgba(255,255,255,0.82);
       letter-spacing: -0.01em;
+      line-height: 1.7;
+      max-width: 520px;
+      margin: 0 auto 36px;
     }
-    .br-m { display: none; }
-    .hero-brand {
-      margin-top: 34px;
+    .hero-ctas {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
       display: inline-flex;
-      flex-direction: column;
       align-items: center;
-      gap: 16px;
-      font-size: 30px;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 28px;
+      border-radius: 50px;
+      font-size: 15px;
       font-weight: 700;
-      letter-spacing: 0.06em;
-      color: #fff;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.22s, box-shadow 0.22s, background 0.22s, color 0.22s;
+      font-family: inherit;
+      border: 1px solid transparent;
+      min-width: 168px;
     }
-    .hero-brand::before {
-      content: '';
-      width: 28px;
-      height: 1px;
-      background: rgba(255,255,255,0.45);
+    .btn-primary {
+      background: #fff;
+      color: var(--ink);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.35);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.55);
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
     }
     .scroll-cue {
       position: absolute;
-      bottom: 28px;
+      bottom: 26px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 2;
@@ -187,6 +223,60 @@
       0%,100% { transform: translateX(-50%) translateY(0); }
       50% { transform: translateX(-50%) translateY(6px); }
     }
+
+    /* ─── 히어로 미리보기 카드 (Before/After mini) ─── */
+    .hero-preview {
+      margin: 44px auto 0;
+      max-width: 360px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.32);
+    }
+    .hero-preview-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--gray-2);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    .hero-preview-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .hero-preview-img {
+      aspect-ratio: 1 / 1;
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-preview-img.before { background: linear-gradient(135deg,#42342b,#7c6452); }
+    .hero-preview-img.after { background: linear-gradient(135deg,#dfe8e8,#a9bdbe); }
+    .hero-preview-tag {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #fff;
+      background: rgba(0,0,0,0.55);
+      padding: 3px 7px;
+      border-radius: 3px;
+    }
+    .hero-preview-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .hero-preview-meta .arrow { color: var(--gray-2); }
 
     /* ─── 공통 섹션 ─── */
     .section { padding: 110px 0; }
@@ -206,7 +296,7 @@
       font-size: 34px;
       font-weight: 900;
       letter-spacing: -0.04em;
-      line-height: 1.3;
+      line-height: 1.32;
       color: var(--ink);
     }
     .section.ink .heading { color: #fff; }
@@ -219,6 +309,9 @@
       max-width: 620px;
     }
     .section.ink .lead { color: rgba(255,255,255,0.62); }
+
+    .center { text-align: center; }
+    .center .lead { margin-left: auto; margin-right: auto; }
 
     /* ─── 지표 ─── */
     .stats {
@@ -248,134 +341,75 @@
       margin-top: 14px;
     }
 
-    /* ─── 약속 ─── */
-    .promise-grid {
+    /* ─── '이런 점이 다릅니다' 4 카드 ─── */
+    .diff-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 0;
-      margin-top: 52px;
+      margin-top: 56px;
       border-top: 1px solid var(--line);
       border-left: 1px solid var(--line);
     }
-    .promise {
-      padding: 36px 32px;
-      text-align: center;
+    .diff {
+      padding: 40px 32px;
       border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
     }
-    .promise-num {
+    .diff-num {
       font-size: 12px;
       font-weight: 800;
       color: var(--gray);
-      letter-spacing: 0.1em;
-      margin-bottom: 16px;
+      letter-spacing: 0.12em;
+      margin-bottom: 18px;
     }
-    .promise h3 {
-      font-size: 18px;
+    .diff h3 {
+      font-size: 19px;
       font-weight: 800;
       letter-spacing: -0.03em;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      line-height: 1.4;
     }
-    .promise p {
-      font-size: 13.5px;
+    .diff p {
+      font-size: 14px;
       color: var(--gray-2);
       line-height: 1.75;
       font-weight: 400;
     }
 
-    /* 스크롤 리빌 */
-    .js-reveal .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .js-reveal .reveal.in { opacity: 1; transform: none; }
-
-    /* About 강조 + 대표 약속 */
-    .about-em { position: relative; display: inline-block; }
-    .about-em::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      height: 4px;
-      background: var(--ink);
-      transform-origin: left;
-    }
-    .js-reveal .about-em::after {
-      transform: scaleX(0);
-      transition: transform 0.75s 0.45s cubic-bezier(0.2,0.7,0.2,1);
-    }
-    .js-reveal .heading.in .about-em::after { transform: scaleX(1); }
-    #about .eyebrow,
-    #about .heading { text-align: center; }
-    #about .lead {
-      text-align: center;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .about-pledge {
-      margin: 40px auto 0;
-      max-width: 600px;
-      padding: 28px 30px;
-      background: var(--sand);
-      text-align: center;
-    }
-    .about-pledge-quote {
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.6;
-      color: var(--ink);
-    }
-    .about-pledge-sign {
-      margin-top: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 11px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--gray-2);
-    }
-    .about-pledge-rule { width: 26px; height: 1px; background: var(--gray); }
-
-    .report-link {
+    /* ─── 실제 작업 리포트 ─── */
+    .report-card {
       display: block;
-      margin: 40px auto 0;
-      max-width: 560px;
+      max-width: 580px;
+      margin: 52px auto 0;
       background: var(--ink);
       color: #fff;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: 10px;
       overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.22s, box-shadow 0.22s;
     }
-    .report-link:hover {
+    .report-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 18px 40px rgba(15,15,15,0.24);
+      box-shadow: 0 22px 50px rgba(15,15,15,0.28);
     }
     .report-preview {
       position: relative;
-      height: 230px;
+      height: 260px;
       background: #fff;
       overflow: hidden;
     }
     .report-preview iframe {
       width: 100%;
-      height: 880px;
+      height: 900px;
       border: 0;
-      display: block;
       pointer-events: none;
+      display: block;
     }
     .report-preview::after {
       content: '';
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 88px;
+      left: 0; right: 0; bottom: 0;
+      height: 95px;
       background: linear-gradient(to bottom, rgba(15,15,15,0), rgba(15,15,15,0.94));
       pointer-events: none;
     }
@@ -384,9 +418,9 @@
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-      padding: 20px 24px;
+      padding: 22px 26px;
     }
-    .report-link-badge {
+    .report-badge {
       display: inline-block;
       font-size: 10px;
       font-weight: 800;
@@ -397,98 +431,83 @@
       border-radius: 3px;
       margin-bottom: 9px;
     }
-    .report-link-title { font-size: 14px; font-weight: 700; letter-spacing: -0.02em; }
-    .report-link-desc { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
-    .report-link-arrow { font-size: 18px; color: #fff; transition: transform 0.22s; flex-shrink: 0; }
-    .report-link:hover .report-link-arrow { transform: translateX(5px); }
+    .report-title { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
+    .report-desc { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 4px; }
+    .report-arrow {
+      font-size: 20px;
+      color: #fff;
+      flex-shrink: 0;
+      transition: transform 0.22s;
+    }
+    .report-card:hover .report-arrow { transform: translateX(5px); }
 
-    /* ─── 서비스 ─── */
-    .service-grid {
+    /* ─── Before/After 포트폴리오 ─── */
+    .portfolio-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
       margin-top: 52px;
     }
-    .service {
+    .pf {
       background: #fff;
-      border: 1px solid var(--line);
-      padding: 34px 28px;
-      transition: transform 0.25s, box-shadow 0.25s;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 14px 36px rgba(15,15,15,0.06);
     }
-    .service:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 18px 40px rgba(15,15,15,0.08);
+    .pf-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
     }
-    .service-name {
-      font-size: 19px;
+    .pf-img {
+      aspect-ratio: 4 / 3;
+      position: relative;
+      overflow: hidden;
+    }
+    .pf-img-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 10px;
       font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 6px;
+      letter-spacing: 0.12em;
+      color: #fff;
+      background: rgba(0,0,0,0.6);
+      padding: 4px 8px;
+      border-radius: 3px;
     }
-    .service-tag {
-      font-size: 12.5px;
-      color: var(--gray-2);
-      font-weight: 500;
+    .pf:nth-child(1) .pf-img.before { background: linear-gradient(135deg,#3a2e25,#766253); }
+    .pf:nth-child(1) .pf-img.after  { background: linear-gradient(135deg,#e8eef0,#9eb7bd); }
+    .pf:nth-child(2) .pf-img.before { background: linear-gradient(135deg,#2f2b26,#6e655c); }
+    .pf:nth-child(2) .pf-img.after  { background: linear-gradient(135deg,#ece8de,#b3a98b); }
+    .pf:nth-child(3) .pf-img.before { background: linear-gradient(135deg,#34302a,#7a6c5a); }
+    .pf:nth-child(3) .pf-img.after  { background: linear-gradient(135deg,#dfe7e3,#a3bcb0); }
+    .pf:nth-child(4) .pf-img.before { background: linear-gradient(135deg,#332b22,#705c45); }
+    .pf:nth-child(4) .pf-img.after  { background: linear-gradient(135deg,#ebe6dc,#bfae8e); }
+    .pf-meta {
+      padding: 16px 18px 18px;
     }
-    .service-incl {
-      margin-top: 20px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
+    .pf-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .pf-info {
       font-size: 12px;
       color: var(--gray-2);
-      line-height: 1.65;
-      letter-spacing: -0.02em;
+      font-weight: 500;
+      margin-top: 4px;
     }
-    .service-note {
-      margin-top: 32px;
-      font-size: 12.5px;
-      color: var(--gray-2);
+    .portfolio-note {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray);
       line-height: 1.7;
     }
 
-    /* ─── 갤러리 ─── */
-    .gallery {
-      display: flex;
-      gap: 14px;
-      overflow-x: auto;
-      margin-top: 48px;
-      padding-bottom: 8px;
-      scrollbar-width: none;
-    }
-    .gallery::-webkit-scrollbar { display: none; }
-    .gallery-item {
-      flex-shrink: 0;
-      width: 260px;
-      height: 320px;
-      position: relative;
-      overflow: hidden;
-      border-radius: 4px;
-    }
-    .gallery-item:nth-child(1) { background: linear-gradient(155deg,#2a2a2a,#0d0d0d); }
-    .gallery-item:nth-child(2) { background: linear-gradient(155deg,#3a3733,#161412); }
-    .gallery-item:nth-child(3) { background: linear-gradient(155deg,#2d2f33,#101113); }
-    .gallery-item:nth-child(4) { background: linear-gradient(155deg,#363330,#171513); }
-    .gallery-item:nth-child(5) { background: linear-gradient(155deg,#28292b,#0e0f10); }
-    .gallery-num {
-      position: absolute;
-      top: 18px;
-      left: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.4);
-    }
-    .gallery-label {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: #fff;
-    }
-
-    /* ─── 인증 후기 ─── */
+    /* ─── 인증 후기 슬라이더 ─── */
     .verify-points {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -502,168 +521,16 @@
       background: var(--sand);
     }
     .verify-point-mark {
-      width: 24px;
-      height: 24px;
+      width: 24px; height: 24px;
       flex-shrink: 0;
       border-radius: 50%;
       background: #1A2A3A;
       color: #fff;
-      font-size: 12px;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 12px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
     }
     .verify-point h4 { font-size: 14px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 5px; }
     .verify-point p { font-size: 12.5px; color: var(--gray-2); line-height: 1.62; }
-
-    /* 신뢰 디자인 인증 카드 */
-    .trust-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-top: 44px;
-    }
-    .trust-card {
-      background: #1A2A3A;
-      border-radius: 10px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 22px 50px rgba(15,15,15,0.16);
-    }
-    .trust-head { padding: 24px 22px 20px; }
-    .trust-verified {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .trust-seal {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #E8C46B;
-      color: #1A2A3A;
-      font-size: 12px;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .trust-verified-text {
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      color: #fff;
-    }
-    .trust-head-main {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.02em;
-      margin-bottom: 5px;
-    }
-    .trust-head-sub {
-      font-size: 11px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.5);
-      letter-spacing: -0.01em;
-      margin-bottom: 17px;
-    }
-    .trust-issuer {
-      font-size: 10px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.4);
-    }
-    .trust-issuer strong { color: rgba(255,255,255,0.78); font-weight: 700; }
-    .trust-body {
-      background: #fff;
-      border-radius: 16px 16px 0 0;
-      padding: 22px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .trust-company { display: flex; align-items: center; gap: 12px; }
-    .trust-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .trust-logo img { width: 28px; height: 28px; display: block; }
-    .trust-co-name { font-size: 15.5px; font-weight: 800; letter-spacing: -0.03em; color: #111; }
-    .trust-co-meta { font-size: 11px; color: #999; font-weight: 500; margin-top: 2px; }
-    .trust-stars { display: flex; align-items: center; gap: 9px; margin-top: 18px; }
-    .trust-star { font-size: 16px; color: #FFBB33; letter-spacing: 1px; }
-    .trust-rating {
-      font-size: 11px;
-      font-weight: 800;
-      color: #1A2A3A;
-      background: #F1EFE8;
-      padding: 4px 9px;
-      border-radius: 20px;
-    }
-    .trust-text {
-      font-size: 13.5px;
-      font-weight: 500;
-      color: #111;
-      line-height: 1.72;
-      letter-spacing: -0.02em;
-      margin-top: 16px;
-      flex: 1;
-    }
-    .trust-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-    .trust-tag {
-      font-size: 10.5px;
-      font-weight: 600;
-      color: #1A2A3A;
-      background: #F1EFE8;
-      padding: 6px 11px;
-      border-radius: 20px;
-    }
-    .trust-divider { height: 1px; background: #F0F0F0; margin: 16px 0; }
-    .trust-foot { display: flex; gap: 12px; align-items: flex-start; }
-    .trust-foot-info { flex: 1; min-width: 0; }
-    .trust-author {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 10px;
-      font-weight: 700;
-      color: #1A2A3A;
-      background: #F1EFE8;
-      padding: 6px 10px;
-      border-radius: 6px;
-      letter-spacing: -0.02em;
-    }
-    .trust-author-check { color: #C9A24B; font-weight: 900; }
-    .trust-cert {
-      display: inline-block;
-      margin-top: 7px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #233547;
-      background: #F1EFE8;
-      padding: 4px 9px;
-      border-radius: 5px;
-      font-family: 'Menlo', monospace;
-      letter-spacing: 0.05em;
-    }
-    .trust-url {
-      font-size: 9.5px;
-      color: #6B6B68;
-      font-family: 'Menlo', monospace;
-      margin-top: 8px;
-      word-break: break-all;
-    }
-    .trust-qr-hint { font-size: 9px; color: #AAA; margin-top: 5px; }
-    .trust-qr { width: 58px; height: 58px; flex-shrink: 0; }
 
     .review-slider { position: relative; margin-top: 40px; }
     .review-track {
@@ -694,8 +561,7 @@
       top: 50%;
       transform: translateY(-50%);
       z-index: 3;
-      width: 44px;
-      height: 44px;
+      width: 44px; height: 44px;
       border-radius: 50%;
       border: 1px solid var(--line);
       background: #fff;
@@ -703,11 +569,10 @@
       font-size: 20px;
       line-height: 1;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       box-shadow: 0 6px 20px rgba(15,15,15,0.14);
       transition: transform 0.18s;
+      font-family: inherit;
     }
     .review-arrow:hover { transform: translateY(-50%) scale(1.08); }
     .review-arrow-prev { left: -8px; }
@@ -719,8 +584,7 @@
       margin-top: 14px;
     }
     .review-dot {
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: var(--line);
       cursor: pointer;
@@ -728,211 +592,90 @@
     }
     .review-dot.active { width: 22px; border-radius: 5px; background: var(--ink); }
 
-    .reviews-foot {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 40px;
-    }
-    .reviews-foot-stars { font-size: 14px; color: #FFBB33; letter-spacing: 2px; }
-    .reviews-foot-text { font-size: 12.5px; color: var(--gray-2); font-weight: 600; }
-    .reviews-more {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--ink);
-      text-decoration: none;
-      border-bottom: 1.5px solid var(--ink);
-      padding-bottom: 3px;
-      margin-left: auto;
-    }
-
-    /* ─── 예약 ─── */
-    .booking-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      margin-top: 52px;
-      align-items: start;
-    }
-    .cal {
-      background: #fff;
-      border: 1px solid var(--line);
-      padding: 22px;
-    }
-    .cal-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .cal-head button {
-      background: none;
-      border: none;
-      color: var(--gray-2);
-      font-size: 16px;
-      cursor: pointer;
-      padding: 4px 10px;
-    }
-    .cal-title { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
-    .cal-dow {
-      display: grid;
-      grid-template-columns: repeat(7,1fr);
-      gap: 2px;
-      margin-bottom: 6px;
-    }
-    .cal-dow div {
+    /* ─── 대표 소개 ─── */
+    .owner-card {
+      max-width: 640px;
+      margin: 52px auto 0;
+      padding: 38px 36px;
+      background: var(--sand);
+      border-radius: 10px;
       text-align: center;
-      font-size: 11px;
+    }
+    .owner-mark {
+      width: 56px; height: 56px;
+      margin: 0 auto 22px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .owner-mark img { width: 38px; height: 38px; }
+    .owner-quote {
+      font-size: 18px;
       font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.62;
+      color: var(--ink);
+      margin-bottom: 22px;
+    }
+    .owner-bio {
+      font-size: 13.5px;
       color: var(--gray-2);
-      padding: 6px 0;
+      line-height: 1.78;
+      max-width: 460px;
+      margin: 0 auto 22px;
     }
-    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
-    .cal-legend {
-      display: flex;
-      gap: 16px;
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px solid var(--line);
-    }
-    .cal-legend div { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--gray-2); }
-    .cal-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .selected-date {
-      display: none;
-      margin-top: 12px;
-      padding: 13px 16px;
-      background: var(--ink);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-
-    .field { margin-bottom: 16px; }
-    .field-label {
-      display: block;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ink);
-      margin-bottom: 8px;
-    }
-    .field-label .req { color: var(--gray); }
-    .input, .textarea, select.input {
-      width: 100%;
-      padding: 13px 14px;
-      background: #fff;
-      border: 1px solid var(--line);
-      font-size: 14px;
-      font-family: inherit;
-      font-weight: 500;
-      color: var(--ink);
-      letter-spacing: -0.01em;
-      transition: border-color 0.2s;
-    }
-    .input:focus, .textarea:focus, select.input:focus {
-      outline: none;
-      border-color: var(--ink);
-    }
-    .textarea { min-height: 84px; resize: vertical; }
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .check {
-      display: flex;
+    .owner-sign {
+      display: inline-flex;
       align-items: center;
-      gap: 9px;
-      padding: 12px 13px;
-      border: 1px solid var(--line);
-      background: #fff;
-      font-size: 12.5px;
+      gap: 11px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--gray-2);
-      cursor: pointer;
-      transition: all 0.18s;
-    }
-    .check-box {
-      width: 15px;
-      height: 15px;
-      border: 1.5px solid var(--gray);
-      flex-shrink: 0;
-      position: relative;
-    }
-    .check.checked { background: var(--ink); border-color: var(--ink); color: #fff; }
-    .check.checked .check-box { background: #fff; border-color: #fff; }
-    .check.checked .check-box::after {
-      content: '✓';
-      position: absolute;
-      top: -3px; left: 1px;
-      font-size: 12px;
-      font-weight: 900;
-      color: var(--ink);
-    }
-    .deposit {
-      margin: 22px 0;
-      padding: 18px 20px;
-      background: var(--sand-2);
-      border-left: 3px solid var(--ink);
-    }
-    .deposit-label {
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      font-weight: 800;
-      color: var(--gray-2);
-      margin-bottom: 9px;
-    }
-    .deposit-text { font-size: 12.5px; color: var(--ink-2); line-height: 1.75; font-weight: 500; }
-    .deposit-row {
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .submit {
-      width: 100%;
-      padding: 18px;
-      background: var(--ink);
-      color: #fff;
-      border: none;
-      font-size: 15px;
-      font-weight: 800;
       letter-spacing: -0.01em;
-      cursor: pointer;
-      border-radius: 50px;
-      transition: transform 0.2s, opacity 0.2s;
     }
-    .submit:hover { transform: translateY(-2px); opacity: 0.9; }
-    .booking-success {
-      display: none;
-      margin-top: 14px;
-      padding: 24px;
+    .owner-sign-rule { width: 26px; height: 1px; background: var(--gray); }
+
+    /* ─── 마지막 예약 CTA ─── */
+    .final-cta {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 54px 36px;
       background: var(--ink);
       color: #fff;
+      border-radius: 12px;
       text-align: center;
     }
-    .privacy {
-      font-size: 11px;
-      color: var(--gray);
-      text-align: center;
-      margin-top: 14px;
-      line-height: 1.6;
+    .final-cta .eyebrow { color: rgba(255,255,255,0.45); margin-bottom: 12px; }
+    .final-cta h2 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.3;
+      margin-bottom: 12px;
     }
+    .final-cta p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    .final-cta-ctas {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .final-cta .btn-primary { background: #fff; color: var(--ink); }
+    .final-cta .btn-ghost { color: #fff; border-color: rgba(255,255,255,0.45); }
+    .final-cta .btn-ghost:hover { background: rgba(255,255,255,0.1); }
 
     /* ─── 푸터 ─── */
-    .footer { background: var(--ink); color: #fff; padding: 80px 0 40px; }
+    .footer { background: var(--ink); color: #fff; padding: 76px 0 36px; }
     .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 900;
       letter-spacing: -0.04em;
     }
-    .footer-logo { width: 36px; height: 36px; display: block; }
     .footer-slogan {
       font-size: 13px;
       color: rgba(255,255,255,0.5);
@@ -951,6 +694,7 @@
     .footer-row { display: flex; justify-content: space-between; font-size: 13px; }
     .footer-row-label { color: rgba(255,255,255,0.45); font-weight: 500; }
     .footer-row-value { font-weight: 600; }
+    .footer-row-value a { color: inherit; text-decoration: none; }
     .footer-bottom {
       display: flex;
       justify-content: space-between;
@@ -958,43 +702,45 @@
       flex-wrap: wrap;
       gap: 10px;
       font-size: 11px;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.32);
     }
+    .footer-bottom .powered {
+      letter-spacing: 0.02em;
+    }
+    .footer-bottom .powered strong { color: rgba(255,255,255,0.55); font-weight: 600; }
 
-    /* ─── 플로팅 견적 버튼 ─── */
-    .fab {
+    /* ─── 모바일 하단 고정 CTA ─── */
+    .sticky-cta {
       position: fixed;
-      bottom: 22px;
-      right: 22px;
+      left: 0; right: 0;
+      bottom: 0;
       z-index: 55;
-      display: flex;
-      align-items: center;
-      gap: 11px;
+      padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: saturate(180%) blur(14px);
+      box-shadow: 0 -4px 20px rgba(15,15,15,0.08);
+      display: none;
+      gap: 8px;
+    }
+    .sticky-cta.show { display: flex; }
+    .sticky-cta .btn {
+      flex: 1;
+      padding: 14px 18px;
+      font-size: 14px;
+      min-width: 0;
+    }
+    .sticky-cta .btn-call {
+      flex: 0 0 54px;
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      font-size: 18px;
+      padding: 0;
+    }
+    .sticky-cta .btn-quote {
       background: var(--ink);
       color: #fff;
-      border: none;
-      padding: 10px 22px 10px 11px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-family: inherit;
-      box-shadow: 0 10px 30px rgba(15,15,15,0.34);
-      transition: transform 0.22s, box-shadow 0.22s;
     }
-    .fab:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 40px rgba(15,15,15,0.44);
-    }
-    .fab-logo {
-      width: 36px;
-      height: 36px;
-      background: #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .fab-logo img { width: 23px; height: 23px; display: block; }
-    .fab-text { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
 
     /* ─── 견적 위저드 모달 ─── */
     .quote-modal {
@@ -1010,11 +756,11 @@
     .quote-modal.open { display: flex; }
     .quote-panel {
       background: #fff;
-      width: min(460px, 100%);
+      width: min(440px, 100%);
       max-height: 92vh;
       display: flex;
       flex-direction: column;
-      border-radius: 6px;
+      border-radius: 8px;
       overflow: hidden;
       animation: panelIn 0.3s ease both;
     }
@@ -1024,78 +770,102 @@
     }
     .quote-top {
       position: relative;
-      padding: 20px 22px 16px;
+      padding: 24px 24px 20px;
       border-bottom: 1px solid var(--line);
     }
     .quote-close {
       position: absolute;
-      top: 15px;
-      right: 16px;
+      top: 16px;
+      right: 18px;
       background: none;
       border: none;
-      font-size: 17px;
+      font-size: 18px;
       color: var(--gray-2);
       cursor: pointer;
       line-height: 1;
     }
-    .quote-step-label {
+    .quote-eyebrow {
       font-size: 10px;
-      letter-spacing: 0.2em;
-      font-weight: 800;
-      color: var(--gray);
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      margin-bottom: 11px;
+      color: var(--gray);
+      font-weight: 800;
+      margin-bottom: 8px;
     }
-    .quote-progress {
-      height: 3px;
-      background: var(--line);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .quote-progress-bar {
-      height: 100%;
-      width: 33%;
-      background: var(--ink);
-      transition: width 0.35s ease;
-    }
-    .quote-body { padding: 26px 24px; overflow-y: auto; flex: 1; }
     .quote-q {
-      font-size: 21px;
+      font-size: 20px;
       font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1.36;
-      margin-bottom: 22px;
+      letter-spacing: -0.035em;
+      line-height: 1.4;
     }
-    .quote-options { display: flex; flex-direction: column; gap: 10px; }
-    .quote-opt {
-      border: 1.5px solid var(--line);
-      padding: 17px 18px;
-      cursor: pointer;
-      transition: border-color 0.18s, background 0.18s;
+    .quote-q-sub {
+      font-size: 13px;
+      color: var(--gray-2);
+      margin-top: 6px;
+      line-height: 1.65;
     }
-    .quote-opt:hover { border-color: var(--gray); }
-    .quote-opt.selected { border-color: var(--ink); background: var(--sand); }
-    .quote-opt-name { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
-    .quote-opt-desc { font-size: 12px; color: var(--gray-2); margin-top: 3px; }
+    .quote-body { padding: 22px 24px; overflow-y: auto; flex: 1; }
+    .field { margin-bottom: 14px; }
+    .field-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .field-label .req { color: var(--gray); }
+    .input, .textarea {
+      width: 100%;
+      padding: 13px 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      transition: border-color 0.2s;
+      border-radius: 4px;
+    }
+    .input:focus, .textarea:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+    .textarea { min-height: 76px; resize: vertical; }
+    .quote-note {
+      margin-top: 6px;
+      padding: 14px 16px;
+      background: var(--sand);
+      border-radius: 6px;
+      font-size: 12.5px;
+      color: var(--ink-2);
+      line-height: 1.7;
+    }
     .quote-foot {
-      display: flex;
-      gap: 10px;
-      padding: 16px 20px;
+      padding: 16px 24px 20px;
       border-top: 1px solid var(--line);
     }
-    .quote-back, .quote-next {
-      padding: 14px;
+    .quote-submit {
+      width: 100%;
+      padding: 16px;
       border-radius: 50px;
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 800;
       letter-spacing: -0.01em;
       font-family: inherit;
       cursor: pointer;
-      border: 1px solid var(--ink);
+      border: none;
+      background: var(--ink);
+      color: #fff;
+      transition: opacity 0.2s, transform 0.2s;
     }
-    .quote-back { flex: 0 0 92px; background: #fff; color: var(--ink); }
-    .quote-back:disabled { opacity: 0.3; cursor: default; }
-    .quote-next { flex: 1; background: var(--ink); color: #fff; }
+    .quote-submit:hover { transform: translateY(-2px); opacity: 0.92; }
+    .quote-done {
+      text-align: center;
+      padding: 14px 0;
+    }
     .quote-done-icon {
       width: 58px;
       height: 58px;
@@ -1108,31 +878,49 @@
       justify-content: center;
       margin: 4px auto 20px;
     }
+    .quote-done h3 {
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+    }
+    .quote-done p {
+      font-size: 13px;
+      color: var(--gray-2);
+      line-height: 1.75;
+      margin-bottom: 22px;
+    }
+
+    /* ─── 스크롤 리빌 ─── */
+    .js-reveal .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .js-reveal .reveal.in { opacity: 1; transform: none; }
 
     @media (max-width: 860px) {
       .section { padding: 76px 0; }
       .hero h1 { font-size: 34px; }
-      .hero-brand { font-size: 26px; }
-      .br-m { display: inline; }
+      .hero-brand { font-size: 22px; }
       .heading { font-size: 27px; }
       .stat { padding: 38px 10px; }
       .stat-num { font-size: 38px; }
-      .service-grid { grid-template-columns: 1fr; }
-      .verify-points, .trust-grid { grid-template-columns: 1fr; }
-      .booking-grid { grid-template-columns: 1fr; gap: 32px; }
-      .promise-grid { grid-template-columns: 1fr; }
+      .diff-grid { grid-template-columns: 1fr; }
+      .portfolio-grid { grid-template-columns: 1fr; gap: 18px; }
+      .verify-points { grid-template-columns: 1fr; }
       .nav-links { display: none; }
       .review-arrow { display: none; }
-      .gallery-item { width: 200px; height: 250px; }
+      .final-cta { padding: 44px 24px; }
+      .final-cta h2 { font-size: 25px; }
     }
     @media (max-width: 480px) {
-      .hero h1 { font-size: 30px; }
-      .hero-brand { font-size: 24px; }
+      .hero h1 { font-size: 28px; }
+      .hero-brand { font-size: 20px; }
       .wrap { padding: 0 18px; }
-      .field-row, .checks { grid-template-columns: 1fr; }
-      .fab { bottom: 16px; right: 16px; padding: 9px 18px 9px 10px; }
-      .fab-logo { width: 32px; height: 32px; }
-      .fab-text { font-size: 13px; }
+      .hero-inner { padding: 110px 22px 90px; }
+      .hero-ctas { flex-direction: column; align-items: stretch; }
+      .hero-ctas .btn { width: 100%; }
     }
   </style>
 </head>
@@ -1140,37 +928,13 @@
 
   <div class="demo-bar">예시 페이지 — 실제 서비스 출시 전 디자인 미리보기입니다</div>
 
-  <!-- 인증 QR (신뢰 디자인 카드용) -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="qr" viewBox="0 0 100 100">
-      <rect width="100" height="100" fill="#fff"/>
-      <g fill="#1A2A3A">
-        <path fill-rule="evenodd" d="M6 6h26v26H6Z M11 11h16v16H11Z"/>
-        <rect x="13" y="13" width="12" height="12"/>
-        <path fill-rule="evenodd" d="M68 6h26v26H68Z M73 11h16v16H73Z"/>
-        <rect x="75" y="13" width="12" height="12"/>
-        <path fill-rule="evenodd" d="M6 68h26v26H6Z M11 73h16v16H11Z"/>
-        <rect x="13" y="75" width="12" height="12"/>
-        <rect x="38" y="8" width="6" height="6"/><rect x="50" y="8" width="6" height="6"/><rect x="62" y="8" width="6" height="6"/>
-        <rect x="44" y="16" width="6" height="6"/><rect x="56" y="16" width="6" height="6"/>
-        <rect x="38" y="24" width="6" height="6"/><rect x="52" y="24" width="6" height="6"/><rect x="62" y="24" width="6" height="6"/>
-        <rect x="8" y="40" width="6" height="6"/><rect x="20" y="40" width="6" height="6"/><rect x="34" y="40" width="6" height="6"/><rect x="46" y="40" width="6" height="6"/><rect x="58" y="40" width="6" height="6"/><rect x="70" y="40" width="6" height="6"/><rect x="84" y="40" width="6" height="6"/>
-        <rect x="14" y="50" width="6" height="6"/><rect x="28" y="50" width="6" height="6"/><rect x="52" y="50" width="6" height="6"/><rect x="66" y="50" width="6" height="6"/><rect x="80" y="50" width="6" height="6"/>
-        <rect x="8" y="60" width="6" height="6"/><rect x="22" y="60" width="6" height="6"/><rect x="40" y="60" width="6" height="6"/><rect x="54" y="60" width="6" height="6"/><rect x="72" y="60" width="6" height="6"/><rect x="86" y="60" width="6" height="6"/>
-        <rect x="40" y="70" width="6" height="6"/><rect x="54" y="70" width="6" height="6"/><rect x="68" y="70" width="6" height="6"/><rect x="82" y="70" width="6" height="6"/>
-        <rect x="46" y="80" width="6" height="6"/><rect x="62" y="80" width="6" height="6"/><rect x="76" y="80" width="6" height="6"/><rect x="88" y="80" width="6" height="6"/>
-        <rect x="40" y="88" width="6" height="6"/><rect x="54" y="88" width="6" height="6"/><rect x="70" y="88" width="6" height="6"/>
-      </g>
-    </symbol>
-  </svg>
-
   <nav class="nav" id="nav">
-    <img class="nav-logo" src="logo_mark.png" alt="새로클린">
+    <a href="#" class="nav-brand">새로클린</a>
     <div class="nav-right">
       <div class="nav-links">
-        <a href="#services">서비스</a>
+        <a href="#diff">차별점</a>
+        <a href="#portfolio">포트폴리오</a>
         <a href="#reviews">후기</a>
-        <a href="#booking">예약</a>
       </div>
     </div>
   </nav>
@@ -1182,9 +946,24 @@
     <div class="hero-overlay"></div>
     <div class="hero-inner">
       <div class="hero-eyebrow">Premium Cleaning</div>
-      <h1>보이지 않는 곳까지<br>세심하게.</h1>
-      <p class="hero-sub">하루 한집, <br class="br-m">대표가 직접 작업하는 입주·이사 청소 전문</p>
       <div class="hero-brand">새로클린</div>
+      <h1>하루 한집,<br>기록으로 증명하는<br>프리미엄 청소.</h1>
+      <p class="hero-sub">고객님께 실제 전달되는 작업 리포트로<br>청소 전 과정을 투명하게 보여드립니다.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn btn-primary" onclick="openQuote();return false;">무료 견적 문의</a>
+        <a href="tel:010-9876-5432" class="btn btn-ghost">바로 전화하기</a>
+      </div>
+      <div class="hero-preview">
+        <div class="hero-preview-label">실제 리포트 미리보기</div>
+        <div class="hero-preview-pair">
+          <div class="hero-preview-img before"><span class="hero-preview-tag">BEFORE</span></div>
+          <div class="hero-preview-img after"><span class="hero-preview-tag">AFTER</span></div>
+        </div>
+        <div class="hero-preview-meta">
+          <span>입주청소 · 42평 · 주방 구역</span>
+          <span class="arrow">↓ 자세히</span>
+        </div>
+      </div>
     </div>
     <div class="scroll-cue">Scroll</div>
   </header>
@@ -1203,126 +982,133 @@
         </div>
         <div class="stat">
           <div class="stat-num" data-target="100" data-suffix="%">100%</div>
-          <div class="stat-label">직접 작업</div>
+          <div class="stat-label">대표 직접</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ 소개 / 약속 ═══ -->
-  <section class="section" id="about">
-    <div class="wrap">
-      <div class="eyebrow reveal">About</div>
-      <h2 class="heading reveal">외주 없이,<br><span class="about-em">우리가 직접</span> 합니다.</h2>
-      <p class="lead reveal">
-        하루에 한 집만 맡습니다. 서두르지 않고 보이지 않는 곳까지 꼼꼼하게,
-        작업하는 사람이 곧 책임지는 사람입니다.
-      </p>
-      <div class="about-pledge reveal">
-        <div class="about-pledge-quote">"맡겨주신 집, 대표가 직접 끝까지 책임지겠습니다."</div>
-        <div class="about-pledge-sign"><span class="about-pledge-rule"></span>새로클린 대표 드림</div>
-      </div>
+  <!-- ═══ 이런 점이 다릅니다 ═══ -->
+  <section class="section" id="diff">
+    <div class="wrap center">
+      <div class="eyebrow reveal">Why 새로클린</div>
+      <h2 class="heading reveal">이런 점이 다릅니다.</h2>
+      <p class="lead reveal">청소는 결과가 전부가 아닙니다. 누가, 어떻게, 어디까지 했는지 — 과정이 남아야 진짜 깨끗합니다.</p>
 
-      <div class="promise-grid">
-        <div class="promise">
-          <div class="promise-num">01</div>
-          <h3>하루 한 집</h3>
-          <p>일정에 쫓기지 않고 한 집에 온전히 집중합니다.</p>
+      <div class="diff-grid">
+        <div class="diff">
+          <div class="diff-num">01</div>
+          <h3>하루 한집 집중 관리</h3>
+          <p>여러 집을 하루에 묶어 받지 않습니다. 한 집에 온전히 시간을 들여 빠뜨림 없이 끝냅니다.</p>
         </div>
-        <div class="promise">
-          <div class="promise-num">02</div>
-          <h3>친환경 세제</h3>
-          <p>EWG 1등급 세제만 사용해 아이·반려동물도 안심.</p>
+        <div class="diff">
+          <div class="diff-num">02</div>
+          <h3>대표가 직접 관리</h3>
+          <p>외주 없이 처음부터 끝까지 대표가 함께합니다. 작업한 사람이 곧 책임지는 사람입니다.</p>
         </div>
-        <div class="promise">
-          <div class="promise-num">03</div>
-          <h3>실시간 리포트</h3>
-          <p>구역별 전·후 사진을 작업 중 바로 받아보세요.</p>
+        <div class="diff">
+          <div class="diff-num">03</div>
+          <h3>구역별 작업 기록</h3>
+          <p>주방·욕실·창틀·베란다까지 각 구역별로 사진과 함께 어떻게 작업했는지 남깁니다.</p>
         </div>
-        <div class="promise">
-          <div class="promise-num">04</div>
-          <h3>14일 A/S</h3>
-          <p>하자 발견 시 14일 이내 무상 재방문해드립니다.</p>
+        <div class="diff">
+          <div class="diff-num">04</div>
+          <h3>Before / After 리포트</h3>
+          <p>청소 전후를 한눈에 비교할 수 있는 인증 리포트를 작업 직후 보내드립니다.</p>
         </div>
       </div>
+    </div>
+  </section>
 
-      <a href="https://cleaningmanager.kr/?id=314ec716-dc4d-45a2-a140-4f2be9ad255d" target="_blank" class="report-link">
+  <!-- ═══ 실제 작업 리포트 ═══ -->
+  <section class="section sand" id="report">
+    <div class="wrap center">
+      <div class="eyebrow">Real Report</div>
+      <h2 class="heading">고객에게 보내는<br>실제 작업 리포트.</h2>
+      <p class="lead">새로클린이 작업을 마치고 고객에게 보낸 실제 리포트입니다. 구역별 전·후 사진, 사용한 세제, 소요 시간까지 그대로 들어가 있습니다.</p>
+
+      <a href="https://cleaningmanager.kr/?id=314ec716-dc4d-45a2-a140-4f2be9ad255d" target="_blank" class="report-card">
         <div class="report-preview">
           <iframe src="https://cleaningmanager.kr/?id=314ec716-dc4d-45a2-a140-4f2be9ad255d" loading="lazy" scrolling="no" tabindex="-1" title="작업 리포트 미리보기"></iframe>
         </div>
         <div class="report-bar">
           <div>
-            <span class="report-link-badge">실제 전달 리포트</span>
-            <div class="report-link-title">새로클린이 고객에게 보낸 작업 리포트</div>
-            <div class="report-link-desc">입주청소 42평 · 구역별 전·후 사진 — 눌러서 전체 보기</div>
+            <span class="report-badge">실제 전달 리포트</span>
+            <div class="report-title">입주청소 42평 · 송도 · 2026년 5월 작업</div>
+            <div class="report-desc">구역별 전·후 사진 전체 공개 — 눌러서 전체 보기</div>
           </div>
-          <span class="report-link-arrow">→</span>
+          <span class="report-arrow">→</span>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- ═══ 서비스 ═══ -->
-  <section class="section sand" id="services">
-    <div class="wrap">
-      <div class="eyebrow">Services</div>
-      <h2 class="heading">서비스 안내</h2>
+  <!-- ═══ Before/After 포트폴리오 ═══ -->
+  <section class="section" id="portfolio">
+    <div class="wrap center">
+      <div class="eyebrow">Portfolio</div>
+      <h2 class="heading">작업 기록 모음.</h2>
+      <p class="lead">고객 동의를 받은 작업 사례만 선별해 공개합니다. 식별 정보(이름·상세 주소·정확한 날짜)는 모두 가렸습니다.</p>
 
-      <div class="service-grid">
-        <div class="service">
-          <div class="service-name">입주청소</div>
-          <div class="service-tag">새 집 입주 전 전체 청소</div>
-          <div class="service-incl">주방 · 욕실 · 거실 · 방 · 창틀 · 베란다 전 구역</div>
-        </div>
-        <div class="service">
-          <div class="service-name">이사청소</div>
-          <div class="service-tag">이사 전후 빈 집 청소</div>
-          <div class="service-incl">바닥 · 벽 · 수납장 내부 · 욕실 · 베란다 마무리</div>
-        </div>
-        <div class="service">
-          <div class="service-name">거주청소</div>
-          <div class="service-tag">생활 중인 집 전문 청소</div>
-          <div class="service-incl">주방·욕실 집중 · 생활 먼지 · 정리 정돈</div>
-        </div>
+      <div class="portfolio-grid">
+        <article class="pf">
+          <div class="pf-pair">
+            <div class="pf-img before"><span class="pf-img-tag">BEFORE</span></div>
+            <div class="pf-img after"><span class="pf-img-tag">AFTER</span></div>
+          </div>
+          <div class="pf-meta">
+            <div class="pf-title">송도 입주청소 사례</div>
+            <div class="pf-info">42평 · 2026년 5월 작업</div>
+          </div>
+        </article>
+        <article class="pf">
+          <div class="pf-pair">
+            <div class="pf-img before"><span class="pf-img-tag">BEFORE</span></div>
+            <div class="pf-img after"><span class="pf-img-tag">AFTER</span></div>
+          </div>
+          <div class="pf-meta">
+            <div class="pf-title">청라 이사청소 사례</div>
+            <div class="pf-info">28평 · 2026년 4월 작업</div>
+          </div>
+        </article>
+        <article class="pf">
+          <div class="pf-pair">
+            <div class="pf-img before"><span class="pf-img-tag">BEFORE</span></div>
+            <div class="pf-img after"><span class="pf-img-tag">AFTER</span></div>
+          </div>
+          <div class="pf-meta">
+            <div class="pf-title">영종 입주청소 사례</div>
+            <div class="pf-info">34평 · 2026년 3월 작업</div>
+          </div>
+        </article>
+        <article class="pf">
+          <div class="pf-pair">
+            <div class="pf-img before"><span class="pf-img-tag">BEFORE</span></div>
+            <div class="pf-img after"><span class="pf-img-tag">AFTER</span></div>
+          </div>
+          <div class="pf-meta">
+            <div class="pf-title">청라 거주청소 사례</div>
+            <div class="pf-info">24평 · 2026년 2월 작업</div>
+          </div>
+        </article>
       </div>
-      <p class="service-note">
-        평수와 옵션에 따라 견적이 달라집니다. 우측 하단 <strong>견적 문의하기</strong>로 무료 견적을 받아보세요.
-      </p>
-    </div>
-  </section>
-
-  <!-- ═══ 갤러리 ═══ -->
-  <section class="section ink">
-    <div class="wrap">
-      <div class="eyebrow">Gallery</div>
-      <h2 class="heading">작업의 기준</h2>
-      <div class="gallery">
-        <div class="gallery-item"><span class="gallery-num">01</span><span class="gallery-label">친환경 세제</span></div>
-        <div class="gallery-item"><span class="gallery-num">02</span><span class="gallery-label">전용 장비</span></div>
-        <div class="gallery-item"><span class="gallery-num">03</span><span class="gallery-label">전문 작업자</span></div>
-        <div class="gallery-item"><span class="gallery-num">04</span><span class="gallery-label">작업 현장</span></div>
-        <div class="gallery-item"><span class="gallery-num">05</span><span class="gallery-label">완성된 공간</span></div>
-      </div>
+      <p class="portfolio-note">※ 이미지는 데모용 자리표시이며, 실제 출시 시 사장님이 직접 등록한 작업 사진으로 자동 큐레이션됩니다.</p>
     </div>
   </section>
 
   <!-- ═══ 인증 후기 ═══ -->
-  <section class="section" id="reviews">
-    <div class="wrap">
+  <section class="section sand" id="reviews">
+    <div class="wrap center">
       <div class="eyebrow">Verified Reviews</div>
-      <h2 class="heading">고객이 전하는 말</h2>
-      <p class="lead">
-        새로클린의 모든 후기는 <strong>클리닝매니저</strong>가 인증한 후기입니다.
-        청소가 실제로 완료된 뒤 서비스를 받은 고객 본인만 남길 수 있어,
-        광고용으로 만들어진 가짜 후기와는 다릅니다.
-      </p>
+      <h2 class="heading">고객이 전하는 말.</h2>
+      <p class="lead">새로클린의 모든 후기는 <strong>클리닝매니저</strong>가 인증합니다. 청소가 실제로 완료된 뒤 서비스를 받은 고객 본인만 남길 수 있어, 광고용 가짜 후기와는 다릅니다.</p>
 
       <div class="verify-points">
         <div class="verify-point">
           <div class="verify-point-mark">✓</div>
           <div>
-            <h4>고객 본인만 작성</h4>
-            <p>실제 청소를 받은 고객이 본인 인증을 거친 뒤에만 후기를 남깁니다.</p>
+            <h4>본인만 작성</h4>
+            <p>실제 청소를 받은 고객이 본인 인증을 거친 뒤에만 남깁니다.</p>
           </div>
         </div>
         <div class="verify-point">
@@ -1355,281 +1141,106 @@
         <span class="review-dot"></span>
         <span class="review-dot"></span>
       </div>
+    </div>
+  </section>
 
-      <div class="reviews-foot">
-        <span class="reviews-foot-stars">★★★★★</span>
-        <span class="reviews-foot-text">인증 후기 247건 · 평균 4.9</span>
-        <a href="#" class="reviews-more" onclick="return false;">후기 더 보기 →</a>
+  <!-- ═══ 대표 소개 ═══ -->
+  <section class="section" id="owner">
+    <div class="wrap center">
+      <div class="eyebrow">Owner</div>
+      <h2 class="heading">대표가 직접 책임집니다.</h2>
+
+      <div class="owner-card">
+        <div class="owner-mark"><img src="logo_mark.png" alt=""></div>
+        <div class="owner-quote">"맡겨주신 집, 대표가 직접 끝까지 책임지겠습니다."</div>
+        <p class="owner-bio">현장 10년 경력, 모든 작업에 처음부터 끝까지 함께합니다. 청소는 결과가 아니라 과정이 깨끗해야 한다는 믿음으로, 한 집에 온전히 집중합니다.</p>
+        <div class="owner-sign"><span class="owner-sign-rule"></span>새로클린 대표 드림</div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ 예약 ═══ -->
-  <section class="section sand" id="booking">
+  <!-- ═══ 마지막 예약 CTA ═══ -->
+  <section class="section sand">
     <div class="wrap">
-      <div class="eyebrow">Booking</div>
-      <h2 class="heading">예약폼 작성하기</h2>
-      <p class="lead">원하시는 날짜를 선택해 신청해주세요. 가예약 후 예약금 입금 시 최종 확정됩니다.</p>
-
-      <div class="booking-grid">
-        <!-- 좌: 캘린더 -->
-        <div>
-          <div class="field-label" style="margin-bottom:12px;">날짜 선택 <span class="req">*</span></div>
-          <div class="cal">
-            <div class="cal-head">
-              <button onclick="changeMonth(-1)">◀</button>
-              <div class="cal-title" id="cal-title"></div>
-              <button onclick="changeMonth(1)">▶</button>
-            </div>
-            <div class="cal-dow">
-              <div style="color:#C0392B;">일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div style="color:#2C5AA0;">토</div>
-            </div>
-            <div class="cal-grid" id="cal-grid"></div>
-            <div class="cal-legend">
-              <div><span class="cal-dot" style="background:#0F0F0F;"></span>선택됨</div>
-              <div><span class="cal-dot" style="background:#EBE7DD;"></span>마감</div>
-            </div>
-          </div>
-          <div class="selected-date" id="selected-date"></div>
-        </div>
-
-        <!-- 우: 폼 -->
-        <div>
-          <div class="field">
-            <label class="field-label">희망 시간</label>
-            <select class="input">
-              <option>오전 9시</option><option>오전 10시</option><option>오전 11시</option>
-              <option>오후 1시</option><option>오후 2시</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="field-label">성함 <span class="req">*</span></label>
-            <input type="text" class="input" placeholder="홍길동">
-          </div>
-          <div class="field">
-            <label class="field-label">연락처 <span class="req">*</span></label>
-            <input type="text" class="input" placeholder="010-1234-5678">
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label">평수 <span class="req">*</span></label>
-              <input type="text" class="input" placeholder="34평">
-            </div>
-            <div class="field">
-              <label class="field-label">서비스 <span class="req">*</span></label>
-              <select class="input">
-                <option>입주청소</option><option>이사청소</option><option>거주청소</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label class="field-label">추가 필요하신 서비스</label>
-            <div class="checks">
-              <div class="check" onclick="this.classList.toggle('checked')"><div class="check-box"></div>컬비</div>
-              <div class="check" onclick="this.classList.toggle('checked')"><div class="check-box"></div>외창 청소</div>
-              <input type="text" class="input" placeholder="직접 입력">
-              <input type="text" class="input" placeholder="직접 입력">
-            </div>
-          </div>
-          <div class="field">
-            <label class="field-label">특이사항</label>
-            <textarea class="textarea" placeholder="아이가 있어서 친환경 세제 부탁드려요!"></textarea>
-          </div>
+      <div class="final-cta">
+        <div class="eyebrow">Get Quote</div>
+        <h2>오늘 견적,<br>지금 5분 안에.</h2>
+        <p>성함과 연락처만 남겨주시면<br>대표가 직접 확인 후 연락드립니다.</p>
+        <div class="final-cta-ctas">
+          <a href="#" class="btn btn-primary" onclick="openQuote();return false;">무료 견적 문의</a>
+          <a href="tel:010-9876-5432" class="btn btn-ghost">바로 전화하기</a>
         </div>
       </div>
-
-      <div class="deposit">
-        <div class="deposit-label">가예약 안내</div>
-        <div class="deposit-text">
-          신청 완료 후 사장님이 확인하여 <strong>카카오톡으로 예약금 계좌를 안내</strong>드립니다.
-          예약금 입금이 확인되면 예약이 최종 확정됩니다.
-        </div>
-        <div class="deposit-row">
-          <span style="font-size:11px;color:var(--gray-2);font-weight:600;">예약금</span>
-          <span style="font-size:14px;font-weight:900;">50,000원</span>
-          <span style="font-size:11px;color:var(--gray);">·</span>
-          <span style="font-size:11px;color:var(--gray-2);font-weight:600;">입금 후 확정</span>
-        </div>
-      </div>
-
-      <button class="submit" onclick="submitBooking()">가예약 신청하기 →</button>
-
-      <div class="booking-success" id="booking-success">
-        <div style="font-size:15px;font-weight:800;margin-bottom:8px;">가예약 신청이 완료되었습니다</div>
-        <div style="font-size:12.5px;color:rgba(255,255,255,0.6);line-height:1.7;">사장님이 확인 후 카카오톡으로 예약금 안내를 드립니다.</div>
-      </div>
-
-      <p class="privacy">제출 시 개인정보 처리방침 및 예약 약관에 동의하는 것으로 간주됩니다.</p>
     </div>
   </section>
 
   <!-- ═══ 푸터 ═══ -->
   <footer class="footer">
     <div class="wrap">
-      <div class="footer-brand">
-        <img src="logo_mark.png" alt="" class="footer-logo">
-        <span>새로클린</span>
-      </div>
+      <div class="footer-brand">새로클린</div>
       <div class="footer-slogan">하루 한집, 대표가 직접 작업하는<br>입주·이사 청소 전문</div>
 
       <div class="footer-contact">
-        <div class="footer-row"><span class="footer-row-label">전화 문의</span><span class="footer-row-value">010-9876-5432</span></div>
-        <div class="footer-row"><span class="footer-row-label">카카오톡</span><span class="footer-row-value">@새로클린</span></div>
-        <div class="footer-row"><span class="footer-row-label">서비스 지역</span><span class="footer-row-value">서울 서부 · 경기 서부</span></div>
+        <div class="footer-row"><span class="footer-row-label">전화 문의</span><span class="footer-row-value"><a href="tel:010-9876-5432">010-9876-5432</a></span></div>
+        <div class="footer-row"><span class="footer-row-label">서비스 지역</span><span class="footer-row-value">인천 서부 · 송도 · 청라 · 영종</span></div>
         <div class="footer-row"><span class="footer-row-label">사업자등록번호</span><span class="footer-row-value">123-45-67890</span></div>
       </div>
 
       <div class="footer-bottom">
         <span>© 2026 새로클린. All rights reserved.</span>
-        <span>예시 페이지 · 출시 전 디자인 미리보기</span>
+        <span class="powered">Powered by <strong>클리닝매니저</strong></span>
       </div>
     </div>
   </footer>
 
-  <!-- ═══ 플로팅 견적 버튼 ═══ -->
-  <button class="fab" id="fab" onclick="openQuote()">
-    <span class="fab-logo"><img src="logo_mark.png" alt=""></span>
-    <span class="fab-text">견적 문의하기</span>
-  </button>
+  <!-- ═══ 모바일 하단 고정 CTA ═══ -->
+  <div class="sticky-cta" id="sticky-cta">
+    <a href="tel:010-9876-5432" class="btn btn-call" aria-label="전화">☎</a>
+    <button class="btn btn-quote" onclick="openQuote()">무료 견적 문의</button>
+  </div>
 
-  <!-- ═══ 견적 위저드 모달 ═══ -->
+  <!-- ═══ 견적 위저드 모달 (1-step) ═══ -->
   <div class="quote-modal" id="quote-modal" onclick="if(event.target===this)closeQuote()">
     <div class="quote-panel">
       <div class="quote-top">
         <button class="quote-close" onclick="closeQuote()">✕</button>
-        <div class="quote-step-label" id="quote-step-label">Step 1 / 3</div>
-        <div class="quote-progress"><div class="quote-progress-bar" id="quote-progress-bar"></div></div>
+        <div class="quote-eyebrow">무료 견적 문의</div>
+        <div class="quote-q">연락처만 남겨주세요</div>
+        <div class="quote-q-sub">대표가 직접 확인 후 연락드립니다. 서비스 종류·평수는 통화에서 안내드려도 됩니다.</div>
       </div>
 
-      <div class="quote-body">
-        <!-- 1단계: 서비스 종류 -->
-        <div class="quote-step" id="quote-step-1" data-step="1">
-          <div class="quote-q">어떤 청소가 필요하세요?</div>
-          <div class="quote-options">
-            <div class="quote-opt" onclick="selectService(this,'입주청소')">
-              <div class="quote-opt-name">입주청소</div>
-              <div class="quote-opt-desc">새 집 입주 전 전체 청소</div>
-            </div>
-            <div class="quote-opt" onclick="selectService(this,'이사청소')">
-              <div class="quote-opt-name">이사청소</div>
-              <div class="quote-opt-desc">이사 전후 빈 집 청소</div>
-            </div>
-            <div class="quote-opt" onclick="selectService(this,'거주청소')">
-              <div class="quote-opt-name">거주청소</div>
-              <div class="quote-opt-desc">생활 중인 집 전문 청소</div>
-            </div>
-          </div>
+      <div class="quote-body" id="quote-body">
+        <div class="field">
+          <label class="field-label">성함 <span class="req">*</span></label>
+          <input type="text" id="q-name" class="input" placeholder="홍길동">
         </div>
-
-        <!-- 2단계: 평수 · 희망 날짜 -->
-        <div class="quote-step" id="quote-step-2" data-step="2" style="display:none;">
-          <div class="quote-q">평수와 희망 날짜를<br>알려주세요</div>
-          <div class="field">
-            <label class="field-label">평수 <span class="req">*</span></label>
-            <input type="text" id="q-size" class="input" placeholder="예: 34평">
-          </div>
-          <div class="field">
-            <label class="field-label">희망 날짜</label>
-            <input type="date" id="q-date" class="input">
-            <div style="font-size:11px;color:var(--gray);margin-top:7px;">날짜가 미정이면 비워두셔도 됩니다.</div>
-          </div>
+        <div class="field">
+          <label class="field-label">연락처 <span class="req">*</span></label>
+          <input type="text" id="q-phone" class="input" placeholder="010-1234-5678" inputmode="numeric">
         </div>
-
-        <!-- 3단계: 연락처 -->
-        <div class="quote-step" id="quote-step-3" data-step="3" style="display:none;">
-          <div class="quote-q">어디로 견적을<br>보내드릴까요?</div>
-          <div class="field">
-            <label class="field-label">성함 <span class="req">*</span></label>
-            <input type="text" id="q-name" class="input" placeholder="홍길동">
-          </div>
-          <div class="field">
-            <label class="field-label">연락처 <span class="req">*</span></label>
-            <input type="text" id="q-phone" class="input" placeholder="010-1234-5678">
-          </div>
-          <div style="font-size:12.5px;color:var(--gray-2);line-height:1.7;margin-top:6px;">
-            입력하신 연락처로 사장님이 직접 견적을 안내드립니다.
-          </div>
+        <div class="field">
+          <label class="field-label">추가 안내사항 <span class="req">(선택)</span></label>
+          <textarea id="q-memo" class="textarea" placeholder="예) 친환경 세제 부탁드려요 / 5월 마지막 주 희망"></textarea>
         </div>
-
-        <!-- 완료 -->
-        <div class="quote-step" id="quote-done" data-step="done" style="display:none;text-align:center;padding:14px 0;">
-          <div class="quote-done-icon">✓</div>
-          <div style="font-size:19px;font-weight:900;letter-spacing:-0.03em;margin-bottom:10px;">견적 문의가 접수되었습니다</div>
-          <div style="font-size:13px;color:var(--gray-2);line-height:1.75;margin-bottom:26px;">입력하신 연락처로 사장님이<br>직접 견적을 안내드립니다.</div>
-          <button class="quote-next" style="width:100%;" onclick="closeQuote()">확인</button>
+        <div class="quote-note">
+          접수되면 <strong>"문의 접수, 곧 연락드릴게요"</strong> 알림톡이 자동으로 갑니다. 작업 중이라 통화가 어려우시면 폼을 남겨주세요.
         </div>
       </div>
 
       <div class="quote-foot" id="quote-foot">
-        <button class="quote-back" id="quote-back" onclick="quotePrev()">이전</button>
-        <button class="quote-next" id="quote-next" onclick="quoteNext()">다음</button>
+        <button class="quote-submit" id="quote-submit" onclick="submitQuote()">견적 문의 보내기</button>
+      </div>
+
+      <div class="quote-done" id="quote-done" style="display:none;padding:34px 24px 28px;">
+        <div class="quote-done-icon">✓</div>
+        <h3>문의가 접수되었습니다</h3>
+        <p>대표가 직접 확인 후<br>곧 연락드리겠습니다.</p>
+        <button class="quote-submit" onclick="closeQuote()">확인</button>
       </div>
     </div>
   </div>
 
 <script>
-// ── 견적 위저드 ──
-var quoteStep = 1;
-var quoteData = { service: '' };
-
-function openQuote() {
-  document.getElementById('quote-modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  document.getElementById('fab').style.display = 'none';
-  showQuoteStep(1);
-}
-function closeQuote() {
-  document.getElementById('quote-modal').classList.remove('open');
-  document.body.style.overflow = '';
-  document.getElementById('fab').style.display = 'flex';
-}
-function showQuoteStep(s) {
-  quoteStep = s;
-  [1,2,3].forEach(function(n) {
-    document.getElementById('quote-step-' + n).style.display = (n===s) ? 'block' : 'none';
-  });
-  document.getElementById('quote-done').style.display = 'none';
-  document.getElementById('quote-foot').style.display = 'flex';
-  document.getElementById('quote-step-label').textContent = 'Step ' + s + ' / 3';
-  document.getElementById('quote-progress-bar').style.width = (s * 33.34) + '%';
-  document.getElementById('quote-back').disabled = (s === 1);
-  document.getElementById('quote-next').textContent = (s === 3) ? '견적 문의 보내기' : '다음';
-}
-function selectService(el, val) {
-  var opts = document.querySelectorAll('#quote-step-1 .quote-opt');
-  for (var i=0; i<opts.length; i++) opts[i].classList.remove('selected');
-  el.classList.add('selected');
-  quoteData.service = val;
-}
-function quoteNext() {
-  if (quoteStep === 1) {
-    if (!quoteData.service) { alert('청소 종류를 선택해주세요'); return; }
-    showQuoteStep(2);
-  } else if (quoteStep === 2) {
-    if (!document.getElementById('q-size').value.trim()) { alert('평수를 입력해주세요'); return; }
-    showQuoteStep(3);
-  } else if (quoteStep === 3) {
-    var n = document.getElementById('q-name').value.trim();
-    var p = document.getElementById('q-phone').value.trim();
-    if (!n || !p) { alert('성함과 연락처를 입력해주세요'); return; }
-    [1,2,3].forEach(function(x) { document.getElementById('quote-step-' + x).style.display = 'none'; });
-    document.getElementById('quote-done').style.display = 'block';
-    document.getElementById('quote-foot').style.display = 'none';
-    document.getElementById('quote-step-label').textContent = '완료';
-    document.getElementById('quote-progress-bar').style.width = '100%';
-  }
-}
-function quotePrev() {
-  if (quoteStep > 1) showQuoteStep(quoteStep - 1);
-}
-
-// ── 네비게이션 스크롤 ──
-var nav = document.getElementById('nav');
-window.addEventListener('scroll', function() {
-  if (window.scrollY > 60) nav.classList.add('scrolled');
-  else nav.classList.remove('scrolled');
-});
-
 // ── 히어로 영상 (자동재생 실패 시 포스터 폴백) ──
 (function() {
   var v = document.querySelector('.hero video');
@@ -1649,6 +1260,57 @@ window.addEventListener('scroll', function() {
     if (!document.hidden && v.paused) tryPlay();
   });
 })();
+
+// ── 견적 모달 ──
+function openQuote() {
+  document.getElementById('quote-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeQuote() {
+  document.getElementById('quote-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  // 다음 열기에 대비해 폼 초기화
+  setTimeout(function() {
+    document.getElementById('quote-body').style.display = 'block';
+    document.getElementById('quote-foot').style.display = 'block';
+    document.getElementById('quote-done').style.display = 'none';
+    document.getElementById('q-name').value = '';
+    document.getElementById('q-phone').value = '';
+    document.getElementById('q-memo').value = '';
+  }, 320);
+}
+function submitQuote() {
+  var name = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) {
+    alert('성함과 연락처를 입력해주세요');
+    return;
+  }
+  // 데모: 실제 제출은 Phase 1 데이터 연동 단계에서 Supabase 저장 + 알림톡 발송
+  document.getElementById('quote-body').style.display = 'none';
+  document.getElementById('quote-foot').style.display = 'none';
+  document.getElementById('quote-done').style.display = 'block';
+}
+
+// ── 네비게이션 스크롤 + 하단 고정 CTA ──
+var nav = document.getElementById('nav');
+var stickyCta = document.getElementById('sticky-cta');
+var heroEl = document.querySelector('.hero');
+function onScroll() {
+  if (window.scrollY > 60) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+  // 모바일에서만 sticky CTA 노출, 히어로 지나면 보이게
+  if (window.innerWidth <= 860 && heroEl) {
+    var heroBottom = heroEl.offsetTop + heroEl.offsetHeight;
+    if (window.scrollY > heroBottom - 100) stickyCta.classList.add('show');
+    else stickyCta.classList.remove('show');
+  } else {
+    stickyCta.classList.remove('show');
+  }
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('resize', onScroll);
+onScroll();
 
 // ── 지표 카운트업 ──
 (function() {
@@ -1742,86 +1404,6 @@ window.addEventListener('scroll', function() {
     }, 90);
   });
 })();
-
-// ── 캘린더 ──
-var today = new Date();
-var curYear = today.getFullYear();
-var curMonth = today.getMonth();
-var selectedDate = null;
-var closedDates = [
-  new Date(curYear, curMonth, today.getDate() + 2),
-  new Date(curYear, curMonth, today.getDate() + 5),
-  new Date(curYear, curMonth, today.getDate() + 8),
-];
-
-function isClosed(d) {
-  return closedDates.some(function(c) {
-    return c.getFullYear()===d.getFullYear() && c.getMonth()===d.getMonth() && c.getDate()===d.getDate();
-  });
-}
-
-function renderCalendar() {
-  var months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-  document.getElementById('cal-title').textContent = curYear + '년 ' + months[curMonth];
-  var grid = document.getElementById('cal-grid');
-  grid.innerHTML = '';
-  var first = new Date(curYear, curMonth, 1).getDay();
-  var days = new Date(curYear, curMonth+1, 0).getDate();
-  for (var i=0; i<first; i++) grid.appendChild(document.createElement('div'));
-  for (var d=1; d<=days; d++) {
-    var date = new Date(curYear, curMonth, d);
-    var btn = document.createElement('div');
-    btn.textContent = d;
-    btn.style.cssText = 'text-align:center;padding:9px 2px;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.15s;';
-    var isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    var isSun = date.getDay()===0;
-    var isSat = date.getDay()===6;
-    var closed = isClosed(date);
-    var isSelected = selectedDate && date.getFullYear()===selectedDate.getFullYear() && date.getMonth()===selectedDate.getMonth() && date.getDate()===selectedDate.getDate();
-    if (isSelected) {
-      btn.style.background = '#0F0F0F'; btn.style.color = '#fff';
-    } else if (isPast) {
-      btn.style.color = '#CFCBC2'; btn.style.cursor = 'default';
-    } else if (closed) {
-      btn.style.background = '#EBE7DD'; btn.style.color = '#9A958C'; btn.style.cursor = 'default';
-    } else if (isSun) {
-      btn.style.color = '#C0392B';
-    } else if (isSat) {
-      btn.style.color = '#2C5AA0';
-    } else {
-      btn.style.color = '#0F0F0F';
-      btn.onmouseenter = function() { this.style.background = '#F4F1EB'; };
-      btn.onmouseleave = function() { this.style.background = ''; };
-      (function(dt, b) {
-        b.onclick = function() {
-          selectedDate = dt;
-          renderCalendar();
-          var dows = ['일','월','화','수','목','금','토'];
-          var disp = document.getElementById('selected-date');
-          disp.style.display = 'block';
-          disp.textContent = '선택한 날짜  ' + dt.getFullYear() + '.' + String(dt.getMonth()+1).padStart(2,'0') + '.' + String(dt.getDate()).padStart(2,'0') + ' (' + dows[dt.getDay()] + ')';
-        };
-      })(date, btn);
-    }
-    grid.appendChild(btn);
-  }
-}
-
-function changeMonth(dir) {
-  curMonth += dir;
-  if (curMonth > 11) { curMonth = 0; curYear++; }
-  if (curMonth < 0) { curMonth = 11; curYear--; }
-  renderCalendar();
-}
-
-function submitBooking() {
-  if (!selectedDate) { alert('날짜를 선택해주세요'); return; }
-  document.getElementById('booking-success').style.display = 'block';
-  document.querySelector('.submit').style.display = 'none';
-  document.getElementById('booking-success').scrollIntoView({behavior:'smooth', block:'center'});
-}
-
-renderCalendar();
 </script>
 </body>
 </html>
