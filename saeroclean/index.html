@@ -224,60 +224,6 @@
       50% { transform: translateX(-50%) translateY(6px); }
     }
 
-    /* ─── 히어로 미리보기 카드 (Before/After mini) ─── */
-    .hero-preview {
-      margin: 44px auto 0;
-      max-width: 360px;
-      background: rgba(255,255,255,0.95);
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.32);
-    }
-    .hero-preview-label {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--gray-2);
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      text-align: left;
-    }
-    .hero-preview-pair {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .hero-preview-img {
-      aspect-ratio: 1 / 1;
-      border-radius: 6px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-preview-img.before { background: linear-gradient(135deg,#42342b,#7c6452); }
-    .hero-preview-img.after { background: linear-gradient(135deg,#dfe8e8,#a9bdbe); }
-    .hero-preview-tag {
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      color: #fff;
-      background: rgba(0,0,0,0.55);
-      padding: 3px 7px;
-      border-radius: 3px;
-    }
-    .hero-preview-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 11.5px;
-      color: var(--ink);
-      font-weight: 600;
-    }
-    .hero-preview-meta .arrow { color: var(--gray-2); }
-
     /* ─── 공통 섹션 ─── */
     .section { padding: 110px 0; }
     .section.sand { background: var(--sand); }
@@ -1051,20 +997,32 @@
         <a href="#" class="btn btn-primary" onclick="openQuote();return false;">무료 견적 문의</a>
         <a href="tel:010-9876-5432" class="btn btn-ghost">바로 전화하기</a>
       </div>
-      <div class="hero-preview">
-        <div class="hero-preview-label">실제 리포트 미리보기</div>
-        <div class="hero-preview-pair">
-          <div class="hero-preview-img before"><span class="hero-preview-tag">BEFORE</span></div>
-          <div class="hero-preview-img after"><span class="hero-preview-tag">AFTER</span></div>
-        </div>
-        <div class="hero-preview-meta">
-          <span>입주청소 · 42평 · 주방 구역</span>
-          <span class="arrow">↓ 자세히</span>
-        </div>
-      </div>
     </div>
     <div class="scroll-cue">Scroll</div>
   </header>
+
+  <!-- ═══ 실제 작업 리포트 ═══ -->
+  <section class="section sand" id="report">
+    <div class="wrap center">
+      <div class="eyebrow">Real Report</div>
+      <h2 class="heading">고객에게 보내는<br>실제 작업 리포트.</h2>
+      <p class="lead">새로클린이 작업을 마치고 고객에게 보낸 실제 리포트입니다. 구역별 전·후 사진, 사용한 세제, 소요 시간까지 그대로 들어가 있습니다.</p>
+
+      <a href="https://cleaningmanager.kr/?id=314ec716-dc4d-45a2-a140-4f2be9ad255d" target="_blank" class="report-card">
+        <div class="report-preview">
+          <iframe src="https://cleaningmanager.kr/?id=314ec716-dc4d-45a2-a140-4f2be9ad255d" loading="lazy" scrolling="no" tabindex="-1" title="작업 리포트 미리보기"></iframe>
+        </div>
+        <div class="report-bar">
+          <div>
+            <span class="report-badge">실제 전달 리포트</span>
+            <div class="report-title">입주청소 42평 · 송도 · 2026년 5월 작업</div>
+            <div class="report-desc">구역별 전·후 사진 전체 공개 — 눌러서 전체 보기</div>
+          </div>
+          <span class="report-arrow">→</span>
+        </div>
+      </a>
+    </div>
+  </section>
 
   <!-- ═══ 지표 ═══ -->
   <section class="section" style="padding:0;">
@@ -1160,29 +1118,6 @@
         <div class="gallery-item"><span class="gallery-num">05</span><span class="gallery-label">완성된 공간</span></div>
       </div>
       <p class="gallery-note">※ 이미지는 데모용 자리표시이며, 출시 시 사장님이 직접 등록한 사진으로 채워집니다.</p>
-    </div>
-  </section>
-
-  <!-- ═══ 실제 작업 리포트 ═══ -->
-  <section class="section sand" id="report">
-    <div class="wrap center">
-      <div class="eyebrow">Real Report</div>
-      <h2 class="heading">고객에게 보내는<br>실제 작업 리포트.</h2>
-      <p class="lead">새로클린이 작업을 마치고 고객에게 보낸 실제 리포트입니다. 구역별 전·후 사진, 사용한 세제, 소요 시간까지 그대로 들어가 있습니다.</p>
-
-      <a href="https://cleaningmanager.kr/?id=314ec716-dc4d-45a2-a140-4f2be9ad255d" target="_blank" class="report-card">
-        <div class="report-preview">
-          <iframe src="https://cleaningmanager.kr/?id=314ec716-dc4d-45a2-a140-4f2be9ad255d" loading="lazy" scrolling="no" tabindex="-1" title="작업 리포트 미리보기"></iframe>
-        </div>
-        <div class="report-bar">
-          <div>
-            <span class="report-badge">실제 전달 리포트</span>
-            <div class="report-title">입주청소 42평 · 송도 · 2026년 5월 작업</div>
-            <div class="report-desc">구역별 전·후 사진 전체 공개 — 눌러서 전체 보기</div>
-          </div>
-          <span class="report-arrow">→</span>
-        </div>
-      </a>
     </div>
   </section>
 
