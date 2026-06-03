@@ -160,24 +160,39 @@
       const sub = doc.querySelector('.hero-sub');
       if (sub) sub.innerHTML = esc(row.hero_sub).replace(/\n/g, '<br>');
     }
-    if (row.hero_video_url) {
-      const video = doc.querySelector('.hero video');
-      if (video) {
-        video.querySelectorAll('source').forEach(function(s) { s.remove(); });
-        video.setAttribute('src', row.hero_video_url);
-      }
-    }
-    if (row.hero_poster_url) {
+    // 사장님이 영상/포스터 중 하나라도 업로드했으면 saeroclean 기본 미디어는 완전 교체
+    const hasCustomMedia = !!row.hero_video_url || !!row.hero_poster_url;
+    if (hasCustomMedia) {
       const hero = doc.querySelector('.hero');
+      const video = doc.querySelector('.hero video');
+
+      if (row.hero_video_url) {
+        // 영상 있음 → 사장님 영상 사용
+        if (video) {
+          video.querySelectorAll('source').forEach(function(s) { s.remove(); });
+          video.setAttribute('src', row.hero_video_url);
+          if (row.hero_poster_url) {
+            video.setAttribute('poster', row.hero_poster_url);
+          }
+        }
+      } else {
+        // 영상 없고 포스터만 → video 요소 자체 제거 (기본 영상 안 보이게)
+        if (video) video.remove();
+      }
+
+      // 배경 이미지: 사장님 포스터가 있으면 그것, 없으면 기본 saeroclean 포스터 제거(검정)
       if (hero) {
         const existing = hero.getAttribute('style') || '';
-        hero.setAttribute('style', existing +
-          ";background-image:url('" + row.hero_poster_url +
-          "');background-size:cover;background-position:center;background-repeat:no-repeat;");
+        if (row.hero_poster_url) {
+          hero.setAttribute('style', existing +
+            ";background-image:url('" + row.hero_poster_url +
+            "');background-size:cover;background-position:center;background-repeat:no-repeat;");
+        } else {
+          // 영상만 있고 포스터 없음 → 기본 포스터 제거 (검정 배경에서 영상 로딩)
+          hero.setAttribute('style', existing +
+            ";background-image:none;background-color:#000;");
+        }
       }
-      // video의 poster 속성도 같이 (영상 로딩 전 첫 프레임)
-      const video = doc.querySelector('.hero video');
-      if (video) video.setAttribute('poster', row.hero_poster_url);
     }
 
     // (다음에 추가될 항목)
