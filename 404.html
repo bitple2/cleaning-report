@@ -124,6 +124,7 @@
     // 섹션 노출/숨김 (section_visibility)
     const vis = row.section_visibility || {};
     const sectionMap = {
+      hero: '.hero',
       report: '#report',
       differentiators: '#diff',
       services: '#services',
@@ -147,9 +148,39 @@
       });
     }
 
-    // (Phase B-3+에서 추가될 항목들)
-    // - hero_video_url, hero_poster_url
-    // - hero_headline, hero_sub
+    // ─── 히어로 텍스트/미디어 (DB 값이 있으면 덮어쓰기) ───
+    function esc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    if (row.hero_headline) {
+      const h1 = doc.querySelector('.hero h1');
+      if (h1) h1.innerHTML = esc(row.hero_headline).replace(/\n/g, '<br>');
+    }
+    if (row.hero_sub) {
+      const sub = doc.querySelector('.hero-sub');
+      if (sub) sub.innerHTML = esc(row.hero_sub).replace(/\n/g, '<br>');
+    }
+    if (row.hero_video_url) {
+      const video = doc.querySelector('.hero video');
+      if (video) {
+        video.querySelectorAll('source').forEach(function(s) { s.remove(); });
+        video.setAttribute('src', row.hero_video_url);
+      }
+    }
+    if (row.hero_poster_url) {
+      const hero = doc.querySelector('.hero');
+      if (hero) {
+        const existing = hero.getAttribute('style') || '';
+        hero.setAttribute('style', existing +
+          ";background-image:url('" + row.hero_poster_url +
+          "');background-size:cover;background-position:center;background-repeat:no-repeat;");
+      }
+      // video의 poster 속성도 같이 (영상 로딩 전 첫 프레임)
+      const video = doc.querySelector('.hero video');
+      if (video) video.setAttribute('poster', row.hero_poster_url);
+    }
+
+    // (다음에 추가될 항목)
     // - standards_images[] → #standards 갤러리
     // - owner_photo_url, owner_quote, owner_bio
     // - booking modal의 company_id
