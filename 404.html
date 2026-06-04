@@ -205,11 +205,11 @@
         const d = (item.description || '').trim();
         if (t) {
           const h = card.querySelector('h3');
-          if (h) h.textContent = t;
+          if (h) h.innerHTML = esc(t).replace(/\n/g, '<br>');
         }
         if (d) {
           const p = card.querySelector('p');
-          if (p) p.textContent = d;
+          if (p) p.innerHTML = esc(d).replace(/\n/g, '<br>');
         }
       });
     }
