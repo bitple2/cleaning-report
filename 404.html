@@ -213,6 +213,10 @@
         }
       });
     }
+    // 차별점 설명: 마침표 뒤 자동 줄바꿈 (사장님 콘텐츠 + saeroclean 기본 둘 다 적용)
+    doc.querySelectorAll('#diff .diff p').forEach(function(p) {
+      p.innerHTML = p.innerHTML.replace(/\.\s+/g, '.<br>');
+    });
 
     // (다음에 추가될 항목)
     // - services[] → #services 3 카드
