@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>잠시만요...</title>
 <meta name="robots" content="noindex">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <style>
   body {
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -59,6 +62,7 @@
         select: '*,company:companies(id,name,is_paid)'
       }).toString();
       const resp = await fetch(SB_URL + '/rest/v1/company_homepages?' + qs, {
+        cache: 'no-store',
         headers: {
           'apikey': SB_ANON,
           'Authorization': 'Bearer ' + SB_ANON,
@@ -87,7 +91,10 @@
   }
 
   async function renderHomepage(row, company) {
-    const resp = await fetch(TEMPLATE_PATH + 'index.html');
+    // 캐시 우회 — saeroclean 템플릿이 업데이트되면 즉시 반영
+    const resp = await fetch(
+        TEMPLATE_PATH + 'index.html?t=' + Date.now(),
+        { cache: 'no-store' });
     if (!resp.ok) { showNotFound(); return; }
     const html = await resp.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
