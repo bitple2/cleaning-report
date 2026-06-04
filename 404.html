@@ -225,8 +225,31 @@
       p.innerHTML = p.innerHTML.replace(/\.\s+/g, '.<br>');
     });
 
+    // ─── 서비스 안내 (#services 3 카드) ───
+    if (row.services && Array.isArray(row.services)) {
+      const svcCards = doc.querySelectorAll('#services .service');
+      row.services.forEach(function(item, i) {
+        if (i >= svcCards.length || !item || typeof item !== 'object') return;
+        const card = svcCards[i];
+        const n = (item.name || '').trim();
+        const t = (item.tag || '').trim();
+        const inc = (item.included || '').trim();
+        if (n) {
+          const el = card.querySelector('.service-name');
+          if (el) el.innerHTML = esc(n).replace(/\n/g, '<br>');
+        }
+        if (t) {
+          const el = card.querySelector('.service-tag');
+          if (el) el.innerHTML = esc(t).replace(/\n/g, '<br>');
+        }
+        if (inc) {
+          const el = card.querySelector('.service-incl');
+          if (el) el.innerHTML = esc(inc).replace(/\n/g, '<br>');
+        }
+      });
+    }
+
     // (다음에 추가될 항목)
-    // - services[] → #services 3 카드
     // - standards_images[] → #standards 갤러리
     // - owner_photo_url, owner_quote, owner_bio
     // - booking modal의 company_id
