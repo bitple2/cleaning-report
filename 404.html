@@ -195,7 +195,27 @@
       }
     }
 
+    // ─── 이런 점이 다릅니다 (#diff 4 카드) ───
+    if (row.differentiators && Array.isArray(row.differentiators)) {
+      const diffCards = doc.querySelectorAll('#diff .diff');
+      row.differentiators.forEach(function(item, i) {
+        if (i >= diffCards.length || !item || typeof item !== 'object') return;
+        const card = diffCards[i];
+        const t = (item.title || '').trim();
+        const d = (item.description || '').trim();
+        if (t) {
+          const h = card.querySelector('h3');
+          if (h) h.textContent = t;
+        }
+        if (d) {
+          const p = card.querySelector('p');
+          if (p) p.textContent = d;
+        }
+      });
+    }
+
     // (다음에 추가될 항목)
+    // - services[] → #services 3 카드
     // - standards_images[] → #standards 갤러리
     // - owner_photo_url, owner_quote, owner_bio
     // - booking modal의 company_id
