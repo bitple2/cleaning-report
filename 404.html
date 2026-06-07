@@ -197,7 +197,50 @@
         el.textContent = company.is_paid ? '완료' : '—';
       });
 
-      // 2) 최근 후기 3건 fetch
+      // 2) 최근 작업 기록 6건 fetch (RPC)
+      const rwResp = await fetch(SB_URL + '/rest/v1/rpc/public_profile_recent_work', {
+        method: 'POST',
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SB_ANON,
+          'Authorization': 'Bearer ' + SB_ANON
+        },
+        body: JSON.stringify({ profile_slug: row.slug, work_limit: 6 })
+      });
+      if (rwResp.ok) {
+        const works = await rwResp.json();
+        if (Array.isArray(works) && works.length > 0) {
+          const listEl = doc.querySelector('[data-recent-work-list]');
+          if (listEl) {
+            listEl.innerHTML = '<div class="work-list">' +
+              works.map(function(w) {
+                const dt = new Date(w.date);
+                const dateStr = (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일';
+                const region = escHtml(w.address_region || '—');
+                const pyeong = w.size_pyeong != null ? w.size_pyeong : '—';
+                const service = escHtml(w.service_type || '');
+                const photoCount = w.photo_count || 0;
+                const photoHtml = w.photo_url
+                  ? '<img src="' + escHtml(w.photo_url) + '" alt="">'
+                  : '<div class="work-photo-empty">📷</div>';
+                return '<a class="work-card" href="/?id=' +
+                  encodeURIComponent(w.report_id) + '&public=1">' +
+                  '<div class="work-photo">' + photoHtml +
+                    '<span class="work-date-badge">' + dateStr + '</span></div>' +
+                  '<div class="work-meta">' +
+                    '<div class="work-region">' + region + '</div>' +
+                    '<div class="work-spec">' + pyeong + '평 · ' + service + '</div>' +
+                    '<div class="work-photo-count">사진 ' + photoCount + '장</div>' +
+                    '<div class="work-report-btn">리포트 보기 ›</div>' +
+                  '</div></a>';
+              }).join('') +
+              '</div>';
+          }
+        }
+      }
+
+      // 3) 최근 후기 3건 fetch
       const rvResp = await fetch(
         SB_URL + '/rest/v1/reviews?' + new URLSearchParams({
           company_id: 'eq.' + company.id,
