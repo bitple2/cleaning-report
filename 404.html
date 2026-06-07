@@ -197,55 +197,60 @@
         el.textContent = company.is_paid ? '완료' : '—';
       });
 
-      // ─── 신뢰 배지 (활성된 것만 표시) ───
+      // ─── 신뢰 배지 (활성/비활성 4종 모두 표시) ───
       const badgeStats = (typeof stats === 'object' && stats) ? stats : {};
       const last = badgeStats.last_report_at
           ? new Date(badgeStats.last_report_at).getTime() : 0;
-      const days30 = last && (Date.now() - last) / 86400000 <= 30;
+      const daysSinceLast = last ? (Date.now() - last) / 86400000 : Infinity;
+      const reportsN = badgeStats.reports_count || 0;
+      const reviewsN = badgeStats.reviews_count || 0;
 
-      const badges = [];
-      if (days30) {
-        badges.push({
+      const badges = [
+        {
           label: '최근 30일<br>작업 있음',
-          svg: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 12 15 16 10"/>'
-        });
-      }
-      if ((badgeStats.reports_count || 0) > 0) {
-        badges.push({
+          svg: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 12 15 16 10"/>',
+          active: daysSinceLast <= 30,
+          criteriaActive: '최근 작업 확인됨',
+          criteriaInactive: '30일 이내 작업 필요'
+        },
+        {
           label: '실제 리포트<br>공개',
-          svg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 14 11 16 15 12"/>'
-        });
-      }
-      if ((badgeStats.reviews_count || 0) > 0) {
-        badges.push({
+          svg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 14 11 16 15 12"/>',
+          active: reportsN > 0,
+          criteriaActive: reportsN + '건 공개됨',
+          criteriaInactive: '리포트 1건 이상 필요'
+        },
+        {
           label: '실제 후기<br>공개',
-          svg: '<polygon points="12 2 15 8.5 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 9 8.5 12 2"/>'
-        });
-      }
-      // 대표 직접 시공 — 기본 활성
-      badges.push({
-        label: '대표 직접<br>시공',
-        svg: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'
-      });
+          svg: '<polygon points="12 2 15 8.5 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 9 8.5 12 2"/>',
+          active: reviewsN > 0,
+          criteriaActive: reviewsN + '개 공개됨',
+          criteriaInactive: '후기 1건 이상 필요'
+        },
+        {
+          label: '대표 직접<br>시공',
+          svg: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+          active: true,
+          criteriaActive: '플랫폼 검증',
+          criteriaInactive: ''
+        }
+      ];
 
       const badgeListEl = doc.querySelector('[data-badges-list]');
       if (badgeListEl) {
-        if (badges.length > 0) {
-          badgeListEl.innerHTML = '<div class="badge-list">' +
-            badges.map(function(b) {
-              return '<div class="badge-card">' +
-                '<div class="badge-icon">' +
-                  '<svg viewBox="0 0 24 24">' + b.svg + '</svg>' +
-                '</div>' +
-                '<div class="badge-label">' + b.label + '</div>' +
-              '</div>';
-            }).join('') +
+        badgeListEl.innerHTML = '<div class="badge-list">' +
+          badges.map(function(b) {
+            const cls = b.active ? 'badge-card' : 'badge-card inactive';
+            const criteria = b.active ? b.criteriaActive : b.criteriaInactive;
+            return '<div class="' + cls + '">' +
+              '<div class="badge-icon">' +
+                '<svg viewBox="0 0 24 24">' + b.svg + '</svg>' +
+              '</div>' +
+              '<div class="badge-label">' + b.label + '</div>' +
+              (criteria ? '<div class="badge-criteria">' + criteria + '</div>' : '') +
             '</div>';
-        } else {
-          // 활성 배지 0개 → 섹션 헤더도 숨김
-          const sec = doc.querySelector('[data-badges-section]');
-          if (sec) sec.style.display = 'none';
-        }
+          }).join('') +
+          '</div>';
       }
 
       // 2) 최근 작업 기록 6건 fetch (RPC)

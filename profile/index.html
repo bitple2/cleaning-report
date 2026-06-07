@@ -372,7 +372,7 @@
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 12px;
-    padding: 14px 6px 13px;
+    padding: 14px 6px 12px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -405,6 +405,30 @@
     color: var(--ink);
     line-height: 1.35;
     letter-spacing: -0.03em;
+  }
+  .badge-criteria {
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 500;
+    line-height: 1.4;
+    margin-top: 5px;
+    letter-spacing: -0.02em;
+  }
+  /* 비활성 — 흐리게 표시 */
+  .badge-card.inactive {
+    background: var(--bg);
+    border-color: var(--line-2);
+  }
+  .badge-card.inactive .badge-icon {
+    background: var(--muted-2);
+    box-shadow: none;
+    opacity: 0.85;
+  }
+  .badge-card.inactive .badge-label {
+    color: var(--muted);
+  }
+  .badge-card.inactive .badge-criteria {
+    color: var(--muted-2);
   }
 
   /* ─── Review card ─── */
