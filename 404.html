@@ -152,13 +152,114 @@
       });
     }
 
-    // 통계 (Phase 1 — DB 직접 컬럼 우선 표시. reports/reviews 자동집계는 Phase 2)
-    // 현재는 placeholder 그대로 두고, 데이터 채우기는 다음 단계에서 추가.
+    // ─── 통계 + 후기 자동 채우기 (Phase 1.1) ───
+    try {
+      // 1) 통계 RPC 호출
+      const statsResp = await fetch(SB_URL + '/rest/v1/rpc/public_profile_stats', {
+        method: 'POST',
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SB_ANON,
+          'Authorization': 'Bearer ' + SB_ANON
+        },
+        body: JSON.stringify({ profile_slug: row.slug })
+      });
+      if (statsResp.ok) {
+        const stats = await statsResp.json();
+        if (stats && typeof stats === 'object') {
+          const fmt = function(n) { return n == null ? '0' : String(n); };
+          const rating = stats.avg_rating == null
+              ? '—'
+              : Number(stats.avg_rating).toFixed(1);
+          doc.querySelectorAll('[data-jobs-count]').forEach(function(el) {
+            el.textContent = fmt(stats.reports_count);
+          });
+          doc.querySelectorAll('[data-review-count]').forEach(function(el) {
+            el.textContent = fmt(stats.reviews_count);
+          });
+          doc.querySelectorAll('[data-review-count2]').forEach(function(el) {
+            el.textContent = fmt(stats.reviews_count);
+          });
+          doc.querySelectorAll('[data-rating]').forEach(function(el) {
+            el.textContent = rating;
+          });
+          doc.querySelectorAll('[data-last-work]').forEach(function(el) {
+            el.textContent = formatRelativeDate(stats.last_report_at);
+          });
+        }
+      }
+      // 사업자 인증: 현재 Pro 회원이면 '완료', 아니면 '—'
+      doc.querySelectorAll('[data-verified-label]').forEach(function(el) {
+        el.textContent = company.is_paid ? '완료' : '—';
+      });
+
+      // 2) 최근 후기 3건 fetch
+      const rvResp = await fetch(
+        SB_URL + '/rest/v1/reviews?' + new URLSearchParams({
+          company_id: 'eq.' + company.id,
+          is_hidden: 'eq.false',
+          select: 'rating,content,name_display,customer_name_snapshot,service_type_snapshot,created_at',
+          order: 'created_at.desc',
+          limit: '3'
+        }).toString(),
+        {
+          cache: 'no-store',
+          headers: {
+            'apikey': SB_ANON,
+            'Authorization': 'Bearer ' + SB_ANON,
+            'Accept': 'application/json'
+          }
+        }
+      );
+      if (rvResp.ok) {
+        const reviews = await rvResp.json();
+        if (Array.isArray(reviews) && reviews.length > 0) {
+          const listEl = doc.querySelector('[data-reviews-list]');
+          if (listEl) {
+            listEl.innerHTML = '<div class="rev-list">' +
+              reviews.map(function(r) {
+                const rating = Number(r.rating || 0).toFixed(1);
+                const content = escHtml(r.content || '').replace(/\n/g, '<br>');
+                const dt = new Date(r.created_at);
+                const dateStr =
+                  dt.getFullYear() + '.' +
+                  String(dt.getMonth() + 1).padStart(2, '0') + '.' +
+                  String(dt.getDate()).padStart(2, '0');
+                const service = r.service_type_snapshot
+                    ? ' · ' + escHtml(r.service_type_snapshot)
+                    : '';
+                return '<div class="rev-card">' +
+                  '<div class="rev-rating"><span class="star">★</span> ' + rating + '</div>' +
+                  '<p class="rev-content">' + content + '</p>' +
+                  '<div class="rev-meta">' + dateStr + service + '</div>' +
+                  '</div>';
+              }).join('') +
+              '</div>';
+          }
+        }
+      }
+    } catch (e) {
+      console.error('profile stats/reviews fetch error:', e);
+      // 실패해도 페이지 자체는 렌더 (placeholder 유지)
+    }
 
     // 문서 교체
     document.open();
     document.write('<!DOCTYPE html>' + doc.documentElement.outerHTML);
     document.close();
+  }
+
+  function formatRelativeDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    const diff = Math.floor((Date.now() - d.getTime()) / 86400000);
+    if (diff < 1) return '오늘';
+    if (diff === 1) return '1일 전';
+    if (diff < 7) return diff + '일 전';
+    if (diff < 30) return Math.floor(diff / 7) + '주 전';
+    if (diff < 365) return Math.floor(diff / 30) + '개월 전';
+    return Math.floor(diff / 365) + '년 전';
   }
 
   // ━━━━━━━━━━━━ 기존 saeroclean 라우팅 ━━━━━━━━━━━━

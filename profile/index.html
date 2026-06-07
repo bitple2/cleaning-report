@@ -264,6 +264,44 @@
     font-weight: 600;
   }
 
+  /* ─── Review card ─── */
+  .rev-list {
+    padding: 0 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .rev-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .rev-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .rev-rating .star { font-size: 14px; }
+  .rev-content {
+    font-size: 13.5px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    word-break: keep-all;
+  }
+  .rev-meta {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
   /* ─── Coming soon notice ─── */
   .coming-soon {
     margin: 16px 18px;
@@ -389,9 +427,11 @@
       <span class="section-more">전체 보기 ›</span>
     </div>
   </section>
-  <div class="coming-soon">
-    <h3>곧 공개됩니다</h3>
-    <p>실제 고객이 작성한 후기가<br>이 자리에 자동으로 채워질 예정입니다.</p>
+  <div data-reviews-list>
+    <div class="coming-soon" data-reviews-empty>
+      <h3>아직 후기가 없어요</h3>
+      <p>고객이 작성한 후기가<br>이 자리에 자동으로 채워질 예정입니다.</p>
+    </div>
   </div>
 
   <section class="section">
