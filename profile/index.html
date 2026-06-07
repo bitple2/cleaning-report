@@ -431,7 +431,7 @@
     color: var(--muted-2);
   }
 
-  /* ─── Review card ─── */
+  /* ─── Review certification card ─── */
   .rev-list {
     padding: 0 18px;
     display: flex;
@@ -441,32 +441,80 @@
   .rev-card {
     background: var(--paper);
     border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 14px 16px;
+    border-radius: 14px;
+    padding: 16px 16px 14px;
+  }
+  .rev-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 10px;
   }
   .rev-rating {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 800;
+    gap: 5px;
+    font-size: 14px;
+    font-weight: 900;
     color: var(--ink);
-    margin-bottom: 6px;
+    letter-spacing: -0.02em;
   }
-  .rev-rating .star { font-size: 14px; }
+  .rev-rating-stars {
+    color: var(--gold);
+    letter-spacing: 1px;
+    font-size: 13.5px;
+  }
+  .rev-verify {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-decoration: none;
+    padding: 4px 8px 4px 4px;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .rev-verify:hover { background: var(--line-2); }
+  .rev-qr {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    background: #fff;
+    border: 1px solid var(--line);
+  }
+  .rev-verify-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .rev-verify-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+  }
+  .rev-cert-code {
+    font-size: 9.5px;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
   .rev-content {
     font-size: 13.5px;
     color: var(--ink-2);
-    line-height: 1.55;
+    line-height: 1.65;
     letter-spacing: -0.02em;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     word-break: keep-all;
+    white-space: pre-wrap;
   }
   .rev-meta {
     font-size: 11.5px;
     color: var(--muted);
     font-weight: 500;
     letter-spacing: -0.02em;
+    padding-top: 10px;
+    border-top: 1px solid var(--line-2);
   }
 
   /* ─── Coming soon notice ─── */

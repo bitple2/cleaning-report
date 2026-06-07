@@ -296,12 +296,12 @@
         }
       }
 
-      // 3) 최근 후기 3건 fetch
+      // 3) 최근 후기 3건 fetch (cert_code 포함 — 인증 카드용)
       const rvResp = await fetch(
         SB_URL + '/rest/v1/reviews?' + new URLSearchParams({
           company_id: 'eq.' + company.id,
           is_hidden: 'eq.false',
-          select: 'rating,content,name_display,customer_name_snapshot,service_type_snapshot,created_at',
+          select: 'rating,content,name_display,customer_name_snapshot,service_type_snapshot,created_at,cert_code',
           order: 'created_at.desc',
           limit: '3'
         }).toString(),
@@ -322,19 +322,51 @@
             listEl.innerHTML = '<div class="rev-list">' +
               reviews.map(function(r) {
                 const rating = Number(r.rating || 0).toFixed(1);
+                const ratingStars = '★'.repeat(Math.round(r.rating || 0)) +
+                                   '☆'.repeat(5 - Math.round(r.rating || 0));
                 const content = escHtml(r.content || '').replace(/\n/g, '<br>');
                 const dt = new Date(r.created_at);
                 const dateStr =
-                  dt.getFullYear() + '.' +
+                  dt.getFullYear().toString().slice(2) + '.' +
                   String(dt.getMonth() + 1).padStart(2, '0') + '.' +
                   String(dt.getDate()).padStart(2, '0');
                 const service = r.service_type_snapshot
                     ? ' · ' + escHtml(r.service_type_snapshot)
                     : '';
+                const name = r.name_display === 'anonymous'
+                    ? '익명'
+                    : (r.customer_name_snapshot
+                        ? escHtml(r.customer_name_snapshot.charAt(0)) + '*'
+                        : '익명');
+                const certCode = (r.cert_code || '').replace(/^#/, '');
+                const verifyUrl = certCode
+                    ? '/verify/' + encodeURIComponent(certCode)
+                    : '';
+                const qrTarget = certCode
+                    ? 'https://cleaningmanager.kr/verify/' + certCode
+                    : '';
+                const qrImg = qrTarget
+                    ? '<img class="rev-qr" alt="" src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&margin=0&data=' +
+                      encodeURIComponent(qrTarget) + '">'
+                    : '';
+                const verifyBlock = certCode
+                    ? '<a class="rev-verify" href="' + verifyUrl + '" target="_blank" rel="noopener">' +
+                        qrImg +
+                        '<span class="rev-verify-text">' +
+                          '<span class="rev-verify-label">✓ 검증</span>' +
+                          '<span class="rev-cert-code">#' + escHtml(certCode) + '</span>' +
+                        '</span>' +
+                      '</a>'
+                    : '';
                 return '<div class="rev-card">' +
-                  '<div class="rev-rating"><span class="star">★</span> ' + rating + '</div>' +
+                  '<div class="rev-header">' +
+                    '<div class="rev-rating">' +
+                      '<span class="rev-rating-stars">' + ratingStars + '</span> ' + rating +
+                    '</div>' +
+                    verifyBlock +
+                  '</div>' +
                   '<p class="rev-content">' + content + '</p>' +
-                  '<div class="rev-meta">' + dateStr + service + '</div>' +
+                  '<div class="rev-meta">' + name + service + ' · ' + dateStr + '</div>' +
                   '</div>';
               }).join('') +
               '</div>';
