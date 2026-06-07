@@ -357,6 +357,56 @@
     letter-spacing: -0.02em;
   }
 
+  /* ─── Trust badges ─── */
+  .badge-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 18px;
+  }
+  .badge-card {
+    flex: 1 1 calc(25% - 8px);
+    min-width: 76px;
+    max-width: 130px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 6px 13px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .badge-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 9px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  }
+  .badge-icon svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .badge-label {
+    font-size: 11.5px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.35;
+    letter-spacing: -0.03em;
+  }
+
   /* ─── Review card ─── */
   .rev-list {
     padding: 0 18px;
@@ -528,16 +578,13 @@
     </div>
   </div>
 
-  <section class="section">
+  <section class="section" data-badges-section>
     <div class="section-head">
       <div class="section-title">신뢰 배지</div>
       <span class="section-more">자세히 보기 ›</span>
     </div>
   </section>
-  <div class="coming-soon">
-    <h3>곧 공개됩니다</h3>
-    <p>최근 30일 활동·실제 후기 공개·실제 리포트 공개<br>대표 직접 시공 등 검증 정보가 표시될 예정입니다.</p>
-  </div>
+  <div data-badges-list></div>
 
   <footer class="foot">
     <a href="/" class="foot-link">
