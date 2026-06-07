@@ -439,10 +439,23 @@
     gap: 10px;
   }
   .rev-card {
+    display: block;
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 14px;
     padding: 16px 16px 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  }
+  .rev-card:hover {
+    border-color: #BFDBFE;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08);
+  }
+  .rev-card:active { transform: scale(0.99); }
+  /* 카드 안의 verify 요소는 시각적 표식만 (탭은 전체 카드에서) */
+  .rev-verify {
+    pointer-events: none;
   }
   .rev-header {
     display: flex;

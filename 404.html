@@ -350,15 +350,19 @@
                       encodeURIComponent(qrTarget) + '">'
                     : '';
                 const verifyBlock = certCode
-                    ? '<a class="rev-verify" href="' + verifyUrl + '" target="_blank" rel="noopener">' +
+                    ? '<div class="rev-verify">' +
                         qrImg +
                         '<span class="rev-verify-text">' +
                           '<span class="rev-verify-label">✓ 검증</span>' +
                           '<span class="rev-cert-code">#' + escHtml(certCode) + '</span>' +
                         '</span>' +
-                      '</a>'
+                      '</div>'
                     : '';
-                return '<div class="rev-card">' +
+                const cardOpen = certCode
+                    ? '<a class="rev-card" href="' + verifyUrl + '" target="_blank" rel="noopener">'
+                    : '<div class="rev-card">';
+                const cardClose = certCode ? '</a>' : '</div>';
+                return cardOpen +
                   '<div class="rev-header">' +
                     '<div class="rev-rating">' +
                       '<span class="rev-rating-stars">' + ratingStars + '</span> ' + rating +
@@ -367,7 +371,7 @@
                   '</div>' +
                   '<p class="rev-content">' + content + '</p>' +
                   '<div class="rev-meta">' + name + service + ' · ' + dateStr + '</div>' +
-                  '</div>';
+                  cardClose;
               }).join('') +
               '</div>';
           }
