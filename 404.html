@@ -382,6 +382,10 @@
       // 실패해도 페이지 자체는 렌더 (placeholder 유지)
     }
 
+    // 폼 모달에서 사용할 company_id 주입
+    doc.body.setAttribute('data-company-id', company.id || '');
+    doc.body.setAttribute('data-company-name', company.name || '');
+
     // 문서 교체
     document.open();
     document.write('<!DOCTYPE html>' + doc.documentElement.outerHTML);

@@ -557,6 +557,202 @@
     color: var(--muted-2);
   }
 
+  /* ─── Quote form modal ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 1000;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    width: 100%;
+    max-width: 560px;
+    max-height: 92vh;
+    background: var(--paper);
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .modal-header {
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line-2);
+    border-radius: 20px 20px 0 0;
+    z-index: 1;
+  }
+  .modal-handle {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 38px;
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+  }
+  .modal-title {
+    font-size: 15.5px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+  }
+  .modal-body {
+    padding: 18px 18px 12px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .modal-footer {
+    padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line-2);
+    background: var(--paper);
+  }
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+  .field-label {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--ink-2);
+    margin-bottom: 7px;
+    letter-spacing: -0.02em;
+  }
+  .field-label .req {
+    color: var(--primary);
+    margin-left: 2px;
+  }
+  .field-hint {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: 5px;
+    letter-spacing: -0.02em;
+  }
+  .field-input, .field-textarea {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--paper);
+    color: var(--ink);
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field-input:focus, .field-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+  .field-textarea {
+    min-height: 80px;
+    resize: vertical;
+    line-height: 1.55;
+  }
+  .field-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .field-row .field-input { flex: 1; }
+  .field-row-suffix {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .field-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .chip {
+    padding: 9px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 700;
+    background: var(--paper);
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: -0.02em;
+  }
+  .chip.selected {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 11px;
+    font-size: 14.5px;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: -0.02em;
+    font-family: inherit;
+  }
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  /* 성공 상태 */
+  .quote-success {
+    padding: 50px 28px 32px;
+    text-align: center;
+  }
+  .quote-success-icon {
+    width: 64px;
+    height: 64px;
+    background: #DBEAFE;
+    color: var(--primary);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin-bottom: 18px;
+  }
+  .quote-success h2 {
+    font-size: 17px;
+    font-weight: 900;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: -0.03em;
+  }
+  .quote-success p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
   /* ─── Footer ─── */
   .foot {
     margin-top: 28px;
@@ -633,8 +829,8 @@
   </div>
 
   <div class="cta-row">
-    <button class="btn btn-primary">💬  견적 받기</button>
-    <button class="btn btn-outline">📞  전화하기</button>
+    <button class="btn btn-primary" onclick="openQuoteForm()">💬  견적 받기</button>
+    <button class="btn btn-outline" onclick="callOwner()">📞  전화하기</button>
   </div>
 
   <section class="section">
@@ -680,7 +876,73 @@
 
 </div>
 
+<!-- ─── 견적 받기 모달 ─── -->
+<div class="modal-overlay" id="quoteModal" onclick="if(event.target===this)closeQuoteForm()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <span class="modal-title">견적 받기</span>
+      <button class="modal-close" onclick="closeQuoteForm()" aria-label="닫기">✕</button>
+    </div>
+    <div class="modal-body" id="quoteBody">
+      <div class="field">
+        <div class="field-label">이름<span class="req">*</span></div>
+        <input type="text" class="field-input" id="q-name" placeholder="홍길동" maxlength="20" autocomplete="name">
+      </div>
+      <div class="field">
+        <div class="field-label">연락처<span class="req">*</span></div>
+        <input type="tel" class="field-input" id="q-phone" placeholder="010-1234-5678" inputmode="numeric" maxlength="13" autocomplete="tel">
+      </div>
+      <div class="field">
+        <div class="field-label">청소 종류<span class="req">*</span></div>
+        <div class="field-chips" id="q-service">
+          <button type="button" class="chip" data-value="입주청소">입주청소</button>
+          <button type="button" class="chip" data-value="이사청소">이사청소</button>
+          <button type="button" class="chip" data-value="거주청소">거주청소</button>
+          <button type="button" class="chip" data-value="상가청소">상가청소</button>
+          <button type="button" class="chip" data-value="기타">기타</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">희망 평수 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
+        <div class="field-row">
+          <input type="number" class="field-input" id="q-pyeong" placeholder="34" inputmode="numeric" min="1" max="200">
+          <span class="field-row-suffix">평</span>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">대략 지역 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
+        <input type="text" class="field-input" id="q-region" placeholder="예) 인천 서구 검단신도시" maxlength="50">
+        <div class="field-hint">정확한 주소는 사장님 통화 시 알려주세요.</div>
+      </div>
+      <div class="field">
+        <div class="field-label">희망 일자 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
+        <input type="date" class="field-input" id="q-date">
+      </div>
+      <div class="field">
+        <div class="field-label">희망 시간대 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
+        <div class="field-chips" id="q-time">
+          <button type="button" class="chip" data-value="오전">오전</button>
+          <button type="button" class="chip" data-value="오후">오후</button>
+          <button type="button" class="chip" data-value="저녁">저녁</button>
+          <button type="button" class="chip" data-value="협의">협의</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">메모 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
+        <textarea class="field-textarea" id="q-notes" placeholder="예) 친환경 세제 부탁드려요 / 베란다·창틀 중점" maxlength="300"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="submit-btn" id="quoteSubmit" onclick="submitQuoteForm()">문의 보내기</button>
+    </div>
+  </div>
+</div>
+
 <script>
+  const SB_URL = 'https://iucicugxihxilcqtzrbk.supabase.co';
+  const SB_ANON = 'sb_publishable_-_GTb-cNnVnC1gcVHoKlWw_5FztAXMy';
+
   function shareThisPage() {
     if (navigator.share) {
       navigator.share({
@@ -692,6 +954,122 @@
       alert('주소가 복사됐어요');
     }
   }
+
+  function callOwner() {
+    // TODO Phase C — companies.phone 노출 RPC 또는 별도 fetch
+    alert('전화 기능은 곧 연결됩니다. 견적 받기 폼으로 문의해주세요.');
+  }
+
+  // ─── 견적 폼 ───
+  let _quoteService = null;
+  let _quoteTimeSlot = null;
+  let _quoteSubmitting = false;
+
+  function openQuoteForm() {
+    document.getElementById('quoteModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeQuoteForm() {
+    document.getElementById('quoteModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // 칩 선택 (서비스 / 시간대)
+  document.addEventListener('click', function(e) {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    const container = chip.closest('.field-chips');
+    if (!container) return;
+    container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    if (container.id === 'q-service') _quoteService = chip.dataset.value;
+    if (container.id === 'q-time') _quoteTimeSlot = chip.dataset.value;
+  });
+
+  // 전화번호 자동 포맷팅
+  document.addEventListener('input', function(e) {
+    if (e.target.id !== 'q-phone') return;
+    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length >= 7) v = v.slice(0, 3) + '-' + v.slice(3, 7) + '-' + v.slice(7);
+    else if (v.length >= 4) v = v.slice(0, 3) + '-' + v.slice(3);
+    e.target.value = v;
+  });
+
+  async function submitQuoteForm() {
+    if (_quoteSubmitting) return;
+    const name = document.getElementById('q-name').value.trim();
+    const phone = document.getElementById('q-phone').value.trim();
+    if (!name) { alert('이름을 입력해주세요'); return; }
+    if (!phone || phone.replace(/\D/g, '').length < 10) {
+      alert('연락처를 정확히 입력해주세요');
+      return;
+    }
+    if (!_quoteService) { alert('청소 종류를 선택해주세요'); return; }
+
+    const companyId = document.body.dataset.companyId;
+    if (!companyId) { alert('업체 정보를 찾을 수 없습니다. 새로고침 후 다시 시도해주세요.'); return; }
+
+    const pyeongVal = parseInt(document.getElementById('q-pyeong').value);
+    const data = {
+      company_id: companyId,
+      customer_name: name,
+      customer_phone: phone,
+      service_type: _quoteService,
+      size_pyeong: Number.isInteger(pyeongVal) ? pyeongVal : null,
+      address_rough: document.getElementById('q-region').value.trim() || null,
+      preferred_date: document.getElementById('q-date').value || null,
+      preferred_time_slot: _quoteTimeSlot,
+      notes: document.getElementById('q-notes').value.trim() || null
+    };
+
+    _quoteSubmitting = true;
+    const btn = document.getElementById('quoteSubmit');
+    btn.disabled = true;
+    btn.textContent = '전송 중...';
+
+    try {
+      const resp = await fetch(SB_URL + '/rest/v1/booking_inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SB_ANON,
+          'Authorization': 'Bearer ' + SB_ANON,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+      });
+      if (!resp.ok) {
+        const errTxt = await resp.text();
+        console.error('inquiry submit error', errTxt);
+        alert('전송 실패. 잠시 후 다시 시도해주세요.');
+        btn.disabled = false;
+        btn.textContent = '문의 보내기';
+        _quoteSubmitting = false;
+        return;
+      }
+      // 성공 화면 교체
+      document.getElementById('quoteBody').innerHTML =
+        '<div class="quote-success">' +
+          '<div class="quote-success-icon">✓</div>' +
+          '<h2>문의가 접수됐어요</h2>' +
+          '<p>잠시 후 사장님이 직접<br>전화로 안내드릴 거예요.</p>' +
+        '</div>';
+      document.querySelector('.modal-footer').innerHTML =
+        '<button type="button" class="submit-btn" onclick="closeQuoteForm()">닫기</button>';
+    } catch (e) {
+      console.error('inquiry submit error', e);
+      alert('전송 실패. 잠시 후 다시 시도해주세요.');
+      btn.disabled = false;
+      btn.textContent = '문의 보내기';
+      _quoteSubmitting = false;
+    }
+  }
+
+  // ESC 키로 모달 닫기
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeQuoteForm();
+  });
 </script>
 
 </body>
