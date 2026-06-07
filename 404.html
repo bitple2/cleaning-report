@@ -67,7 +67,7 @@
       const qs = new URLSearchParams({
         slug: 'eq.' + slug,
         is_published: 'eq.true',
-        select: '*,company:companies(id,name,is_paid)'
+        select: '*,company:companies(id,name,is_paid,logo_url)'
       }).toString();
       const resp = await fetch(SB_URL + '/rest/v1/company_homepages?' + qs, {
         cache: 'no-store',
@@ -139,14 +139,17 @@
       });
     }
 
-    // 메인 카드 사진 (포스터 우선, 없으면 fallback 아이콘 그대로)
-    const poster = (row.hero_poster_url || '').trim();
-    if (poster) {
+    // 아바타 우선순위:
+    // 1. companies.logo_url (사장님이 더보기 탭에서 업로드한 로고)
+    // 2. company_homepages.hero_poster_url (히어로 포스터 사진)
+    // 3. fallback 이모지 (그대로)
+    const avatarSrc = (company.logo_url || row.hero_poster_url || '').trim();
+    if (avatarSrc) {
       doc.querySelectorAll('.avatar').forEach(function(el) {
         const fb = el.querySelector('[data-avatar-fallback]');
         if (fb) fb.remove();
         const img = doc.createElement('img');
-        img.src = poster;
+        img.src = avatarSrc;
         img.alt = company.name || '';
         el.insertBefore(img, el.firstChild);
       });
