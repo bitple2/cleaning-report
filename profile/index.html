@@ -397,78 +397,64 @@
     letter-spacing: -0.02em;
   }
 
-  /* ─── Trust badges ─── */
+  /* ─── Trust badges (가로 스크롤, 활성만) ─── */
+  .badges-wrap {
+    background: var(--bg);
+    padding: 14px 0 8px;
+    margin: 4px 0 18px;
+    border-top: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .badges-head {
+    padding: 0 18px 10px;
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
   .badge-list {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
     gap: 8px;
-    padding: 0 18px;
+    padding: 0 18px 4px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
   }
+  .badge-list::-webkit-scrollbar { display: none; }
   .badge-card {
-    flex: 1 1 calc(25% - 8px);
-    min-width: 76px;
-    max-width: 130px;
+    flex-shrink: 0;
+    min-width: 124px;
+    padding: 12px 14px 11px;
     background: var(--paper);
     border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 14px 6px 12px;
-    text-align: center;
+    border-radius: 11px;
+    scroll-snap-align: start;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 5px;
+    text-align: center;
   }
-  .badge-icon {
-    width: 40px;
-    height: 40px;
-    background: var(--primary);
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 9px;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-  }
-  .badge-icon svg {
-    width: 19px;
-    height: 19px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+  .badge-emoji {
+    font-size: 22px;
+    line-height: 1;
   }
   .badge-label {
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 800;
-    color: var(--ink);
-    line-height: 1.35;
     letter-spacing: -0.03em;
+    color: var(--ink);
+    line-height: 1.3;
   }
-  .badge-criteria {
-    font-size: 10px;
+  .badge-sub {
+    font-size: 10.5px;
     color: var(--muted);
-    font-weight: 500;
-    line-height: 1.4;
-    margin-top: 5px;
+    font-weight: 600;
     letter-spacing: -0.02em;
-  }
-  /* 비활성 — 흐리게 표시 */
-  .badge-card.inactive {
-    background: var(--bg);
-    border-color: var(--line-2);
-  }
-  .badge-card.inactive .badge-icon {
-    background: var(--muted-2);
-    box-shadow: none;
-    opacity: 0.85;
-  }
-  .badge-card.inactive .badge-label {
-    color: var(--muted);
-  }
-  .badge-card.inactive .badge-criteria {
-    color: var(--muted-2);
+    line-height: 1.3;
   }
 
   /* ─── Review certification card ─── */
@@ -868,6 +854,11 @@
     </div>
   </div>
 
+  <div data-badges-wrap class="badges-wrap" style="display:none;">
+    <div class="badges-head">🛡 신뢰 배지</div>
+    <div class="badge-list" data-badges-list></div>
+  </div>
+
   <div data-info-card-wrap style="display:none;"></div>
 
   <div class="cta-row">
@@ -904,14 +895,6 @@
       <p>고객이 작성한 후기가<br>이 자리에 자동으로 채워질 예정입니다.</p>
     </div>
   </div>
-
-  <section class="section" data-badges-section>
-    <div class="section-head">
-      <div class="section-title">신뢰 배지</div>
-      <span class="section-more">자세히 보기 ›</span>
-    </div>
-  </section>
-  <div data-badges-list></div>
 
   <footer class="foot">
     <a href="/" class="foot-link">

@@ -210,60 +210,57 @@
         el.textContent = company.is_paid ? '완료' : '—';
       });
 
-      // ─── 신뢰 배지 (활성/비활성 4종 모두 표시) ───
+      // ─── 신뢰 배지 (활성만 노출, 5종) ───
       const badgeStats = (typeof stats === 'object' && stats) ? stats : {};
-      const last = badgeStats.last_report_at
-          ? new Date(badgeStats.last_report_at).getTime() : 0;
-      const daysSinceLast = last ? (Date.now() - last) / 86400000 : Infinity;
       const reportsN = badgeStats.reports_count || 0;
       const reviewsN = badgeStats.reviews_count || 0;
+      const avgRating = Number(badgeStats.avg_rating || 0);
+      const certReviewN = badgeStats.cert_review_count || 0;
+      const consecMonths = badgeStats.consecutive_months || 0;
+      const recent30dN = badgeStats.recent_30d_reports || 0;
 
-      const badges = [
-        {
-          label: '최근 30일<br>작업 있음',
-          svg: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 12 15 16 10"/>',
-          active: daysSinceLast <= 30,
-          criteriaActive: '최근 작업 확인됨',
-          criteriaInactive: '30일 이내 작업 필요'
-        },
-        {
-          label: '실제 리포트<br>공개',
-          svg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 14 11 16 15 12"/>',
-          active: reportsN > 0,
-          criteriaActive: reportsN + '건 공개됨',
-          criteriaInactive: '리포트 1건 이상 필요'
-        },
-        {
-          label: '실제 후기<br>공개',
-          svg: '<polygon points="12 2 15 8.5 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 9 8.5 12 2"/>',
-          active: reviewsN > 0,
-          criteriaActive: reviewsN + '개 공개됨',
-          criteriaInactive: '후기 1건 이상 필요'
-        },
-        {
-          label: '대표 직접<br>시공',
-          svg: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
-          active: true,
-          criteriaActive: '플랫폼 검증',
-          criteriaInactive: ''
-        }
-      ];
+      const earned = [];
 
+      // 1) 누적 작업 단계 — 최고 도달만
+      if (reportsN >= 1000) earned.push({ emoji: '💎', label: '1000건 달성' });
+      else if (reportsN >= 300) earned.push({ emoji: '🥇', label: '300건 달성' });
+      else if (reportsN >= 100) earned.push({ emoji: '🥈', label: '100건 달성' });
+      else if (reportsN >= 30) earned.push({ emoji: '🥉', label: '30건 달성' });
+
+      // 2) 평점 단계 — 후기 1건 이상 + 최고 도달만
+      if (reviewsN >= 1) {
+        if (avgRating >= 5.0) earned.push({ emoji: '⭐', label: '평점 5.0 만점' });
+        else if (avgRating >= 4.9) earned.push({ emoji: '⭐', label: '고객 만족 우수', sub: '평점 ' + avgRating.toFixed(1) });
+        else if (avgRating >= 4.6) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1) });
+        else if (avgRating >= 4.5) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1) });
+      }
+
+      // 3) 연속 활동 — 단계 (3 / 6 / 12개월)
+      if (consecMonths >= 12) earned.push({ emoji: '🔁', label: '1년 연속 활동' });
+      else if (consecMonths >= 6) earned.push({ emoji: '🔁', label: '6개월 연속 활동' });
+      else if (consecMonths >= 3) earned.push({ emoji: '🔁', label: '3개월 연속 활동' });
+
+      // 4) 실제 고객 후기 (cert_code 있는 후기 1건 이상)
+      if (certReviewN >= 1) {
+        earned.push({ emoji: '🔐', label: '실제 고객 후기', sub: certReviewN + '건 검증' });
+      }
+
+      // 5) 작업 과정 공개 — 최근 30일 내 리포트 3건 이상
+      if (recent30dN >= 3) {
+        earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '최근 30일 ' + recent30dN + '건' });
+      }
+
+      const badgeWrapEl = doc.querySelector('[data-badges-wrap]');
       const badgeListEl = doc.querySelector('[data-badges-list]');
-      if (badgeListEl) {
-        badgeListEl.innerHTML = '<div class="badge-list">' +
-          badges.map(function(b) {
-            const cls = b.active ? 'badge-card' : 'badge-card inactive';
-            const criteria = b.active ? b.criteriaActive : b.criteriaInactive;
-            return '<div class="' + cls + '">' +
-              '<div class="badge-icon">' +
-                '<svg viewBox="0 0 24 24">' + b.svg + '</svg>' +
-              '</div>' +
-              '<div class="badge-label">' + b.label + '</div>' +
-              (criteria ? '<div class="badge-criteria">' + criteria + '</div>' : '') +
-            '</div>';
-          }).join('') +
+      if (badgeListEl && earned.length > 0) {
+        badgeListEl.innerHTML = earned.map(function(b) {
+          return '<div class="badge-card">' +
+            '<div class="badge-emoji">' + b.emoji + '</div>' +
+            '<div class="badge-label">' + b.label + '</div>' +
+            (b.sub ? '<div class="badge-sub">' + b.sub + '</div>' : '') +
           '</div>';
+        }).join('');
+        if (badgeWrapEl) badgeWrapEl.setAttribute('style', '');
       }
 
       // 2) 최근 작업 기록 6건 fetch (RPC)
