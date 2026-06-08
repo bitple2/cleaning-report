@@ -211,54 +211,32 @@
   }
   .stat-value.primary { color: var(--primary); }
 
-  /* ─── Info card (영업시간·서비스 지역·사업자번호) ─── */
+  /* ─── Info card (영업시간·서비스 지역·사업자번호) — 컴팩트 ─── */
   .info-card {
-    margin: 0 18px;
-    padding: 14px 16px;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 12px;
+    margin: 6px 18px 0;
+    padding: 10px 14px;
+    background: var(--bg);
+    border-radius: 10px;
   }
   .info-row {
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 7px 0;
-  }
-  .info-row + .info-row {
-    border-top: 1px solid var(--line-2);
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
   }
   .info-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    background: #EFF6FF;
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 13px;
+    width: 18px;
+    text-align: center;
     flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .info-text {
-    flex: 1;
-    min-width: 0;
-  }
-  .info-label {
-    font-size: 10.5px;
-    font-weight: 700;
-    color: var(--muted);
-    letter-spacing: 0.02em;
-    margin-bottom: 2px;
   }
   .info-value {
-    font-size: 13px;
+    flex: 1;
+    font-size: 12px;
     font-weight: 600;
-    color: var(--ink);
+    color: var(--ink-2);
     line-height: 1.5;
     letter-spacing: -0.02em;
-    white-space: pre-wrap;
     word-break: keep-all;
   }
 
@@ -896,8 +874,6 @@
     <button type="button" class="btn btn-kakao" onclick="openKakao()">💬  카카오톡 상담</button>
   </div>
 
-  <div data-info-card-wrap style="display:none; margin-bottom:18px;"></div>
-
   <section class="section">
     <div class="section-head">
       <div class="section-title">최근 작업 기록</div>
@@ -931,6 +907,8 @@
     </div>
   </section>
   <div data-badges-list></div>
+
+  <div data-info-card-wrap style="display:none;"></div>
 
   <footer class="foot">
     <a href="/" class="foot-link">

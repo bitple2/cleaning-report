@@ -396,7 +396,7 @@
       if (wrap) wrap.setAttribute('style', '');
     }
 
-    // 정보 카드: 영업시간 · 서비스 지역 · 사업자 정보
+    // 정보 카드: 영업시간 · 서비스 지역 · 사업자 정보 (컴팩트, 푸터 직전)
     const businessHours = (row.business_hours || '').trim();
     const serviceAreas = (row.service_areas || '').trim();
     const businessNumber = (company.business_number || '').trim();
@@ -409,10 +409,7 @@
           rows.push(
             '<div class="info-row">' +
               '<div class="info-icon">🕐</div>' +
-              '<div class="info-text">' +
-                '<div class="info-label">영업시간</div>' +
-                '<div class="info-value">' + escHtml(businessHours) + '</div>' +
-              '</div>' +
+              '<div class="info-value">' + escHtml(businessHours) + '</div>' +
             '</div>'
           );
         }
@@ -420,30 +417,23 @@
           rows.push(
             '<div class="info-row">' +
               '<div class="info-icon">📍</div>' +
-              '<div class="info-text">' +
-                '<div class="info-label">서비스 지역</div>' +
-                '<div class="info-value">' + escHtml(serviceAreas) + '</div>' +
-              '</div>' +
+              '<div class="info-value">' + escHtml(serviceAreas) + '</div>' +
             '</div>'
           );
         }
         if (businessNumber) {
-          const ownerLine = ownerName
-              ? ' · 대표 ' + escHtml(ownerName)
-              : '';
+          const ownerLine = ownerName ? ' · 대표 ' + escHtml(ownerName) : '';
           rows.push(
             '<div class="info-row">' +
               '<div class="info-icon">🏢</div>' +
-              '<div class="info-text">' +
-                '<div class="info-label">사업자 정보</div>' +
-                '<div class="info-value">' + escHtml(businessNumber) +
-                  ownerLine + '</div>' +
+              '<div class="info-value">' +
+                escHtml(businessNumber) + ownerLine +
               '</div>' +
             '</div>'
           );
         }
         wrap.innerHTML = '<div class="info-card">' + rows.join('') + '</div>';
-        wrap.setAttribute('style', 'margin-bottom:18px;');
+        wrap.setAttribute('style', '');
       }
     }
 
