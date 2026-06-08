@@ -35,6 +35,7 @@ function escHtml(s) {
 function httpRequest(opts, body) {
   return new Promise((resolve, reject) => {
     const req = https.request(opts, (res) => {
+      res.setEncoding('utf8');
       let buf = '';
       res.on('data', (chunk) => buf += chunk);
       res.on('end', () => {
