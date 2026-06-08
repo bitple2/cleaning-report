@@ -231,40 +231,50 @@
 
       const earned = [];
 
-      // 1) 누적 작업 단계
+      // 1) 누적 작업 단계 — 항상 노출 (활성/비활성)
       if (reportsN >= 1000) earned.push({ emoji: '💎', label: '1000건 달성', sub: '누적 작업 ' + reportsN + '건' });
       else if (reportsN >= 300) earned.push({ emoji: '🥇', label: '300건 달성', sub: '누적 작업 ' + reportsN + '건' });
       else if (reportsN >= 100) earned.push({ emoji: '🥈', label: '100건 달성', sub: '누적 작업 ' + reportsN + '건' });
       else if (reportsN >= 30) earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 작업 ' + reportsN + '건' });
+      else earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 ' + reportsN + '건', locked: true });
 
-      // 2) 평점 단계 — 4.9 이상은 "고객 만족도 우수 업체"
+      // 2) 평점 단계 — 항상 노출
       if (reviewsN >= 1) {
         if (avgRating >= 5.0) earned.push({ emoji: '⭐', label: '평점 5.0 만점', sub: '고객 만족도 우수 업체' });
         else if (avgRating >= 4.9) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도 우수 업체' });
         else if (avgRating >= 4.6) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도' });
         else if (avgRating >= 4.5) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도' });
+        else earned.push({ emoji: '⭐', label: '평점 4.5', sub: '현재 ' + avgRating.toFixed(1), locked: true });
+      } else {
+        earned.push({ emoji: '⭐', label: '평점 4.5', sub: '후기 0건', locked: true });
       }
 
-      // 3) 연속 활동
+      // 3) 연속 활동 — 항상 노출
       if (consecMonths >= 12) earned.push({ emoji: '🔁', label: '1년 연속 활동', sub: '꾸준한 운영' });
       else if (consecMonths >= 6) earned.push({ emoji: '🔁', label: '6개월 연속 활동', sub: '꾸준한 운영' });
       else if (consecMonths >= 3) earned.push({ emoji: '🔁', label: '3개월 연속 활동', sub: '꾸준한 운영' });
+      else earned.push({ emoji: '🔁', label: '3개월 연속', sub: consecMonths > 0 ? '현재 ' + consecMonths + '개월' : '이번 달 활동 없음', locked: true });
 
-      // 4) 실제 고객 후기 (cert_code)
+      // 4) 실제 고객 후기 — 항상 노출
       if (certReviewN >= 1) {
         earned.push({ emoji: '🔐', label: '인증 후기 ' + certReviewN + '건', sub: '실제 고객 검증' });
+      } else {
+        earned.push({ emoji: '🔐', label: '인증 후기', sub: '0건', locked: true });
       }
 
-      // 5) 작업 과정 공개 — 최근 30일 내 3건 이상
+      // 5) 작업 과정 공개 — 항상 노출
       if (recent30dN >= 3) {
-        earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '투명한 운영' });
+        earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '실시간 리포트 제공 중' });
+      } else {
+        earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '최근 30일 ' + recent30dN + '건', locked: true });
       }
 
       const badgeWrapEl = doc.querySelector('[data-badges-wrap]');
       const badgeListEl = doc.querySelector('[data-badges-list]');
       if (badgeListEl && earned.length > 0) {
         badgeListEl.innerHTML = earned.map(function(b) {
-          return '<div class="badge-card">' +
+          const cls = b.locked ? 'badge-card locked' : 'badge-card';
+          return '<div class="' + cls + '">' +
             '<div class="badge-emoji">' + b.emoji + '</div>' +
             '<div class="badge-label">' + b.label + '</div>' +
             (b.sub ? '<div class="badge-sub">' + b.sub + '</div>' : '') +

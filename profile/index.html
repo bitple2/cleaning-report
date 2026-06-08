@@ -482,6 +482,20 @@
     letter-spacing: -0.02em;
     line-height: 1.25;
   }
+  /* 비활성 (조건 미달) — 회색 + 흐림 */
+  .badge-card.locked {
+    opacity: 0.55;
+    background: var(--bg);
+  }
+  .badge-card.locked .badge-emoji {
+    filter: grayscale(1);
+  }
+  .badge-card.locked .badge-label {
+    color: var(--muted);
+  }
+  .badge-card.locked .badge-sub {
+    color: var(--muted-2);
+  }
 
   /* ─── Review certification card ─── */
   .rev-list {
