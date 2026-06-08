@@ -206,9 +206,18 @@
           });
         }
       }
-      // 사업자 인증: 현재 Pro 회원이면 '완료', 아니면 '—'
-      doc.querySelectorAll('[data-verified-label]').forEach(function(el) {
-        el.textContent = company.is_paid ? '완료' : '—';
+      // 사업자 인증: 현재 Pro 회원이면 헤더 우측에 초록 마크 노출
+      if (company.is_paid) {
+        doc.querySelectorAll('[data-verified-mark]').forEach(function(el) {
+          el.setAttribute('style', '');
+        });
+      }
+      // 최근 작업 — 작업 기록 섹션 헤더 우측에 inline
+      const lastWorkText = (stats && stats.last_report_at)
+          ? '· 최근 작업 ' + formatRelativeDate(stats.last_report_at)
+          : '';
+      doc.querySelectorAll('[data-last-work-inline]').forEach(function(el) {
+        el.textContent = lastWorkText;
       });
 
       // ─── 신뢰 배지 (활성만 노출, 5종) ───
@@ -222,33 +231,33 @@
 
       const earned = [];
 
-      // 1) 누적 작업 단계 — 최고 도달만
-      if (reportsN >= 1000) earned.push({ emoji: '💎', label: '1000건 달성' });
-      else if (reportsN >= 300) earned.push({ emoji: '🥇', label: '300건 달성' });
-      else if (reportsN >= 100) earned.push({ emoji: '🥈', label: '100건 달성' });
-      else if (reportsN >= 30) earned.push({ emoji: '🥉', label: '30건 달성' });
+      // 1) 누적 작업 단계
+      if (reportsN >= 1000) earned.push({ emoji: '💎', label: '1000건 달성', sub: '누적 작업' });
+      else if (reportsN >= 300) earned.push({ emoji: '🥇', label: '300건 달성', sub: '누적 작업' });
+      else if (reportsN >= 100) earned.push({ emoji: '🥈', label: '100건 달성', sub: '누적 작업' });
+      else if (reportsN >= 30) earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 작업' });
 
-      // 2) 평점 단계 — 후기 1건 이상 + 최고 도달만
+      // 2) 평점 단계
       if (reviewsN >= 1) {
-        if (avgRating >= 5.0) earned.push({ emoji: '⭐', label: '평점 5.0 만점' });
-        else if (avgRating >= 4.9) earned.push({ emoji: '⭐', label: '고객 만족 우수', sub: '평점 ' + avgRating.toFixed(1) });
-        else if (avgRating >= 4.6) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1) });
-        else if (avgRating >= 4.5) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1) });
+        if (avgRating >= 5.0) earned.push({ emoji: '⭐', label: '평점 5.0 만점', sub: '고객 만족도' });
+        else if (avgRating >= 4.9) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족 우수' });
+        else if (avgRating >= 4.6) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도' });
+        else if (avgRating >= 4.5) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도' });
       }
 
-      // 3) 연속 활동 — 단계 (3 / 6 / 12개월)
-      if (consecMonths >= 12) earned.push({ emoji: '🔁', label: '1년 연속 활동' });
-      else if (consecMonths >= 6) earned.push({ emoji: '🔁', label: '6개월 연속 활동' });
-      else if (consecMonths >= 3) earned.push({ emoji: '🔁', label: '3개월 연속 활동' });
+      // 3) 연속 활동
+      if (consecMonths >= 12) earned.push({ emoji: '🔁', label: '1년 연속 활동', sub: '꾸준한 운영' });
+      else if (consecMonths >= 6) earned.push({ emoji: '🔁', label: '6개월 연속 활동', sub: '꾸준한 운영' });
+      else if (consecMonths >= 3) earned.push({ emoji: '🔁', label: '3개월 연속 활동', sub: '꾸준한 운영' });
 
-      // 4) 실제 고객 후기 (cert_code 있는 후기 1건 이상)
+      // 4) 실제 고객 후기 (cert_code)
       if (certReviewN >= 1) {
-        earned.push({ emoji: '🔐', label: '실제 고객 후기', sub: certReviewN + '건 검증' });
+        earned.push({ emoji: '🔐', label: '인증 후기 ' + certReviewN + '건', sub: '실제 고객 검증' });
       }
 
-      // 5) 작업 과정 공개 — 최근 30일 내 리포트 3건 이상
+      // 5) 작업 과정 공개 — 최근 30일 내 3건 이상
       if (recent30dN >= 3) {
-        earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '최근 30일 ' + recent30dN + '건' });
+        earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '투명한 운영' });
       }
 
       const badgeWrapEl = doc.querySelector('[data-badges-wrap]');
