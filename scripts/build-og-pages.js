@@ -72,8 +72,10 @@ function buildPageForCompany(template, row) {
   const companyName = company.name || '';
   const slug = row.slug;
   const heroSub = (row.hero_sub || '').trim();
-  // 우선순위: 회사 로고 > 대표 사진 > 클매 로고
-  const imageUrl = (company.logo_url || row.owner_intro_photo_url || '').trim()
+  const logoUrl = (company.logo_url || row.hero_poster_url || '').trim();
+  const isPaid = !!company.is_paid;
+  // OG 이미지: 회사 로고 > 대표 사진 > 클매 로고
+  const imageUrl = logoUrl || (row.owner_intro_photo_url || '').trim()
     || 'https://cleaningmanager.kr/assets/cm_logo.png';
 
   const ogTitle = companyName || '클리닝매니저 신뢰 프로필';
@@ -91,25 +93,19 @@ function buildPageForCompany(template, row) {
     `<title>${escHtml(pageTitle)}</title>`
   );
 
-  // og:title
+  // og:title / description / image / url
   html = html.replace(
     /<meta property="og:title"[^>]*>/,
     `<meta property="og:title" content="${escHtml(ogTitle)}">`
   );
-
-  // og:description
   html = html.replace(
     /<meta property="og:description"[^>]*>/,
     `<meta property="og:description" content="${escHtml(ogDescription)}">`
   );
-
-  // og:image
   html = html.replace(
     /<meta property="og:image"[^>]*>/,
     `<meta property="og:image" content="${escHtml(imageUrl)}">`
   );
-
-  // og:url 추가 (템플릿에 없으면 og:image 다음에 삽입)
   if (!/<meta property="og:url"/.test(html)) {
     html = html.replace(
       /<meta property="og:image"[^>]*>/,
@@ -119,6 +115,41 @@ function buildPageForCompany(template, row) {
     html = html.replace(
       /<meta property="og:url"[^>]*>/,
       `<meta property="og:url" content="${escHtml(ogUrl)}">`
+    );
+  }
+
+  // ─── 히어로 placeholder 치환 (첫 로드 즉시 노출) ───
+
+  // 회사명 (data-company-name)
+  if (companyName) {
+    html = html.replace(
+      /<span data-company-name>[^<]*<\/span>/,
+      `<span data-company-name>${escHtml(companyName)}</span>`
+    );
+  }
+
+  // 히어로 카피 (data-hero-sub, 줄바꿈 → <br>)
+  if (heroSub) {
+    const heroSubHtml = escHtml(heroSub).replace(/\n/g, '<br>');
+    html = html.replace(
+      /<p class="hero-sub" data-hero-sub>[\s\S]*?<\/p>/,
+      `<p class="hero-sub" data-hero-sub>${heroSubHtml}</p>`
+    );
+  }
+
+  // 아바타 — fallback emoji 제거 + 로고 img 삽입
+  if (logoUrl) {
+    html = html.replace(
+      /<div class="avatar-fallback"[^>]*>[\s\S]*?<\/div>/,
+      `<img src="${escHtml(logoUrl)}" alt="${escHtml(companyName)}">`
+    );
+  }
+
+  // 사업자 인증 마크 (is_paid이면 style:none 제거)
+  if (isPaid) {
+    html = html.replace(
+      /<div class="hero-verified" data-verified-hero style="display:none;">/,
+      `<div class="hero-verified" data-verified-hero>`
     );
   }
 
