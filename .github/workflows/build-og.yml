@@ -1,16 +1,14 @@
 name: Build OG pages
 
 on:
-  # ⚠️ 비활성화 — 정적 파일이 데이터 fetch 로직 없이 placeholder만 응답하는 문제 발견
-  # SSG에 데이터 인라인 추가 작업 완료 후 다시 활성화 예정
-  # push:
-  #   branches: [main]
-  #   paths:
-  #     - 'profile/index.html'
-  #     - 'scripts/build-og-pages.js'
-  #     - '.github/workflows/build-og.yml'
-  # schedule:
-  #   - cron: '0 */6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'profile/index.html'
+      - 'scripts/build-og-pages.js'
+      - '.github/workflows/build-og.yml'
+  schedule:
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 env:

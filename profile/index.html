@@ -1264,6 +1264,351 @@
   const SB_URL = 'https://iucicugxihxilcqtzrbk.supabase.co';
   const SB_ANON = 'sb_publishable_-_GTb-cNnVnC1gcVHoKlWw_5FztAXMy';
 
+  // ━━━━━━━━━━━ 신뢰 프로필 데이터 fetch + 채움 ━━━━━━━━━━━
+  // 정적 파일이 응답되는 경우(SSG)에 콘텐츠를 채우는 로직.
+  // 404.html이 동적 라우팅으로 잡는 경우는 거기서 한 번 더 채움 (덮어쓰기 무해).
+  (function() {
+    function escHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+    function formatRelativeDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      const diff = Math.floor((Date.now() - d.getTime()) / 86400000);
+      if (diff < 1) return '오늘';
+      if (diff === 1) return '1일 전';
+      if (diff < 7) return diff + '일 전';
+      if (diff < 30) return Math.floor(diff / 7) + '주 전';
+      if (diff < 365) return Math.floor(diff / 30) + '개월 전';
+      return Math.floor(diff / 365) + '년 전';
+    }
+
+    async function loadProfileData() {
+      const match = window.location.pathname.match(/^\/profile\/([a-z0-9-]{3,30})\/?$/);
+      if (!match) return;
+      const slug = match[1];
+      try {
+        const qs = new URLSearchParams({
+          slug: 'eq.' + slug,
+          is_published: 'eq.true',
+          select: '*,company:companies(id,name,owner_name,business_number,is_paid,logo_url)'
+        }).toString();
+        const resp = await fetch(SB_URL + '/rest/v1/company_homepages?' + qs, {
+          cache: 'no-store',
+          headers: {
+            'apikey': SB_ANON,
+            'Authorization': 'Bearer ' + SB_ANON,
+            'Accept': 'application/json'
+          }
+        });
+        if (!resp.ok) return;
+        const rows = await resp.json();
+        if (!rows.length) return;
+        const row = rows[0];
+        const company = row.company || {};
+
+        // 회사명·히어로 카피
+        if (company.name) {
+          const t = document.querySelector('title');
+          if (t && !t.textContent.trim()) t.textContent = company.name;
+          document.querySelectorAll('[data-company-name]').forEach(function(el) {
+            el.textContent = company.name;
+          });
+        }
+        const heroSub = (row.hero_sub || '').trim();
+        if (heroSub) {
+          document.querySelectorAll('[data-hero-sub]').forEach(function(el) {
+            el.innerHTML = escHtml(heroSub).replace(/\n/g, '<br>');
+          });
+        }
+        // 아바타
+        const avatarSrc = (company.logo_url || row.hero_poster_url || '').trim();
+        if (avatarSrc) {
+          document.querySelectorAll('.avatar').forEach(function(el) {
+            const fb = el.querySelector('[data-avatar-fallback]');
+            if (fb) fb.remove();
+            const existing = el.querySelector('img');
+            if (!existing) {
+              const img = document.createElement('img');
+              img.src = avatarSrc;
+              img.alt = company.name || '';
+              el.insertBefore(img, el.firstChild);
+            }
+          });
+        }
+
+        // 통계 RPC
+        let stats = null;
+        try {
+          const statsResp = await fetch(SB_URL + '/rest/v1/rpc/public_profile_stats', {
+            method: 'POST',
+            cache: 'no-store',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SB_ANON,
+              'Authorization': 'Bearer ' + SB_ANON
+            },
+            body: JSON.stringify({ profile_slug: slug })
+          });
+          if (statsResp.ok) stats = await statsResp.json();
+        } catch (_) {}
+
+        // 사업자 인증
+        if (company.is_paid) {
+          document.querySelectorAll('[data-verified-hero]').forEach(function(el) {
+            el.setAttribute('style', '');
+          });
+        }
+        // 최근 작업 inline
+        const lastWorkText = (stats && stats.last_report_at)
+            ? '· 최근 작업 ' + formatRelativeDate(stats.last_report_at)
+            : '';
+        document.querySelectorAll('[data-last-work-inline]').forEach(function(el) {
+          el.textContent = lastWorkText;
+        });
+
+        // 신뢰 배지 5종
+        const bs = (stats && typeof stats === 'object') ? stats : {};
+        const reportsN = bs.reports_count || 0;
+        const reviewsN = bs.reviews_count || 0;
+        const avgRating = Number(bs.avg_rating || 0);
+        const certReviewN = bs.cert_review_count || 0;
+        const consecMonths = bs.consecutive_months || 0;
+        const recent30dN = bs.recent_30d_reports || 0;
+        const earned = [];
+        if (reportsN >= 1000) earned.push({ emoji: '💎', label: '1000건 달성', sub: '누적 작업 ' + reportsN + '건' });
+        else if (reportsN >= 300) earned.push({ emoji: '🥇', label: '300건 달성', sub: '누적 작업 ' + reportsN + '건' });
+        else if (reportsN >= 100) earned.push({ emoji: '🥈', label: '100건 달성', sub: '누적 작업 ' + reportsN + '건' });
+        else if (reportsN >= 30) earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 작업 ' + reportsN + '건' });
+        else earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 ' + reportsN + '건', locked: true });
+        if (reviewsN >= 1) {
+          if (avgRating >= 5.0) earned.push({ emoji: '⭐', label: '평점 5.0 만점', sub: '고객 만족도 우수 업체' });
+          else if (avgRating >= 4.9) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도 우수 업체' });
+          else if (avgRating >= 4.6) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도' });
+          else if (avgRating >= 4.5) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도' });
+          else earned.push({ emoji: '⭐', label: '평점 4.5', sub: '현재 ' + avgRating.toFixed(1), locked: true });
+        } else {
+          earned.push({ emoji: '⭐', label: '평점 4.5', sub: '후기 0건', locked: true });
+        }
+        if (consecMonths >= 12) earned.push({ emoji: '🔁', label: '1년 연속 활동', sub: '꾸준한 운영' });
+        else if (consecMonths >= 6) earned.push({ emoji: '🔁', label: '6개월 연속 활동', sub: '꾸준한 운영' });
+        else if (consecMonths >= 3) earned.push({ emoji: '🔁', label: '3개월 연속 활동', sub: '꾸준한 운영' });
+        else earned.push({ emoji: '🔁', label: '3개월 연속', sub: consecMonths > 0 ? '현재 ' + consecMonths + '개월' : '이번 달 활동 없음', locked: true });
+        if (certReviewN >= 1) earned.push({ emoji: '🔐', label: '인증 후기 ' + certReviewN + '건', sub: '실제 고객 검증' });
+        else earned.push({ emoji: '🔐', label: '인증 후기', sub: '0건', locked: true });
+        if (recent30dN >= 3) earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '실시간 리포트 제공 중' });
+        else earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '최근 30일 ' + recent30dN + '건', locked: true });
+        const badgeListEl = document.querySelector('[data-badges-list]');
+        const badgeWrapEl = document.querySelector('[data-badges-wrap]');
+        if (badgeListEl && earned.length > 0) {
+          badgeListEl.innerHTML = earned.map(function(b) {
+            const cls = b.locked ? 'badge-card locked' : 'badge-card';
+            return '<div class="' + cls + '"><div class="badge-emoji">' + b.emoji +
+              '</div><div class="badge-label">' + b.label + '</div>' +
+              (b.sub ? '<div class="badge-sub">' + b.sub + '</div>' : '') + '</div>';
+          }).join('');
+          if (badgeWrapEl) badgeWrapEl.setAttribute('style', '');
+        }
+
+        // 최근 작업 6건
+        try {
+          const rwResp = await fetch(SB_URL + '/rest/v1/rpc/public_profile_recent_work', {
+            method: 'POST',
+            cache: 'no-store',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SB_ANON,
+              'Authorization': 'Bearer ' + SB_ANON
+            },
+            body: JSON.stringify({ profile_slug: slug, work_limit: 6 })
+          });
+          if (rwResp.ok) {
+            const works = await rwResp.json();
+            if (Array.isArray(works) && works.length > 0) {
+              const listEl = document.querySelector('[data-recent-work-list]');
+              if (listEl) {
+                listEl.innerHTML = '<div class="work-list">' + works.map(function(w) {
+                  const dt = new Date(w.date);
+                  const dateStr = (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일';
+                  const region = escHtml(w.address_region || '—');
+                  const pyeong = w.size_pyeong != null ? w.size_pyeong : '—';
+                  const service = escHtml(w.service_type || '');
+                  const photoCount = w.photo_count || 0;
+                  const photoHtml = w.photo_url
+                    ? '<img src="' + escHtml(w.photo_url) + '" alt="">'
+                    : '<div class="work-photo-empty">📷</div>';
+                  return '<a class="work-card" href="/?id=' +
+                    encodeURIComponent(w.report_id) + '&public=1">' +
+                    '<div class="work-photo">' + photoHtml +
+                      '<span class="work-date-badge">' + dateStr + '</span></div>' +
+                    '<div class="work-meta">' +
+                      '<div class="work-region">' + region + '</div>' +
+                      '<div class="work-spec">' + pyeong + '평 · ' + service + '</div>' +
+                      '<div class="work-photo-count">사진 ' + photoCount + '장</div>' +
+                      '<div class="work-report-btn">리포트 보기 ›</div>' +
+                    '</div></a>';
+                }).join('') + '</div>';
+              }
+            }
+          }
+        } catch (_) {}
+
+        // 인증 후기 3건
+        try {
+          const rvResp = await fetch(
+            SB_URL + '/rest/v1/reviews?' + new URLSearchParams({
+              company_id: 'eq.' + company.id,
+              is_hidden: 'eq.false',
+              'cert_code': 'not.is.null',
+              select: 'rating,content,name_display,customer_name_snapshot,service_type_snapshot,created_at,cert_code',
+              order: 'created_at.desc',
+              limit: '3'
+            }).toString(),
+            { cache: 'no-store', headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Accept': 'application/json' } }
+          );
+          if (rvResp.ok) {
+            const reviews = await rvResp.json();
+            if (Array.isArray(reviews) && reviews.length > 0) {
+              const listEl = document.querySelector('[data-reviews-list]');
+              if (listEl) {
+                listEl.innerHTML = '<div class="rev-list">' + reviews.map(function(r) {
+                  const rating = Number(r.rating || 0).toFixed(1);
+                  const ratingStars = '★'.repeat(Math.round(r.rating || 0)) + '☆'.repeat(5 - Math.round(r.rating || 0));
+                  const content = escHtml(r.content || '').replace(/\n/g, '<br>');
+                  const dt = new Date(r.created_at);
+                  const dateStr = dt.getFullYear().toString().slice(2) + '.' +
+                    String(dt.getMonth() + 1).padStart(2, '0') + '.' + String(dt.getDate()).padStart(2, '0');
+                  const service = r.service_type_snapshot ? ' · ' + escHtml(r.service_type_snapshot) : '';
+                  const name = r.name_display === 'anonymous' ? '익명'
+                    : (r.customer_name_snapshot ? escHtml(r.customer_name_snapshot.charAt(0)) + '*' : '익명');
+                  const certCode = (r.cert_code || '').replace(/^#/, '');
+                  const verifyUrl = certCode ? '/verify/' + encodeURIComponent(certCode) : '';
+                  const qrTarget = certCode ? 'https://cleaningmanager.kr/verify/' + certCode : '';
+                  const qrImg = qrTarget
+                    ? '<img class="rev-qr" alt="" src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&margin=0&data=' + encodeURIComponent(qrTarget) + '">'
+                    : '';
+                  const verifyBlock = certCode
+                    ? '<div class="rev-verify">' + qrImg + '<span class="rev-verify-text"><span class="rev-verify-label">✓ 검증</span><span class="rev-cert-code">#' + escHtml(certCode) + '</span></span></div>'
+                    : '';
+                  const cardOpen = certCode
+                    ? '<a class="rev-card" href="' + verifyUrl + '" target="_blank" rel="noopener">'
+                    : '<div class="rev-card">';
+                  const cardClose = certCode ? '</a>' : '</div>';
+                  return cardOpen +
+                    '<div class="rev-header"><div class="rev-rating"><span class="rev-rating-stars">' + ratingStars + '</span> ' + rating + '</div>' + verifyBlock + '</div>' +
+                    '<p class="rev-content">' + content + '</p>' +
+                    '<div class="rev-meta">' + name + service + ' · ' + dateStr + '</div>' +
+                    cardClose;
+                }).join('') + '</div>';
+              }
+            }
+          }
+        } catch (_) {}
+
+        // 다른 채널 후기
+        try {
+          const extResp = await fetch(
+            SB_URL + '/rest/v1/external_review_screenshots?' + new URLSearchParams({
+              company_id: 'eq.' + company.id,
+              select: 'image_url,source_label,caption,sort_order',
+              order: 'sort_order.asc,created_at.desc'
+            }).toString(),
+            { cache: 'no-store', headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Accept': 'application/json' } }
+          );
+          if (extResp.ok) {
+            const ext = await extResp.json();
+            if (Array.isArray(ext) && ext.length > 0) {
+              const listEl = document.querySelector('[data-external-reviews-list]');
+              const sectionEl = document.querySelector('[data-external-reviews-section]');
+              document.querySelectorAll('[data-ext-count]').forEach(function(el) {
+                el.textContent = '· ' + ext.length + '개';
+              });
+              if (listEl) {
+                listEl.innerHTML = '<div class="ext-list">' + ext.map(function(e) {
+                  const src = (e.source_label || '').trim();
+                  const cap = (e.caption || '').trim();
+                  return '<div class="ext-card"><div class="ext-card-img"><img src="' + escHtml(e.image_url) + '" alt="" loading="lazy"></div>' +
+                    '<div class="ext-card-body">' +
+                      (src ? '<div class="ext-card-source">' + escHtml(src) + '</div>' : '') +
+                      (cap ? '<div class="ext-card-caption">' + escHtml(cap) + '</div>' : '') +
+                    '</div></div>';
+                }).join('') + '</div>';
+              }
+              if (sectionEl) sectionEl.setAttribute('style', '');
+            }
+          }
+        } catch (_) {}
+
+        // 대표 인사
+        const ownerIntroText = (row.owner_intro_text || '').trim();
+        const ownerIntroPhoto = (row.owner_intro_photo_url || '').trim();
+        const visMap = (row.section_visibility && typeof row.section_visibility === 'object') ? row.section_visibility : {};
+        const ownerVisible = visMap.owner !== false;
+        if (ownerVisible && (ownerIntroText || ownerIntroPhoto)) {
+          if (ownerIntroPhoto) {
+            document.querySelectorAll('[data-owner-intro-photo]').forEach(function(el) {
+              if (!el.querySelector('img')) {
+                const img = document.createElement('img');
+                img.src = ownerIntroPhoto;
+                img.alt = '대표 사진';
+                el.appendChild(img);
+              }
+            });
+          }
+          if (ownerIntroText) {
+            document.querySelectorAll('[data-owner-intro-text]').forEach(function(el) {
+              el.textContent = ownerIntroText;
+            });
+          }
+          document.querySelectorAll('[data-owner-intro-section]').forEach(function(el) {
+            el.setAttribute('style', '');
+          });
+        }
+
+        // body 데이터 속성
+        document.body.setAttribute('data-company-id', company.id || '');
+        document.body.setAttribute('data-company-name', company.name || '');
+        document.body.setAttribute('data-contact-phone', (row.contact_phone || '').trim());
+        document.body.setAttribute('data-kakao-url', (row.kakao_channel_url || '').trim());
+        if ((row.kakao_channel_url || '').trim()) {
+          const wrap = document.querySelector('[data-kakao-wrap]');
+          if (wrap) wrap.setAttribute('style', '');
+        }
+
+        // 정보 카드
+        const businessHours = (row.business_hours || '').trim();
+        const serviceAreas = (row.service_areas || '').trim();
+        const businessNumber = (company.business_number || '').trim();
+        const ownerName = (company.owner_name || '').trim();
+        if (businessHours || serviceAreas || businessNumber) {
+          const wrap = document.querySelector('[data-info-card-wrap]');
+          if (wrap && !wrap.innerHTML.trim()) {
+            const rows2 = [];
+            if (businessHours) rows2.push('<div class="info-row"><div class="info-icon">🕐</div><div class="info-value">' + escHtml(businessHours) + '</div></div>');
+            if (serviceAreas) rows2.push('<div class="info-row"><div class="info-icon">📍</div><div class="info-value">' + escHtml(serviceAreas) + '</div></div>');
+            if (businessNumber) {
+              const ownerLine = ownerName ? ' · 대표 ' + escHtml(ownerName) : '';
+              rows2.push('<div class="info-row"><div class="info-icon">🏢</div><div class="info-value">' + escHtml(businessNumber) + ownerLine + '</div></div>');
+            }
+            wrap.innerHTML = '<div class="info-card">' + rows2.join('') + '</div>';
+            wrap.setAttribute('style', '');
+          }
+        }
+      } catch (e) {
+        console.error('profile data load error:', e);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadProfileData);
+    } else {
+      loadProfileData();
+    }
+  })();
+
   function toggleAbout(btn) {
     const expand = document.querySelector('[data-about-expand]');
     if (!expand) return;
