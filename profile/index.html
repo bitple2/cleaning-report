@@ -211,6 +211,57 @@
   }
   .stat-value.primary { color: var(--primary); }
 
+  /* ─── Info card (영업시간·서비스 지역·사업자번호) ─── */
+  .info-card {
+    margin: 0 18px;
+    padding: 14px 16px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 0;
+  }
+  .info-row + .info-row {
+    border-top: 1px solid var(--line-2);
+  }
+  .info-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: #EFF6FF;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .info-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .info-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    margin-bottom: 2px;
+  }
+  .info-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    white-space: pre-wrap;
+    word-break: keep-all;
+  }
+
   /* ─── CTAs ─── */
   .cta-row {
     display: grid;
@@ -243,6 +294,14 @@
     color: var(--ink);
     border: 1px solid var(--line);
   }
+  .btn-kakao {
+    background: var(--kakao);
+    color: var(--kakao-ink);
+  }
+  .cta-kakao-wrap {
+    padding: 0 18px 18px;
+  }
+  .cta-kakao-wrap .btn { width: 100%; }
 
   /* ─── Section title ─── */
   .section { padding: 22px 18px 6px; }
@@ -833,6 +892,12 @@
     <button class="btn btn-outline" onclick="callOwner()">📞  전화하기</button>
   </div>
 
+  <div class="cta-kakao-wrap" data-kakao-wrap style="display:none;">
+    <button type="button" class="btn btn-kakao" onclick="openKakao()">💬  카카오톡 상담</button>
+  </div>
+
+  <div data-info-card-wrap style="display:none; margin-bottom:18px;"></div>
+
   <section class="section">
     <div class="section-head">
       <div class="section-title">최근 작업 기록</div>
@@ -956,8 +1021,19 @@
   }
 
   function callOwner() {
-    // TODO Phase C — companies.phone 노출 RPC 또는 별도 fetch
-    alert('전화 기능은 곧 연결됩니다. 견적 받기 폼으로 문의해주세요.');
+    const phone = (document.body.dataset.contactPhone || '').trim();
+    if (!phone) {
+      alert('전화번호가 등록되지 않았어요. 견적 받기 폼으로 문의해주세요.');
+      return;
+    }
+    const clean = phone.replace(/[^0-9+]/g, '');
+    window.location.href = 'tel:' + clean;
+  }
+
+  function openKakao() {
+    const url = (document.body.dataset.kakaoUrl || '').trim();
+    if (!url) return;
+    window.open(url, '_blank', 'noopener');
   }
 
   // ─── 견적 폼 ───

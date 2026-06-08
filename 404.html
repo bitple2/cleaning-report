@@ -67,7 +67,7 @@
       const qs = new URLSearchParams({
         slug: 'eq.' + slug,
         is_published: 'eq.true',
-        select: '*,company:companies(id,name,is_paid,logo_url)'
+        select: '*,company:companies(id,name,owner_name,business_number,is_paid,logo_url)'
       }).toString();
       const resp = await fetch(SB_URL + '/rest/v1/company_homepages?' + qs, {
         cache: 'no-store',
@@ -382,9 +382,70 @@
       // 실패해도 페이지 자체는 렌더 (placeholder 유지)
     }
 
-    // 폼 모달에서 사용할 company_id 주입
+    // 폼 모달·CTA에서 사용할 데이터 주입
     doc.body.setAttribute('data-company-id', company.id || '');
     doc.body.setAttribute('data-company-name', company.name || '');
+    doc.body.setAttribute(
+        'data-contact-phone', (row.contact_phone || '').trim());
+    doc.body.setAttribute(
+        'data-kakao-url', (row.kakao_channel_url || '').trim());
+
+    // 카카오톡 상담 버튼 노출 (URL 있을 때만)
+    if ((row.kakao_channel_url || '').trim()) {
+      const wrap = doc.querySelector('[data-kakao-wrap]');
+      if (wrap) wrap.setAttribute('style', '');
+    }
+
+    // 정보 카드: 영업시간 · 서비스 지역 · 사업자 정보
+    const businessHours = (row.business_hours || '').trim();
+    const serviceAreas = (row.service_areas || '').trim();
+    const businessNumber = (company.business_number || '').trim();
+    const ownerName = (company.owner_name || '').trim();
+    if (businessHours || serviceAreas || businessNumber) {
+      const wrap = doc.querySelector('[data-info-card-wrap]');
+      if (wrap) {
+        const rows = [];
+        if (businessHours) {
+          rows.push(
+            '<div class="info-row">' +
+              '<div class="info-icon">🕐</div>' +
+              '<div class="info-text">' +
+                '<div class="info-label">영업시간</div>' +
+                '<div class="info-value">' + escHtml(businessHours) + '</div>' +
+              '</div>' +
+            '</div>'
+          );
+        }
+        if (serviceAreas) {
+          rows.push(
+            '<div class="info-row">' +
+              '<div class="info-icon">📍</div>' +
+              '<div class="info-text">' +
+                '<div class="info-label">서비스 지역</div>' +
+                '<div class="info-value">' + escHtml(serviceAreas) + '</div>' +
+              '</div>' +
+            '</div>'
+          );
+        }
+        if (businessNumber) {
+          const ownerLine = ownerName
+              ? ' · 대표 ' + escHtml(ownerName)
+              : '';
+          rows.push(
+            '<div class="info-row">' +
+              '<div class="info-icon">🏢</div>' +
+              '<div class="info-text">' +
+                '<div class="info-label">사업자 정보</div>' +
+                '<div class="info-value">' + escHtml(businessNumber) +
+                  ownerLine + '</div>' +
+              '</div>' +
+            '</div>'
+          );
+        }
+        wrap.innerHTML = '<div class="info-card">' + rows.join('') + '</div>';
+        wrap.setAttribute('style', 'margin-bottom:18px;');
+      }
+    }
 
     // 문서 교체
     document.open();
