@@ -458,10 +458,13 @@
       // 실패해도 페이지 자체는 렌더 (placeholder 유지)
     }
 
-    // 대표 소개 (사진 + 텍스트)
+    // 대표 소개 (사진 + 텍스트) — section_visibility.owner !== false
     const ownerIntroText = (row.owner_intro_text || '').trim();
     const ownerIntroPhoto = (row.owner_intro_photo_url || '').trim();
-    if (ownerIntroText || ownerIntroPhoto) {
+    const visMap = (row.section_visibility && typeof row.section_visibility === 'object')
+        ? row.section_visibility : {};
+    const ownerVisible = visMap.owner !== false;
+    if (ownerVisible && (ownerIntroText || ownerIntroPhoto)) {
       if (ownerIntroPhoto) {
         doc.querySelectorAll('[data-owner-intro-photo]').forEach(function(el) {
           const img = doc.createElement('img');
