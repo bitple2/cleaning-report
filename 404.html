@@ -206,9 +206,9 @@
           });
         }
       }
-      // 사업자 인증: 현재 Pro 회원이면 헤더 우측에 초록 마크 노출
+      // 사업자 인증: 현재 Pro 회원이면 히어로 안에 초록 마크 + "사업자 인증 완료" 노출
       if (company.is_paid) {
-        doc.querySelectorAll('[data-verified-mark]').forEach(function(el) {
+        doc.querySelectorAll('[data-verified-hero]').forEach(function(el) {
           el.setAttribute('style', '');
         });
       }

@@ -49,7 +49,7 @@
   /* ─── Top bar ─── */
   .top {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     padding: 14px 18px;
     border-bottom: 1px solid var(--line-2);
@@ -58,36 +58,25 @@
     top: 0;
     z-index: 10;
   }
-  .brand { margin-top: 6px; }
-  .top-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-  }
-  .verified-mark {
+  .hero-verified {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-    padding: 3px 8px 3px 6px;
-    background: #DCFCE7;
-    color: #166534;
-    border-radius: 999px;
-    font-size: 10.5px;
-    font-weight: 800;
+    gap: 5px;
+    margin-top: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink-2);
     letter-spacing: -0.02em;
-    border: 1px solid #BBF7D0;
-    line-height: 1.3;
   }
-  .verified-mark-icon {
-    width: 12px; height: 12px;
+  .hero-verified-icon {
+    width: 15px; height: 15px;
     background: #16A34A;
     color: #fff;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 8px;
+    font-size: 9px;
     font-weight: 900;
   }
   .brand {
@@ -846,16 +835,10 @@
       <span class="brand-badge">클</span>
       <span>클매 신뢰 프로필</span>
     </span>
-    <div class="top-right">
-      <button class="share-btn" onclick="shareThisPage()">
-        <span>↗</span>
-        <span>공유하기</span>
-      </button>
-      <span class="verified-mark" data-verified-mark style="display:none;">
-        <span class="verified-mark-icon">✓</span>
-        <span>사업자 인증</span>
-      </span>
-    </div>
+    <button class="share-btn" onclick="shareThisPage()">
+      <span>↗</span>
+      <span>공유하기</span>
+    </button>
   </header>
 
   <section class="hero">
@@ -871,6 +854,10 @@
           <span class="verified">✓</span>
         </h1>
         <p class="hero-sub" data-hero-sub>하루 한 집, 대표가 직접 청소합니다.</p>
+        <div class="hero-verified" data-verified-hero style="display:none;">
+          <span class="hero-verified-icon">✓</span>
+          <span>사업자 인증 완료</span>
+        </div>
       </div>
     </div>
   </section>
