@@ -408,6 +408,48 @@
           }
         }
       }
+
+      // 4) 다른 채널 후기 (external_review_screenshots)
+      const extResp = await fetch(
+        SB_URL + '/rest/v1/external_review_screenshots?' + new URLSearchParams({
+          company_id: 'eq.' + company.id,
+          select: 'image_url,source_label,caption,sort_order',
+          order: 'sort_order.asc,created_at.desc'
+        }).toString(),
+        {
+          cache: 'no-store',
+          headers: {
+            'apikey': SB_ANON,
+            'Authorization': 'Bearer ' + SB_ANON,
+            'Accept': 'application/json'
+          }
+        }
+      );
+      if (extResp.ok) {
+        const ext = await extResp.json();
+        if (Array.isArray(ext) && ext.length > 0) {
+          const listEl = doc.querySelector('[data-external-reviews-list]');
+          const sectionEl = doc.querySelector('[data-external-reviews-section]');
+          if (listEl) {
+            listEl.innerHTML = '<div class="ext-list">' +
+              ext.map(function(e) {
+                const src = (e.source_label || '').trim();
+                const cap = (e.caption || '').trim();
+                return '<div class="ext-card">' +
+                  '<div class="ext-card-img">' +
+                    '<img src="' + escHtml(e.image_url) + '" alt="" loading="lazy">' +
+                  '</div>' +
+                  '<div class="ext-card-body">' +
+                    (src ? '<div class="ext-card-source">' + escHtml(src) + '</div>' : '') +
+                    (cap ? '<div class="ext-card-caption">' + escHtml(cap) + '</div>' : '') +
+                  '</div>' +
+                '</div>';
+              }).join('') +
+              '</div>';
+          }
+          if (sectionEl) sectionEl.setAttribute('style', '');
+        }
+      }
     } catch (e) {
       console.error('profile stats/reviews fetch error:', e);
       // 실패해도 페이지 자체는 렌더 (placeholder 유지)

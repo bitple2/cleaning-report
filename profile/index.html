@@ -422,6 +422,59 @@
     letter-spacing: -0.02em;
   }
   .section-title-meta:empty { display: none; }
+  /* ─── 다른 채널 후기 (외부 후기 캡쳐) ─── */
+  .ext-list {
+    display: flex;
+    gap: 10px;
+    padding: 0 18px 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .ext-list::-webkit-scrollbar { display: none; }
+  .ext-card {
+    flex-shrink: 0;
+    width: 230px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+  }
+  .ext-card-img {
+    width: 100%;
+    background: var(--bg);
+    display: block;
+  }
+  .ext-card-img img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .ext-card-body {
+    padding: 10px 12px 12px;
+  }
+  .ext-card-source {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--bg);
+    color: var(--ink-2);
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .ext-card-caption {
+    font-size: 12px;
+    color: var(--ink-2);
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+  }
+
   .section-cert-badge {
     display: inline-flex;
     align-items: center;
@@ -1037,6 +1090,15 @@
       <p>고객이 작성한 후기가<br>이 자리에 자동으로 채워질 예정입니다.</p>
     </div>
   </div>
+
+  <section class="section" data-external-reviews-section style="display:none;">
+    <div class="section-head">
+      <div class="section-title">
+        다른 채널 후기<span class="section-title-meta">고객이 다른 곳에 남긴 후기</span>
+      </div>
+    </div>
+  </section>
+  <div data-external-reviews-list></div>
 
   <footer class="foot">
     <a href="/" class="foot-link">
