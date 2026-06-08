@@ -604,17 +604,14 @@
     padding: 0 14px;
   }
 
-  /* ─── Trust badges (가로 스크롤, 활성만) ─── */
+  /* ─── Trust badges (가로 스크롤, 활성만 — 배지 칩만 떠있는 형태) ─── */
   .badges-wrap {
-    margin: 0 16px 12px;
-    padding: 14px 0 10px;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    overflow: hidden;
+    margin: 0 0 14px;
+    padding: 14px 0 14px;
+    background: transparent;
   }
   .badges-head {
-    padding: 0 14px 10px;
+    padding: 0 18px 10px;
     font-size: 12.5px;
     font-weight: 800;
     letter-spacing: -0.02em;
@@ -625,8 +622,8 @@
   }
   .badge-list {
     display: flex;
-    gap: 7px;
-    padding: 0 14px 4px;
+    gap: 8px;
+    padding: 4px 18px 6px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -639,6 +636,7 @@
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
