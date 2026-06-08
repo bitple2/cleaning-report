@@ -1308,11 +1308,11 @@
         const row = rows[0];
         const company = row.company || {};
 
-        // 회사명·히어로 카피
+        // 회사명·히어로 카피 (body 속성은 그대로 두고 span만 채움)
         if (company.name) {
           const t = document.querySelector('title');
           if (t && !t.textContent.trim()) t.textContent = company.name;
-          document.querySelectorAll('[data-company-name]').forEach(function(el) {
+          document.querySelectorAll('span[data-company-name]').forEach(function(el) {
             el.textContent = company.name;
           });
         }
