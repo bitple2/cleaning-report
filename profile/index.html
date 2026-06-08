@@ -426,7 +426,7 @@
   .ext-list {
     display: flex;
     gap: 10px;
-    padding: 0 18px 8px;
+    padding: 0 14px 8px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -500,7 +500,7 @@
   .work-list {
     display: flex;
     gap: 10px;
-    padding: 0 18px 6px;
+    padding: 0 14px 8px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -589,13 +589,32 @@
     letter-spacing: -0.02em;
   }
 
+  /* ─── 섹션 카드 공통 (가로 스크롤 섹션 그룹화) ─── */
+  .section-card {
+    margin: 0 16px 12px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .section-card > .section {
+    padding: 16px 0 6px;
+  }
+  .section-card > .section .section-head {
+    padding: 0 14px;
+  }
+
   /* ─── Trust badges (가로 스크롤, 활성만) ─── */
   .badges-wrap {
-    padding: 8px 0 4px;
-    margin: 0 0 14px;
+    margin: 0 16px 12px;
+    padding: 14px 0 10px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
   }
   .badges-head {
-    padding: 0 18px 10px;
+    padding: 0 14px 10px;
     font-size: 12.5px;
     font-weight: 800;
     letter-spacing: -0.02em;
@@ -607,7 +626,7 @@
   .badge-list {
     display: flex;
     gap: 7px;
-    padding: 0 18px 4px;
+    padding: 0 14px 4px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -662,7 +681,7 @@
 
   /* ─── Review certification card ─── */
   .rev-list {
-    padding: 0 18px;
+    padding: 0 14px 8px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -761,10 +780,10 @@
 
   /* ─── Coming soon notice ─── */
   .coming-soon {
-    margin: 16px 18px;
-    padding: 28px 24px;
-    background: var(--line-2);
-    border-radius: 14px;
+    margin: 4px 14px 12px;
+    padding: 24px 20px;
+    background: var(--bg);
+    border-radius: 10px;
     text-align: center;
     color: var(--muted);
   }
@@ -1061,44 +1080,50 @@
     <button type="button" class="btn btn-kakao" onclick="openKakao()">💬  카카오톡 상담</button>
   </div>
 
-  <section class="section">
-    <div class="section-head">
-      <div class="section-title">
-        최근 작업 기록<span class="section-title-meta" data-last-work-inline></span>
+  <div class="section-card">
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">
+          최근 작업 기록<span class="section-title-meta" data-last-work-inline></span>
+        </div>
+        <a href="works/" class="section-more">전체 보기 ›</a>
       </div>
-      <a href="works/" class="section-more">전체 보기 ›</a>
-    </div>
-  </section>
-  <div data-recent-work-list>
-    <div class="coming-soon" data-work-empty>
-      <h3>아직 작업 기록이 없어요</h3>
-      <p>사장님이 작성한 실제 작업 리포트가<br>이 자리에 자동으로 채워질 예정입니다.</p>
+    </section>
+    <div data-recent-work-list>
+      <div class="coming-soon" data-work-empty>
+        <h3>아직 작업 기록이 없어요</h3>
+        <p>사장님이 작성한 실제 작업 리포트가<br>이 자리에 자동으로 채워질 예정입니다.</p>
+      </div>
     </div>
   </div>
 
-  <section class="section">
-    <div class="section-head">
-      <div class="section-title">
-        최근 후기<span class="section-cert-badge">✓ 클매 인증 후기</span>
+  <div class="section-card">
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">
+          최근 후기<span class="section-cert-badge">✓ 클매 인증 후기</span>
+        </div>
+        <span class="section-more">전체 보기 ›</span>
       </div>
-      <span class="section-more">전체 보기 ›</span>
-    </div>
-  </section>
-  <div data-reviews-list>
-    <div class="coming-soon" data-reviews-empty>
-      <h3>아직 후기가 없어요</h3>
-      <p>고객이 작성한 후기가<br>이 자리에 자동으로 채워질 예정입니다.</p>
+    </section>
+    <div data-reviews-list>
+      <div class="coming-soon" data-reviews-empty>
+        <h3>아직 후기가 없어요</h3>
+        <p>고객이 작성한 후기가<br>이 자리에 자동으로 채워질 예정입니다.</p>
+      </div>
     </div>
   </div>
 
-  <section class="section" data-external-reviews-section style="display:none;">
-    <div class="section-head">
-      <div class="section-title">
-        다른 채널 후기<span class="section-title-meta">고객이 다른 곳에 남긴 후기</span>
+  <div class="section-card" data-external-reviews-section style="display:none;">
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">
+          다른 채널 후기<span class="section-title-meta">고객이 다른 곳에 남긴 후기</span>
+        </div>
       </div>
-    </div>
-  </section>
-  <div data-external-reviews-list></div>
+    </section>
+    <div data-external-reviews-list></div>
+  </div>
 
   <footer class="foot">
     <a href="/" class="foot-link">
