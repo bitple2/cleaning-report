@@ -108,18 +108,27 @@
   }
   .share-btn:hover { background: var(--line-2); }
 
-  /* ─── About card (헤더 직속, 클리닝매니저 소개) ─── */
+  /* ─── About card (히어로 아래, 클매 소개) ─── */
   .about-card {
     padding: 14px 18px 16px;
-    background: var(--bg);
+    background: var(--paper);
+    border-top: 1px solid var(--line-2);
     border-bottom: 1px solid var(--line-2);
+    margin: 0 0 4px;
   }
   .about-strong {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     font-size: 12.5px;
     font-weight: 800;
-    color: var(--ink);
+    color: var(--ink-2);
     letter-spacing: -0.03em;
     margin-bottom: 4px;
+  }
+  .about-info-icon {
+    color: var(--muted-2);
+    font-weight: 600;
   }
   .about-body {
     font-size: 11.5px;
@@ -128,6 +137,27 @@
     font-weight: 500;
     letter-spacing: -0.02em;
   }
+
+  /* 공유 버튼 — 히어로 우측 상단 floating */
+  .share-btn-floating {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--bg);
+    color: var(--ink-2);
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  .share-btn-floating:hover { background: var(--line-2); }
+  .hero { position: relative; }
 
   /* ─── Hero ─── */
   .hero { padding: 20px 18px 16px; }
@@ -856,26 +886,10 @@
 <body>
 <div class="wrap">
 
-  <header class="top">
-    <span class="brand">
-      <img class="brand-logo" src="/assets/cm_logo.png" alt="클리닝매니저">
-      <span>클리닝매니저 신뢰 프로필</span>
-    </span>
-    <button class="share-btn" onclick="shareThisPage()">
-      <span>↗</span>
-      <span>공유하기</span>
-    </button>
-  </header>
-
-  <section class="about-card">
-    <p class="about-strong">좋은 작업이 묻히지 않도록.</p>
-    <p class="about-body">
-      클리닝매니저는 실제 작업 기록과 후기를 공개해<br>
-      고객이 직접 확인하고 선택할 수 있도록 돕습니다.
-    </p>
-  </section>
-
   <section class="hero">
+    <button class="share-btn share-btn-floating" onclick="shareThisPage()" aria-label="공유하기">
+      <span>↗</span>
+    </button>
     <div class="hero-row">
       <div class="avatar">
         <div class="avatar-fallback" data-avatar-fallback>👤</div>
@@ -894,6 +908,17 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="about-card">
+    <p class="about-strong">
+      <span class="about-info-icon">ⓘ</span>
+      클매 신뢰 프로필
+    </p>
+    <p class="about-body">
+      실제 작업 기록과 후기를 기반으로<br>
+      고객이 직접 확인할 수 있습니다.
+    </p>
   </section>
 
   <div data-badges-wrap class="badges-wrap" style="display:none;">
