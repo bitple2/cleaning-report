@@ -422,6 +422,47 @@
     letter-spacing: -0.02em;
   }
   .section-title-meta:empty { display: none; }
+  /* ─── 대표 소개 ─── */
+  .owner-intro {
+    padding: 4px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .owner-intro-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--bg);
+    margin: 0 0 14px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .owner-intro-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .owner-intro-photo:empty::before {
+    content: "👤";
+    font-size: 30px;
+    color: var(--muted-2);
+  }
+  .owner-intro-text {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-2);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    white-space: pre-wrap;
+    text-align: center;
+    margin: 0;
+  }
+
   /* ─── 다른 채널 후기 (외부 후기 캡쳐) ─── */
   .ext-list {
     display: flex;
@@ -1082,6 +1123,18 @@
 
   <div class="cta-kakao-wrap" data-kakao-wrap style="display:none;">
     <button type="button" class="btn btn-kakao" onclick="openKakao()">💬  카카오톡 상담</button>
+  </div>
+
+  <div class="section-card" data-owner-intro-section style="display:none;">
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">👤 대표 소개</div>
+      </div>
+    </section>
+    <div class="owner-intro">
+      <div class="owner-intro-photo" data-owner-intro-photo></div>
+      <p class="owner-intro-text" data-owner-intro-text></p>
+    </div>
   </div>
 
   <div class="section-card section-card--bare">

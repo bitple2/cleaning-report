@@ -458,6 +458,28 @@
       // 실패해도 페이지 자체는 렌더 (placeholder 유지)
     }
 
+    // 대표 소개 (사진 + 텍스트)
+    const ownerIntroText = (row.owner_intro_text || '').trim();
+    const ownerIntroPhoto = (row.owner_intro_photo_url || '').trim();
+    if (ownerIntroText || ownerIntroPhoto) {
+      if (ownerIntroPhoto) {
+        doc.querySelectorAll('[data-owner-intro-photo]').forEach(function(el) {
+          const img = doc.createElement('img');
+          img.src = ownerIntroPhoto;
+          img.alt = '대표 사진';
+          el.appendChild(img);
+        });
+      }
+      if (ownerIntroText) {
+        doc.querySelectorAll('[data-owner-intro-text]').forEach(function(el) {
+          el.textContent = ownerIntroText;
+        });
+      }
+      doc.querySelectorAll('[data-owner-intro-section]').forEach(function(el) {
+        el.setAttribute('style', '');
+      });
+    }
+
     // 폼 모달·CTA에서 사용할 데이터 주입
     doc.body.setAttribute('data-company-id', company.id || '');
     doc.body.setAttribute('data-company-name', company.name || '');
