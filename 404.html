@@ -169,6 +169,7 @@
     }
 
     // ─── 통계 + 후기 자동 채우기 (Phase 1.1) ───
+    let stats = null;
     try {
       // 1) 통계 RPC 호출
       const statsResp = await fetch(SB_URL + '/rest/v1/rpc/public_profile_stats', {
@@ -182,7 +183,7 @@
         body: JSON.stringify({ profile_slug: row.slug })
       });
       if (statsResp.ok) {
-        const stats = await statsResp.json();
+        stats = await statsResp.json();
         if (stats && typeof stats === 'object') {
           const fmt = function(n) { return n == null ? '0' : String(n); };
           const rating = stats.avg_rating == null
