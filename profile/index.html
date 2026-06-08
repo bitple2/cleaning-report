@@ -597,6 +597,12 @@
     border-radius: 14px;
     overflow: hidden;
   }
+  .section-card--bare {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+  }
   .section-card > .section {
     padding: 16px 0 6px;
   }
@@ -1078,7 +1084,7 @@
     <button type="button" class="btn btn-kakao" onclick="openKakao()">💬  카카오톡 상담</button>
   </div>
 
-  <div class="section-card">
+  <div class="section-card section-card--bare">
     <section class="section">
       <div class="section-head">
         <div class="section-title">
