@@ -1,0 +1,46 @@
+name: Build OG pages
+
+on:
+  # main 브랜치 푸시 시 (템플릿이나 스크립트 변경 반영)
+  push:
+    branches: [main]
+    paths:
+      - 'profile/index.html'
+      - 'scripts/build-og-pages.js'
+      - '.github/workflows/build-og.yml'
+  # 6시간마다 자동 (회사 정보 변경 반영)
+  schedule:
+    - cron: '0 */6 * * *'
+  # 수동 트리거 (Actions 탭에서 "Run workflow" 버튼)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build OG pages
+        run: node scripts/build-og-pages.js
+
+      - name: Commit & push if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add profile/
+          if git diff --staged --quiet; then
+            echo "변경 없음 — 커밋 건너뜀"
+          else
+            git commit -m "build(og): 회사별 OG 페이지 자동 갱신 [skip ci]"
+            git push
+          fi
