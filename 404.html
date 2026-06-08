@@ -430,6 +430,9 @@
         if (Array.isArray(ext) && ext.length > 0) {
           const listEl = doc.querySelector('[data-external-reviews-list]');
           const sectionEl = doc.querySelector('[data-external-reviews-section]');
+          doc.querySelectorAll('[data-ext-count]').forEach(function(el) {
+            el.textContent = '· ' + ext.length + '개';
+          });
           if (listEl) {
             listEl.innerHTML = '<div class="ext-list">' +
               ext.map(function(e) {
