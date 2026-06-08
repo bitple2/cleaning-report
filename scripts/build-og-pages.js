@@ -76,16 +76,12 @@ function buildPageForCompany(template, row) {
   const imageUrl = (company.logo_url || row.owner_intro_photo_url || '').trim()
     || 'https://cleaningmanager.kr/assets/cm_logo.png';
 
-  const ogTitle = companyName
-    ? `${companyName} — 클리닝매니저 신뢰 프로필`
-    : '클리닝매니저 신뢰 프로필';
+  const ogTitle = companyName || '클리닝매니저 신뢰 프로필';
   const ogDescription = heroSub
     ? heroSub.replace(/\n/g, ' ')
     : '실제 작업 기록과 후기를 기반으로 고객이 직접 확인할 수 있습니다.';
   const ogUrl = `https://cleaningmanager.kr/profile/${slug}/`;
-  const pageTitle = companyName
-    ? `${companyName} — 신뢰 프로필`
-    : '신뢰 프로필';
+  const pageTitle = companyName || '신뢰 프로필';
 
   let html = template;
 
