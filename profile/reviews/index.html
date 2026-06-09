@@ -344,6 +344,10 @@
         : (r.customer_name_snapshot
             ? esc(r.customer_name_snapshot.charAt(0)) + '*'
             : '익명');
+    const phoneDigits = (r.customer_phone_snapshot || '').replace(/\D/g, '');
+    const phoneMasked = phoneDigits.length >= 4
+        ? ' · 010-****-**' + phoneDigits.slice(-2)
+        : '';
     const certCode = (r.cert_code || '').replace(/^#/, '');
     const verifyUrl = certCode ? '/verify/' + encodeURIComponent(certCode) : '';
     const qrTarget = certCode ? 'https://cleaningmanager.kr/verify/' + certCode : '';
@@ -373,7 +377,7 @@
         '</div>' + verifyBlock +
       '</div>' +
       '<p class="rev-content">' + content + '</p>' +
-      '<div class="rev-meta">' + name + service + '</div>' +
+      '<div class="rev-meta">' + name + phoneMasked + service + '</div>' +
       cardClose;
   }
 

@@ -177,6 +177,8 @@ function buildReviews(reviews) {
     const service = r.service_type_snapshot ? ' · ' + escHtml(r.service_type_snapshot) : '';
     const name = r.name_display === 'anonymous' ? '익명'
       : (r.customer_name_snapshot ? escHtml(r.customer_name_snapshot.charAt(0)) + '*' : '익명');
+    const phoneDigits = (r.customer_phone_snapshot || '').replace(/\D/g, '');
+    const phoneMasked = phoneDigits.length >= 4 ? ' · 010-****-**' + phoneDigits.slice(-2) : '';
     const certCode = (r.cert_code || '').replace(/^#/, '');
     const verifyUrl = certCode ? '/verify/' + encodeURIComponent(certCode) : '';
     const qrTarget = certCode ? 'https://cleaningmanager.kr/verify/' + certCode : '';
@@ -193,7 +195,7 @@ function buildReviews(reviews) {
     return cardOpen +
       `<div class="rev-header"><div class="rev-rating-row"><div class="rev-rating"><span class="rev-rating-stars">${ratingStars}</span> ${rating}</div><div class="rev-date">${dateStr}</div></div>${verifyBlock}</div>` +
       `<p class="rev-content">${content}</p>` +
-      `<div class="rev-meta">${name}${service}</div>` +
+      `<div class="rev-meta">${name}${phoneMasked}${service}</div>` +
       cardClose;
   }).join('') + '</div>';
 }
@@ -245,7 +247,7 @@ async function fetchAllData(slug, companyId) {
       company_id: 'eq.' + companyId,
       is_hidden: 'eq.false',
       'cert_code': 'not.is.null',
-      select: 'rating,content,name_display,customer_name_snapshot,service_type_snapshot,created_at,cert_code',
+      select: 'rating,content,name_display,customer_name_snapshot,customer_phone_snapshot,service_type_snapshot,created_at,cert_code',
       order: 'created_at.desc',
       limit: '3',
     }).toString()).catch(() => []),
