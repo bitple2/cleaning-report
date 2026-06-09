@@ -206,11 +206,11 @@ function buildExternalReviews(ext) {
   return '<div class="ext-list">' + ext.map(e => {
     const src = (e.source_label || '').trim();
     const cap = (e.caption || '').trim();
-    return `<div class="ext-card"><div class="ext-card-img"><img src="${escHtml(e.image_url)}" alt="" loading="lazy">` +
+    return `<div class="ext-card"><div class="ext-card-img"><img src="${escHtml(e.image_url)}" alt="" loading="lazy"></div>` +
+      `<div class="ext-card-body">` +
         (src ? `<div class="ext-card-source">${escHtml(src)}</div>` : '') +
-      `</div>` +
-      (cap ? `<div class="ext-card-body"><div class="ext-card-caption">${escHtml(cap)}</div></div>` : '') +
-      `</div>`;
+        (cap ? `<div class="ext-card-caption">${escHtml(cap)}</div>` : '') +
+      `</div></div>`;
   }).join('') + '</div>';
 }
 
