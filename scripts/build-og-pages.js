@@ -114,11 +114,12 @@ function buildBadges(stats) {
   else earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 ' + reportsN + '건', locked: true });
 
   if (reviewsN >= 1) {
-    if (avgRating >= 5.0) earned.push({ emoji: '⭐', label: '평점 5.0 만점', sub: '고객 만족도 우수 업체' });
-    else if (avgRating >= 4.9) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도 우수 업체' });
-    else if (avgRating >= 4.6) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도' });
-    else if (avgRating >= 4.5) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도' });
-    else earned.push({ emoji: '⭐', label: '평점 4.5', sub: '현재 ' + avgRating.toFixed(1), locked: true });
+    const rStr = avgRating.toFixed(1);
+    const rFloat = parseFloat(rStr);
+    if (avgRating >= 5.0) earned.push({ emoji: '⭐', label: '평점 5.0 만점', sub: '고객 만족 우수 업체' });
+    else if (rFloat >= 4.9) earned.push({ emoji: '⭐', label: '평점 ' + rStr, sub: '고객 만족 우수 업체' });
+    else if (rFloat >= 4.5) earned.push({ emoji: '⭐', label: '평점 ' + rStr, sub: '고객 만족도' });
+    else earned.push({ emoji: '⭐', label: '평점 4.5', sub: '현재 ' + rStr, locked: true });
   } else {
     earned.push({ emoji: '⭐', label: '평점 4.5', sub: '후기 0건', locked: true });
   }
