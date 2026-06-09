@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>흩어져있는 후기</title>
+<meta name="description" content="다른 채널에서 받은 후기 전체">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --muted-2: #94A3B8;
+    --line: #E2E8F0;
+    --line-2: #F1F5F9;
+    --paper: #FFFFFF;
+    --bg: #F8FAFC;
+    --primary: #1B2D4F;
+  }
+  html, body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    background: var(--paper);
+    min-height: 100vh;
+  }
+
+  /* Top bar */
+  .top {
+    display: flex;
+    align-items: center;
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--line-2);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .top-back {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+    font-size: 18px;
+  }
+  .top-title {
+    flex: 1;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .top-spacer { width: 36px; }
+
+  /* Summary */
+  .summary {
+    padding: 16px 18px 10px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .summary-label {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .summary-count {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: -0.03em;
+  }
+  .summary-count-unit {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-2);
+  }
+
+  /* Grid */
+  .ext-grid {
+    padding: 8px 14px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .ext-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .ext-card:active { transform: scale(0.98); }
+  .ext-card:hover { box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08); }
+  .ext-card-img {
+    width: 100%;
+    aspect-ratio: 1 / 1.15;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .ext-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .ext-card-body {
+    padding: 8px 10px 10px;
+    border-top: 1px solid var(--line-2);
+    min-height: 54px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .ext-card-source {
+    align-self: flex-start;
+    padding: 2px 7px;
+    background: var(--bg);
+    color: var(--ink-2);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .ext-card-caption {
+    font-size: 11px;
+    color: var(--ink-2);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Modal */
+  .ext-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.92);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 60px 16px 24px;
+  }
+  .ext-modal.open { display: flex; }
+  .ext-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ext-modal-img {
+    max-width: 100%;
+    max-height: 75vh;
+    border-radius: 10px;
+    object-fit: contain;
+    background: var(--paper);
+  }
+  .ext-modal-meta {
+    margin-top: 18px;
+    color: #fff;
+    text-align: center;
+    max-width: 100%;
+  }
+  .ext-modal-source {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .ext-modal-caption {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.92);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  /* Empty */
+  .empty {
+    padding: 60px 24px;
+    text-align: center;
+    color: var(--muted);
+  }
+  .empty h3 {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--ink-2);
+    margin-bottom: 8px;
+  }
+  .empty p {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a href="../" class="top-back" aria-label="뒤로">←</a>
+    <div class="top-title">흩어져있는 후기</div>
+    <div class="top-spacer"></div>
+  </header>
+
+  <div class="summary">
+    <span class="summary-label">총</span>
+    <span class="summary-count" data-total-count>0</span>
+    <span class="summary-count-unit">개</span>
+  </div>
+
+  <div class="ext-grid" data-ext-grid></div>
+
+</div>
+
+<div class="ext-modal" data-ext-modal>
+  <button class="ext-modal-close" onclick="closeExtModal()" aria-label="닫기">✕</button>
+  <img class="ext-modal-img" data-ext-modal-img alt="">
+  <div class="ext-modal-meta">
+    <div class="ext-modal-source" data-ext-modal-source style="display:none"></div>
+    <div class="ext-modal-caption" data-ext-modal-caption style="display:none"></div>
+  </div>
+</div>
+
+<script>
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function init() {
+    let items = [];
+    try {
+      items = JSON.parse(document.body.dataset.extJson || '[]');
+    } catch (_) {
+      items = [];
+    }
+    document.querySelector('[data-total-count]').textContent = items.length;
+    const grid = document.querySelector('[data-ext-grid]');
+    if (items.length === 0) {
+      grid.innerHTML =
+        '<div class="empty" style="grid-column: 1 / -1">' +
+          '<h3>아직 등록된 후기가 없어요</h3>' +
+          '<p>사장님이 다른 채널에서 받은 후기 캡쳐를<br>업로드하면 여기에 노출됩니다.</p>' +
+        '</div>';
+      return;
+    }
+    grid.innerHTML = items.map(function(e) {
+      const src = (e.source_label || '').trim();
+      const cap = (e.caption || '').trim();
+      return '<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="' + esc(e.image_url) + '" data-source="' + esc(src) + '" data-caption="' + esc(cap) + '">' +
+        '<div class="ext-card-img"><img src="' + esc(e.image_url) + '" alt="" loading="lazy"></div>' +
+        '<div class="ext-card-body">' +
+          (src ? '<div class="ext-card-source">' + esc(src) + '</div>' : '') +
+          (cap ? '<div class="ext-card-caption">' + esc(cap) + '</div>' : '') +
+        '</div></div>';
+    }).join('');
+  }
+
+  function openExtModalFromEl(el) {
+    const modal = document.querySelector('[data-ext-modal]');
+    const img = document.querySelector('[data-ext-modal-img]');
+    const sourceEl = document.querySelector('[data-ext-modal-source]');
+    const captionEl = document.querySelector('[data-ext-modal-caption]');
+    if (!modal || !img) return;
+    img.src = el.dataset.imgUrl || '';
+    if (sourceEl) {
+      sourceEl.textContent = el.dataset.source || '';
+      sourceEl.style.display = el.dataset.source ? 'inline-block' : 'none';
+    }
+    if (captionEl) {
+      captionEl.textContent = el.dataset.caption || '';
+      captionEl.style.display = el.dataset.caption ? 'block' : 'none';
+    }
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeExtModal() {
+    const modal = document.querySelector('[data-ext-modal]');
+    if (modal) modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeExtModal();
+  });
+  document.addEventListener('click', function(e) {
+    if (e.target && e.target.matches && e.target.matches('[data-ext-modal]')) closeExtModal();
+  });
+
+  init();
+</script>
+
+</body>
+</html>

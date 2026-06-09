@@ -206,7 +206,8 @@ function buildExternalReviews(ext) {
   return '<div class="ext-list">' + ext.map(e => {
     const src = (e.source_label || '').trim();
     const cap = (e.caption || '').trim();
-    return `<div class="ext-card"><div class="ext-card-img"><img src="${escHtml(e.image_url)}" alt="" loading="lazy"></div>` +
+    return `<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="${escHtml(e.image_url)}" data-source="${escHtml(src)}" data-caption="${escHtml(cap)}">` +
+      `<div class="ext-card-img"><img src="${escHtml(e.image_url)}" alt="" loading="lazy"></div>` +
       `<div class="ext-card-body">` +
         (src ? `<div class="ext-card-source">${escHtml(src)}</div>` : '') +
         (cap ? `<div class="ext-card-caption">${escHtml(cap)}</div>` : '') +

@@ -66,6 +66,13 @@
     return;
   }
 
+  // ─── 2-a3. /profile/SLUG/external/ → 흩어져있는 후기 전체 ───
+  const externalMatch = path.match(/^\/profile\/([a-z0-9-]{3,30})\/external\/?$/);
+  if (externalMatch) {
+    handleProfileExternal(externalMatch[1]);
+    return;
+  }
+
   // ─── 2-b. /profile/SLUG/ → 신규 신뢰 프로필 ───
   const profileMatch = path.match(/^\/profile\/([a-z0-9-]{3,30})\/?$/);
   if (profileMatch) {
@@ -458,7 +465,7 @@
               ext.map(function(e) {
                 const src = (e.source_label || '').trim();
                 const cap = (e.caption || '').trim();
-                return '<div class="ext-card">' +
+                return '<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="' + escHtml(e.image_url) + '" data-source="' + escHtml(src) + '" data-caption="' + escHtml(cap) + '">' +
                   '<div class="ext-card-img">' +
                     '<img src="' + escHtml(e.image_url) + '" alt="" loading="lazy">' +
                   '</div>' +
@@ -732,6 +739,79 @@
       document.close();
     } catch (e) {
       console.error('profile reviews render error:', e);
+      showNotFound();
+    }
+  }
+
+  // ━━━━━━━━━━━━ 흩어져있는 후기 전체 페이지 ━━━━━━━━━━━━
+  async function handleProfileExternal(slug) {
+    try {
+      const qs = new URLSearchParams({
+        slug: 'eq.' + slug,
+        is_published: 'eq.true',
+        select: '*,company:companies(id,name,is_paid)'
+      }).toString();
+      const resp = await fetch(SB_URL + '/rest/v1/company_homepages?' + qs, {
+        cache: 'no-store',
+        headers: {
+          'apikey': SB_ANON,
+          'Authorization': 'Bearer ' + SB_ANON,
+          'Accept': 'application/json'
+        }
+      });
+      if (!resp.ok) { showNotFound(); return; }
+      const rows = await resp.json();
+      if (!rows.length) { showNotFound(); return; }
+
+      const row = rows[0];
+      const company = row.company || {};
+
+      if (!company.is_paid && row.created_at) {
+        const created = new Date(row.created_at).getTime();
+        const days = (Date.now() - created) / 86400000;
+        if (days > TRIAL_DAYS) { showExpired(company.name); return; }
+      }
+
+      const extResp = await fetch(
+        SB_URL + '/rest/v1/external_review_screenshots?' + new URLSearchParams({
+          company_id: 'eq.' + company.id,
+          select: 'image_url,source_label,caption,sort_order',
+          order: 'sort_order.asc,created_at.desc'
+        }).toString(),
+        { cache: 'no-store', headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Accept': 'application/json' } }
+      );
+      const ext = extResp.ok ? (await extResp.json()) : [];
+
+      const tplResp = await fetch('/profile/external/index.html?t=' + Date.now(), { cache: 'no-store' });
+      if (!tplResp.ok) { showNotFound(); return; }
+      const html = await tplResp.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+
+      doc.querySelectorAll('[src], [href]').forEach(function(el) {
+        ['src', 'href'].forEach(function(attr) {
+          const v = el.getAttribute(attr);
+          if (!v) return;
+          if (/^(https?:|data:|javascript:|mailto:|tel:|#|\/)/i.test(v)) return;
+          if (v === '../' || v.indexOf('../') === 0) {
+            el.setAttribute(attr, '/profile/' + slug + '/' + v.slice(3));
+          } else {
+            el.setAttribute(attr, '/profile/external/' + v);
+          }
+        });
+      });
+
+      if (company.name) {
+        const t = doc.querySelector('title');
+        if (t) t.textContent = company.name + ' — 흩어져있는 후기';
+      }
+
+      doc.body.setAttribute('data-ext-json', Array.isArray(ext) ? JSON.stringify(ext) : '[]');
+
+      document.open();
+      document.write('<!DOCTYPE html>' + doc.documentElement.outerHTML);
+      document.close();
+    } catch (e) {
+      console.error('profile external render error:', e);
       showNotFound();
     }
   }
