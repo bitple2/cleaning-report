@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인증 후기</title>
+<meta name="description" content="클매가 검증한 실제 고객 후기 전체">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --muted-2: #94A3B8;
+    --line: #E2E8F0;
+    --line-2: #F1F5F9;
+    --paper: #FFFFFF;
+    --bg: #F8FAFC;
+    --primary: #1B2D4F;
+  }
+  html, body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    background: var(--paper);
+    min-height: 100vh;
+  }
+
+  /* Top bar */
+  .top {
+    display: flex;
+    align-items: center;
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--line-2);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .top-back {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+    font-size: 18px;
+  }
+  .top-title {
+    flex: 1;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .top-spacer { width: 36px; }
+
+  /* Summary */
+  .summary {
+    padding: 16px 18px 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .summary-label {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .summary-count {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: -0.03em;
+  }
+  .summary-count-unit {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-2);
+  }
+  .summary-badge {
+    margin-left: 4px;
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  /* Reviews list */
+  .reviews-list {
+    padding: 8px 18px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .rev-card {
+    display: block;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 14px 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .rev-card:active { transform: scale(0.99); }
+  .rev-card:hover { box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06); }
+  .rev-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .rev-rating {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .rev-rating-stars {
+    color: #F59E0B;
+    letter-spacing: 1px;
+    font-size: 12px;
+  }
+  .rev-verify {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .rev-qr {
+    width: 44px;
+    height: 44px;
+    border-radius: 5px;
+    border: 1px solid var(--line);
+  }
+  .rev-verify-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .rev-verify-label {
+    font-size: 9.5px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .rev-cert-code {
+    font-size: 9.5px;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .rev-content {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink-2);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .rev-meta {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding: 22px 18px 40px;
+    flex-wrap: wrap;
+  }
+  .page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 7px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-2);
+    font-family: inherit;
+    cursor: pointer;
+    letter-spacing: -0.02em;
+  }
+  .page-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .page-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .page-btn.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .page-ellipsis {
+    color: var(--muted-2);
+    padding: 0 4px;
+    font-weight: 700;
+  }
+
+  /* Empty */
+  .empty {
+    padding: 60px 24px;
+    text-align: center;
+    color: var(--muted);
+  }
+  .empty h3 {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--ink-2);
+    margin-bottom: 8px;
+  }
+  .empty p {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a href="../" class="top-back" aria-label="뒤로">←</a>
+    <div class="top-title">인증 후기</div>
+    <div class="top-spacer"></div>
+  </header>
+
+  <div class="summary">
+    <span class="summary-label">총</span>
+    <span class="summary-count" data-total-count>0</span>
+    <span class="summary-count-unit">개</span>
+    <span class="summary-badge">✓ 클매 인증 후기</span>
+  </div>
+
+  <div class="reviews-list" data-reviews-list></div>
+
+  <div class="pagination" data-pagination></div>
+
+</div>
+
+<script>
+  const PER_PAGE = 50;
+  let _currentPage = 1;
+  let _allReviews = [];
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function init() {
+    try {
+      _allReviews = JSON.parse(document.body.dataset.reviewsJson || '[]');
+    } catch (_) {
+      _allReviews = [];
+    }
+    document.querySelector('[data-total-count]').textContent = _allReviews.length;
+    if (_allReviews.length === 0) {
+      document.querySelector('[data-reviews-list]').innerHTML =
+        '<div class="empty">' +
+          '<h3>아직 인증 후기가 없어요</h3>' +
+          '<p>고객이 작성한 후기 중 클매가 검증한 후기가<br>이 자리에 자동으로 채워질 예정입니다.</p>' +
+        '</div>';
+      return;
+    }
+    const urlPage = parseInt(new URLSearchParams(location.search).get('p') || '1');
+    const totalPages = Math.ceil(_allReviews.length / PER_PAGE);
+    renderPage(Math.max(1, Math.min(urlPage, totalPages)));
+  }
+
+  function renderPage(page) {
+    _currentPage = page;
+    const start = (page - 1) * PER_PAGE;
+    const items = _allReviews.slice(start, start + PER_PAGE);
+    document.querySelector('[data-reviews-list]').innerHTML =
+      items.map(reviewCard).join('');
+    renderPagination();
+    const url = new URL(location.href);
+    if (page === 1) url.searchParams.delete('p');
+    else url.searchParams.set('p', String(page));
+    history.replaceState(null, '', url.toString());
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  }
+
+  function reviewCard(r) {
+    const rating = Number(r.rating || 0).toFixed(1);
+    const ratingStars = '★'.repeat(Math.round(r.rating || 0)) +
+                        '☆'.repeat(5 - Math.round(r.rating || 0));
+    const content = esc(r.content || '').replace(/\n/g, '<br>');
+    const dt = new Date(r.created_at);
+    const dateStr = dt.getFullYear().toString().slice(2) + '.' +
+      String(dt.getMonth() + 1).padStart(2, '0') + '.' +
+      String(dt.getDate()).padStart(2, '0');
+    const service = r.service_type_snapshot
+        ? ' · ' + esc(r.service_type_snapshot)
+        : '';
+    const name = r.name_display === 'anonymous'
+        ? '익명'
+        : (r.customer_name_snapshot
+            ? esc(r.customer_name_snapshot.charAt(0)) + '*'
+            : '익명');
+    const certCode = (r.cert_code || '').replace(/^#/, '');
+    const verifyUrl = certCode ? '/verify/' + encodeURIComponent(certCode) : '';
+    const qrTarget = certCode ? 'https://cleaningmanager.kr/verify/' + certCode : '';
+    const qrImg = qrTarget
+        ? '<img class="rev-qr" alt="" src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&margin=0&data=' +
+          encodeURIComponent(qrTarget) + '">'
+        : '';
+    const verifyBlock = certCode
+        ? '<div class="rev-verify">' + qrImg +
+            '<span class="rev-verify-text">' +
+              '<span class="rev-verify-label">✓ 검증</span>' +
+              '<span class="rev-cert-code">#' + esc(certCode) + '</span>' +
+            '</span>' +
+          '</div>'
+        : '';
+    const cardOpen = certCode
+        ? '<a class="rev-card" href="' + verifyUrl + '" target="_blank" rel="noopener">'
+        : '<div class="rev-card">';
+    const cardClose = certCode ? '</a>' : '</div>';
+    return cardOpen +
+      '<div class="rev-header">' +
+        '<div class="rev-rating">' +
+          '<span class="rev-rating-stars">' + ratingStars + '</span> ' + rating +
+        '</div>' + verifyBlock +
+      '</div>' +
+      '<p class="rev-content">' + content + '</p>' +
+      '<div class="rev-meta">' + name + service + ' · ' + dateStr + '</div>' +
+      cardClose;
+  }
+
+  function renderPagination() {
+    const totalPages = Math.ceil(_allReviews.length / PER_PAGE);
+    const pag = document.querySelector('[data-pagination]');
+    if (totalPages <= 1) { pag.innerHTML = ''; return; }
+    const parts = [];
+    parts.push(
+      '<button class="page-btn' + (_currentPage === 1 ? ' disabled' : '') +
+        '" onclick="renderPage(' + (_currentPage - 1) + ')">←</button>');
+    const pages = new Set([1, totalPages, _currentPage - 1, _currentPage, _currentPage + 1]);
+    const visible = Array.from(pages).filter(p => p >= 1 && p <= totalPages).sort((a, b) => a - b);
+    let prev = 0;
+    for (const p of visible) {
+      if (p - prev > 1) parts.push('<span class="page-ellipsis">…</span>');
+      parts.push(
+        '<button class="page-btn' + (p === _currentPage ? ' active' : '') +
+          '" onclick="renderPage(' + p + ')">' + p + '</button>');
+      prev = p;
+    }
+    parts.push(
+      '<button class="page-btn' + (_currentPage === totalPages ? ' disabled' : '') +
+        '" onclick="renderPage(' + (_currentPage + 1) + ')">→</button>');
+    pag.innerHTML = parts.join('');
+  }
+
+  init();
+</script>
+
+</body>
+</html>
