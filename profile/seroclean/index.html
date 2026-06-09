@@ -1130,7 +1130,7 @@
 
   <div data-badges-wrap class="badges-wrap">
     <div class="badges-head">🛡 신뢰 배지</div>
-    <div class="badge-list" data-badges-list><div class="badge-card"><div class="badge-emoji">🥉</div><div class="badge-label">30건 달성</div><div class="badge-sub">누적 작업 31건</div></div><div class="badge-card"><div class="badge-emoji">⭐</div><div class="badge-label">평점 4.9</div><div class="badge-sub">고객 만족도</div></div><div class="badge-card"><div class="badge-emoji">🔐</div><div class="badge-label">인증 후기 21건</div><div class="badge-sub">실제 고객 검증</div></div><div class="badge-card"><div class="badge-emoji">🔁</div><div class="badge-label">3개월 연속 활동</div><div class="badge-sub">꾸준한 운영</div></div><div class="badge-card"><div class="badge-emoji">📸</div><div class="badge-label">작업 과정 공개</div><div class="badge-sub">실시간 리포트 제공 중</div></div></div>
+    <div class="badge-list" data-badges-list><div class="badge-card"><div class="badge-emoji">🥉</div><div class="badge-label">30건 달성</div><div class="badge-sub">누적 작업 31건</div></div><div class="badge-card"><div class="badge-emoji">⭐</div><div class="badge-label">평점 4.9</div><div class="badge-sub">고객 만족 우수 업체</div></div><div class="badge-card"><div class="badge-emoji">🔐</div><div class="badge-label">인증 후기 21건</div><div class="badge-sub">실제 고객 검증</div></div><div class="badge-card"><div class="badge-emoji">🔁</div><div class="badge-label">3개월 연속 활동</div><div class="badge-sub">꾸준한 운영</div></div><div class="badge-card"><div class="badge-emoji">📸</div><div class="badge-label">작업 과정 공개</div><div class="badge-sub">실시간 리포트 제공 중</div></div></div>
   </div>
 
   <div data-info-card-wrap><div class="info-card"><div class="info-row"><div class="info-icon">🕐</div><div class="info-value">평일 09:00-21:00 · 주말 예약제</div></div><div class="info-row"><div class="info-icon">📍</div><div class="info-value">서울,경기,인천</div></div></div></div>
@@ -1395,11 +1395,12 @@
         else if (reportsN >= 30) earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 작업 ' + reportsN + '건' });
         else earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 ' + reportsN + '건', locked: true });
         if (reviewsN >= 1) {
-          if (avgRating >= 5.0) earned.push({ emoji: '⭐', label: '평점 5.0 만점', sub: '고객 만족도 우수 업체' });
-          else if (avgRating >= 4.9) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도 우수 업체' });
-          else if (avgRating >= 4.6) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도' });
-          else if (avgRating >= 4.5) earned.push({ emoji: '⭐', label: '평점 ' + avgRating.toFixed(1), sub: '고객 만족도' });
-          else earned.push({ emoji: '⭐', label: '평점 4.5', sub: '현재 ' + avgRating.toFixed(1), locked: true });
+          const rStr = avgRating.toFixed(1);
+          const rFloat = parseFloat(rStr);
+          if (avgRating >= 5.0) earned.push({ emoji: '⭐', label: '평점 5.0 만점', sub: '고객 만족 우수 업체' });
+          else if (rFloat >= 4.9) earned.push({ emoji: '⭐', label: '평점 ' + rStr, sub: '고객 만족 우수 업체' });
+          else if (rFloat >= 4.5) earned.push({ emoji: '⭐', label: '평점 ' + rStr, sub: '고객 만족도' });
+          else earned.push({ emoji: '⭐', label: '평점 4.5', sub: '현재 ' + rStr, locked: true });
         } else {
           earned.push({ emoji: '⭐', label: '평점 4.5', sub: '후기 0건', locked: true });
         }
