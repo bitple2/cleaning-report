@@ -1207,26 +1207,54 @@ function updateViewer() {
 async function downloadPhoto() {
   const url = viewerVideoUrls[viewerIndex] || viewerPhotos[viewerIndex];
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isVid = !!viewerVideoUrls[viewerIndex] || isVideoUrl(url);
 
+  // 영상: Web Share API(files) 우선 — iOS 공유 시트로 "비디오 저장" 가능
+  if (isVid) {
+    try {
+      showToast('영상 준비 중...');
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const fileName = 'cleanops_video_' + (viewerIndex + 1) + '.mp4';
+      const file = new File([blob], fileName, { type: blob.type || 'video/mp4' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        return;
+      }
+      // fallback: blob download (Android Chrome 등)
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('저장되었습니다');
+      return;
+    } catch (e) {
+      // share 거부(AbortError)는 무시, 그 외엔 새 창 fallback
+      if (e && e.name === 'AbortError') return;
+      window.open(url, '_blank');
+      showToast('영상 재생 후 공유 → 비디오 저장 하세요');
+      return;
+    }
+  }
+
+  // 사진: 기존 흐름
   if (isIOS) {
     window.open(url, '_blank');
     showToast('사진을 길게 눌러 저장하세요');
     return;
   }
-
   if (isInAppBrowser()) {
     window.open(url, '_blank');
     showToast('사진을 길게 눌러 저장하세요');
     return;
   }
-
   try {
     const res = await fetch(url);
     const blob = await res.blob();
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    const isVid = isVideoUrl(url);
-    a.download = isVid ? 'cleanops_video_' + (viewerIndex + 1) + '.mp4' : 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
+    a.download = 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
     a.click();
     URL.revokeObjectURL(a.href);
     showToast('저장되었습니다');
