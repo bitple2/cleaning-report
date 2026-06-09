@@ -173,8 +173,7 @@ function buildReviews(reviews) {
     const ratingStars = '★'.repeat(Math.round(r.rating || 0)) + '☆'.repeat(5 - Math.round(r.rating || 0));
     const content = escHtml(r.content || '').replace(/\n/g, '<br>');
     const dt = new Date(r.created_at);
-    const dateStr = dt.getFullYear().toString().slice(2) + '.' +
-      String(dt.getMonth() + 1).padStart(2, '0') + '.' + String(dt.getDate()).padStart(2, '0');
+    const dateStr = (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일';
     const service = r.service_type_snapshot ? ' · ' + escHtml(r.service_type_snapshot) : '';
     const name = r.name_display === 'anonymous' ? '익명'
       : (r.customer_name_snapshot ? escHtml(r.customer_name_snapshot.charAt(0)) + '*' : '익명');
@@ -192,9 +191,9 @@ function buildReviews(reviews) {
       : `<div class="rev-card">`;
     const cardClose = certCode ? '</a>' : '</div>';
     return cardOpen +
-      `<div class="rev-header"><div class="rev-rating"><span class="rev-rating-stars">${ratingStars}</span> ${rating}</div>${verifyBlock}</div>` +
+      `<div class="rev-header"><div class="rev-rating-row"><div class="rev-rating"><span class="rev-rating-stars">${ratingStars}</span> ${rating}</div><div class="rev-date">${dateStr}</div></div>${verifyBlock}</div>` +
       `<p class="rev-content">${content}</p>` +
-      `<div class="rev-meta">${name}${service} · ${dateStr}</div>` +
+      `<div class="rev-meta">${name}${service}</div>` +
       cardClose;
   }).join('') + '</div>';
 }
