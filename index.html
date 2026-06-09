@@ -420,7 +420,6 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding-bottom: 90px;
   }
   .viewer-body img {
     max-width: 100%;
@@ -1206,6 +1205,7 @@ function updateViewer() {
   document.getElementById('viewerCounter').textContent =
     `${viewerIndex + 1} / ${viewerPhotos.length}`;
   const videoUrl = viewerVideoUrls[viewerIndex];
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   if (videoUrl) {
     document.getElementById('viewerBody').innerHTML =
       `<video src="${videoUrl}" controls playsinline preload="metadata" style="max-width:100%;max-height:80vh"></video>`;
@@ -1213,6 +1213,12 @@ function updateViewer() {
     document.getElementById('viewerBody').innerHTML =
       `<img src="${viewerPhotos[viewerIndex]}" style="max-width:100%;max-height:100%;object-fit:contain;-webkit-touch-callout:default">`;
   }
+  // 저장 버튼: iOS 영상일 때만 노출 (그 외엔 OS 기본 길게 누르기/3단 메뉴 사용)
+  const showSave = !!videoUrl && isIOS;
+  const footer = document.querySelector('.viewer-footer');
+  const body = document.querySelector('.viewer-body');
+  if (footer) footer.style.display = showSave ? 'flex' : 'none';
+  if (body) body.style.paddingBottom = showSave ? '90px' : '0';
 }
 
 async function downloadPhoto() {
