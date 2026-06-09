@@ -586,7 +586,11 @@
     ontouchend="handleTouchEnd(event)">
   </div>
   <div class="viewer-footer">
-    <div style="color:rgba(255,255,255,0.5);font-size:11px">사진을 길게 눌러 저장하세요</div>
+    <button class="viewer-download" onclick="downloadPhoto()" aria-label="저장">
+      <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+      <span id="viewerDownloadLabel">저장</span>
+    </button>
+    <div style="color:rgba(255,255,255,0.5);font-size:11px;margin-top:8px">사진은 길게 눌러도 저장 가능</div>
   </div>
 </div>
 <div class="viewer-toast" id="viewerToast">저장되었습니다</div>
