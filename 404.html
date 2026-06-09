@@ -461,11 +461,9 @@
                 return '<div class="ext-card">' +
                   '<div class="ext-card-img">' +
                     '<img src="' + escHtml(e.image_url) + '" alt="" loading="lazy">' +
-                  '</div>' +
-                  '<div class="ext-card-body">' +
                     (src ? '<div class="ext-card-source">' + escHtml(src) + '</div>' : '') +
-                    (cap ? '<div class="ext-card-caption">' + escHtml(cap) + '</div>' : '') +
                   '</div>' +
+                  (cap ? '<div class="ext-card-body"><div class="ext-card-caption">' + escHtml(cap) + '</div></div>' : '') +
                 '</div>';
               }).join('') +
               '</div>';
