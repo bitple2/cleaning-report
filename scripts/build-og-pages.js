@@ -201,6 +201,20 @@ function buildReviews(reviews) {
   }).join('') + '</div>';
 }
 
+function buildGallery(gal) {
+  if (!Array.isArray(gal) || gal.length === 0) return null;
+  return '<div class="ext-list">' + gal.map(g => {
+    const cat = (g.category || '').trim();
+    const cap = (g.caption || '').trim();
+    return `<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="${escHtml(g.image_url)}" data-source="${escHtml(cat)}" data-caption="${escHtml(cap)}">` +
+      `<div class="ext-card-img"><img src="${escHtml(g.image_url)}" alt="" loading="lazy"></div>` +
+      `<div class="ext-card-body">` +
+        (cat ? `<div class="ext-card-source">${escHtml(cat)}</div>` : '') +
+        (cap ? `<div class="ext-card-caption">${escHtml(cap)}</div>` : '') +
+      `</div></div>`;
+  }).join('') + '</div>';
+}
+
 function buildExternalReviews(ext) {
   if (!Array.isArray(ext) || ext.length === 0) return null;
   return '<div class="ext-list">' + ext.map(e => {
@@ -258,9 +272,14 @@ async function fetchAllData(slug, companyId) {
       select: 'image_url,source_label,caption,sort_order',
       order: 'sort_order.asc,created_at.desc',
     }).toString()).catch(() => []),
+    fetchGet(`/rest/v1/company_gallery?` + new URLSearchParams({
+      company_id: 'eq.' + companyId,
+      select: 'image_url,category,caption,sort_order',
+      order: 'sort_order.asc,created_at.desc',
+    }).toString()).catch(() => []),
   ];
-  const [stats, works, reviews, ext] = await Promise.all(tasks);
-  return { stats, works: works || [], reviews: reviews || [], ext: ext || [] };
+  const [stats, works, reviews, ext, gal] = await Promise.all(tasks);
+  return { stats, works: works || [], reviews: reviews || [], ext: ext || [], gal: gal || [] };
 }
 
 function buildPageForCompany(template, row, data) {
@@ -344,6 +363,14 @@ function buildPageForCompany(template, row, data) {
     );
   }
 
+  // 갤러리
+  if (data.gal && data.gal.length > 0) {
+    const galHtml = buildGallery(data.gal);
+    html = html.replace(/<div class="section-card" data-gallery-section style="display:none;">/, `<div class="section-card" data-gallery-section>`);
+    html = html.replace(/<span class="section-title-meta" data-gallery-count><\/span>/, `<span class="section-title-meta" data-gallery-count>· ${data.gal.length}개</span>`);
+    html = html.replace(/<div data-gallery-list><\/div>/, `<div data-gallery-list>${galHtml}</div>`);
+  }
+
   // 외부 후기
   if (data.ext && data.ext.length > 0) {
     const extHtml = buildExternalReviews(data.ext);
@@ -405,7 +432,7 @@ async function main() {
       const html = buildPageForCompany(template, row, data);
       fs.writeFileSync(path.join(dir, 'index.html'), html, 'utf8');
       built++;
-      console.log(`  + /profile/${slug}/  (작업${data.works.length}·후기${data.reviews.length}·외부${data.ext.length})`);
+      console.log(`  + /profile/${slug}/  (작업${data.works.length}·후기${data.reviews.length}·외부${data.ext.length}·갤러리${data.gal.length})`);
     } catch (e) {
       console.error(`  ✗ /profile/${slug}/ 실패: ${e.message}`);
     }

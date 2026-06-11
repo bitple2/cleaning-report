@@ -436,6 +436,48 @@
         }
       }
 
+      // 4-pre) 갤러리 (company_gallery)
+      const galResp = await fetch(
+        SB_URL + '/rest/v1/company_gallery?' + new URLSearchParams({
+          company_id: 'eq.' + company.id,
+          select: 'image_url,category,caption,sort_order',
+          order: 'sort_order.asc,created_at.desc'
+        }).toString(),
+        {
+          cache: 'no-store',
+          headers: {
+            'apikey': SB_ANON,
+            'Authorization': 'Bearer ' + SB_ANON,
+            'Accept': 'application/json'
+          }
+        }
+      );
+      if (galResp.ok) {
+        const gal = await galResp.json();
+        if (Array.isArray(gal) && gal.length > 0) {
+          const listEl = doc.querySelector('[data-gallery-list]');
+          const sectionEl = doc.querySelector('[data-gallery-section]');
+          doc.querySelectorAll('[data-gallery-count]').forEach(function(el) {
+            el.textContent = '· ' + gal.length + '개';
+          });
+          if (listEl) {
+            listEl.innerHTML = '<div class="ext-list">' +
+              gal.map(function(g) {
+                const cat = (g.category || '').trim();
+                const cap = (g.caption || '').trim();
+                return '<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="' + escHtml(g.image_url) + '" data-source="' + escHtml(cat) + '" data-caption="' + escHtml(cap) + '">' +
+                  '<div class="ext-card-img"><img src="' + escHtml(g.image_url) + '" alt="" loading="lazy"></div>' +
+                  '<div class="ext-card-body">' +
+                    (cat ? '<div class="ext-card-source">' + escHtml(cat) + '</div>' : '') +
+                    (cap ? '<div class="ext-card-caption">' + escHtml(cap) + '</div>' : '') +
+                  '</div></div>';
+              }).join('') +
+              '</div>';
+          }
+          if (sectionEl) sectionEl.setAttribute('style', '');
+        }
+      }
+
       // 4) 다른 채널 후기 (external_review_screenshots)
       const extResp = await fetch(
         SB_URL + '/rest/v1/external_review_screenshots?' + new URLSearchParams({
