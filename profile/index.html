@@ -556,6 +556,53 @@
     font-weight: 500;
     letter-spacing: -0.02em;
   }
+  .ext-modal-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    z-index: 2;
+  }
+  .ext-modal-nav.prev { left: 12px; }
+  .ext-modal-nav.next { right: 12px; }
+  .ext-modal-counter {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    display: none;
+    letter-spacing: -0.02em;
+  }
+  .ext-card-count {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 3px 8px;
+    background: rgba(15, 23, 42, 0.78);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    z-index: 1;
+  }
   .ext-card-img {
     flex: 1;
     width: 100%;
@@ -1303,7 +1350,10 @@
 <!-- ─── 외부 후기 이미지 모달 ─── -->
 <div class="ext-modal" data-ext-modal>
   <button class="ext-modal-close" onclick="closeExtModal()" aria-label="닫기">✕</button>
+  <div class="ext-modal-counter" data-ext-modal-counter></div>
+  <button class="ext-modal-nav prev" data-ext-modal-prev onclick="extModalPrev(event)" aria-label="이전">‹</button>
   <img class="ext-modal-img" data-ext-modal-img alt="">
+  <button class="ext-modal-nav next" data-ext-modal-next onclick="extModalNext(event)" aria-label="다음">›</button>
   <div class="ext-modal-meta">
     <div class="ext-modal-source" data-ext-modal-source style="display:none"></div>
     <div class="ext-modal-caption" data-ext-modal-caption style="display:none"></div>
@@ -1625,7 +1675,7 @@
           }
         } catch (_) {}
 
-        // 갤러리 (장비·청소 범위·현장 등)
+        // 갤러리 (카테고리별 그룹화)
         try {
           const galResp = await fetch(
             SB_URL + '/rest/v1/company_gallery?' + new URLSearchParams({
@@ -1638,19 +1688,33 @@
           if (galResp.ok) {
             const gal = await galResp.json();
             if (Array.isArray(gal) && gal.length > 0) {
+              // 카테고리별 그룹화 (빈 카테고리는 '기타')
+              const groups = {};
+              const groupOrder = [];
+              gal.forEach(function(g) {
+                const cat = (g.category || '').trim() || '기타';
+                if (!groups[cat]) { groups[cat] = []; groupOrder.push(cat); }
+                groups[cat].push(g);
+              });
               const listEl = document.querySelector('[data-gallery-list]');
               const sectionEl = document.querySelector('[data-gallery-section]');
               document.querySelectorAll('[data-gallery-count]').forEach(function(el) {
-                el.textContent = '· ' + gal.length + '개';
+                el.textContent = '· ' + groupOrder.length + '개';
               });
               if (listEl) {
-                listEl.innerHTML = '<div class="ext-list">' + gal.map(function(g) {
-                  const cat = (g.category || '').trim();
-                  const cap = (g.caption || '').trim();
-                  return '<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="' + escHtml(g.image_url) + '" data-source="' + escHtml(cat) + '" data-caption="' + escHtml(cap) + '">' +
-                    '<div class="ext-card-img"><img src="' + escHtml(g.image_url) + '" alt="" loading="lazy"></div>' +
+                listEl.innerHTML = '<div class="ext-list">' + groupOrder.map(function(cat) {
+                  const items = groups[cat];
+                  const first = items[0];
+                  const cap = (first.caption || '').trim();
+                  const images = items.map(function(it) { return it.image_url; });
+                  const imagesJson = escHtml(JSON.stringify(images));
+                  const countBadge = items.length > 1 ? '<div class="ext-card-count">' + items.length + '장</div>' : '';
+                  return '<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="' + escHtml(first.image_url) + '" data-images="' + imagesJson + '" data-source="' + escHtml(cat) + '" data-caption="' + escHtml(cap) + '">' +
+                    '<div class="ext-card-img">' + countBadge +
+                      '<img src="' + escHtml(first.image_url) + '" alt="" loading="lazy">' +
+                    '</div>' +
                     '<div class="ext-card-body">' +
-                      (cat ? '<div class="ext-card-source">' + escHtml(cat) + '</div>' : '') +
+                      '<div class="ext-card-source">' + escHtml(cat) + '</div>' +
                       (cap ? '<div class="ext-card-caption">' + escHtml(cap) + '</div>' : '') +
                     '</div></div>';
                 }).join('') + '</div>';
@@ -1762,14 +1826,20 @@
     }
   })();
 
-  // 외부 후기 이미지 모달
+  // 외부 후기 / 갤러리 이미지 모달 (단일 + 그룹 슬라이드 지원)
+  let _extModalImages = [];
+  let _extModalIndex = 0;
+
   function openExtModalFromEl(el) {
-    const modal = document.querySelector('[data-ext-modal]');
-    const img = document.querySelector('[data-ext-modal-img]');
+    let images = [];
+    try { images = JSON.parse(el.dataset.images || '[]'); } catch (_) {}
+    if (!Array.isArray(images) || images.length === 0) {
+      images = [el.dataset.imgUrl || ''];
+    }
+    _extModalImages = images.filter(Boolean);
+    _extModalIndex = 0;
     const sourceEl = document.querySelector('[data-ext-modal-source]');
     const captionEl = document.querySelector('[data-ext-modal-caption]');
-    if (!modal || !img) return;
-    img.src = el.dataset.imgUrl || '';
     if (sourceEl) {
       sourceEl.textContent = el.dataset.source || '';
       sourceEl.style.display = el.dataset.source ? 'inline-block' : 'none';
@@ -1778,8 +1848,36 @@
       captionEl.textContent = el.dataset.caption || '';
       captionEl.style.display = el.dataset.caption ? 'block' : 'none';
     }
-    modal.classList.add('open');
+    _renderExtModal();
+    const modal = document.querySelector('[data-ext-modal]');
+    if (modal) modal.classList.add('open');
     document.body.style.overflow = 'hidden';
+  }
+  function _renderExtModal() {
+    const img = document.querySelector('[data-ext-modal-img]');
+    const counter = document.querySelector('[data-ext-modal-counter]');
+    const prev = document.querySelector('[data-ext-modal-prev]');
+    const next = document.querySelector('[data-ext-modal-next]');
+    if (img) img.src = _extModalImages[_extModalIndex] || '';
+    const multi = _extModalImages.length > 1;
+    if (counter) {
+      counter.textContent = (_extModalIndex + 1) + ' / ' + _extModalImages.length;
+      counter.style.display = multi ? 'block' : 'none';
+    }
+    if (prev) prev.style.display = multi ? 'inline-flex' : 'none';
+    if (next) next.style.display = multi ? 'inline-flex' : 'none';
+  }
+  function extModalPrev(e) {
+    if (e) e.stopPropagation();
+    if (_extModalImages.length <= 1) return;
+    _extModalIndex = (_extModalIndex - 1 + _extModalImages.length) % _extModalImages.length;
+    _renderExtModal();
+  }
+  function extModalNext(e) {
+    if (e) e.stopPropagation();
+    if (_extModalImages.length <= 1) return;
+    _extModalIndex = (_extModalIndex + 1) % _extModalImages.length;
+    _renderExtModal();
   }
   function closeExtModal() {
     const modal = document.querySelector('[data-ext-modal]');
@@ -1787,7 +1885,11 @@
     document.body.style.overflow = '';
   }
   document.addEventListener('keydown', function(e) {
+    const modal = document.querySelector('[data-ext-modal]');
+    if (!modal || !modal.classList.contains('open')) return;
     if (e.key === 'Escape') closeExtModal();
+    else if (e.key === 'ArrowLeft') extModalPrev();
+    else if (e.key === 'ArrowRight') extModalNext();
   });
   document.addEventListener('click', function(e) {
     if (e.target && e.target.matches && e.target.matches('[data-ext-modal]')) closeExtModal();

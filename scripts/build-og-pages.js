@@ -202,17 +202,31 @@ function buildReviews(reviews) {
 }
 
 function buildGallery(gal) {
-  if (!Array.isArray(gal) || gal.length === 0) return null;
-  return '<div class="ext-list">' + gal.map(g => {
-    const cat = (g.category || '').trim();
-    const cap = (g.caption || '').trim();
-    return `<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="${escHtml(g.image_url)}" data-source="${escHtml(cat)}" data-caption="${escHtml(cap)}">` +
-      `<div class="ext-card-img"><img src="${escHtml(g.image_url)}" alt="" loading="lazy"></div>` +
+  if (!Array.isArray(gal) || gal.length === 0) return { html: null, groupCount: 0 };
+  const groups = {};
+  const groupOrder = [];
+  gal.forEach(g => {
+    const cat = (g.category || '').trim() || '기타';
+    if (!groups[cat]) { groups[cat] = []; groupOrder.push(cat); }
+    groups[cat].push(g);
+  });
+  const html = '<div class="ext-list">' + groupOrder.map(cat => {
+    const items = groups[cat];
+    const first = items[0];
+    const cap = (first.caption || '').trim();
+    const images = items.map(it => it.image_url);
+    const imagesJson = escHtml(JSON.stringify(images));
+    const countBadge = items.length > 1 ? `<div class="ext-card-count">${items.length}장</div>` : '';
+    return `<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="${escHtml(first.image_url)}" data-images="${imagesJson}" data-source="${escHtml(cat)}" data-caption="${escHtml(cap)}">` +
+      `<div class="ext-card-img">${countBadge}` +
+        `<img src="${escHtml(first.image_url)}" alt="" loading="lazy">` +
+      `</div>` +
       `<div class="ext-card-body">` +
-        (cat ? `<div class="ext-card-source">${escHtml(cat)}</div>` : '') +
+        `<div class="ext-card-source">${escHtml(cat)}</div>` +
         (cap ? `<div class="ext-card-caption">${escHtml(cap)}</div>` : '') +
       `</div></div>`;
   }).join('') + '</div>';
+  return { html, groupCount: groupOrder.length };
 }
 
 function buildExternalReviews(ext) {
@@ -363,12 +377,14 @@ function buildPageForCompany(template, row, data) {
     );
   }
 
-  // 갤러리
+  // 갤러리 (카테고리별 그룹화)
   if (data.gal && data.gal.length > 0) {
-    const galHtml = buildGallery(data.gal);
-    html = html.replace(/<div class="section-card" data-gallery-section style="display:none;">/, `<div class="section-card" data-gallery-section>`);
-    html = html.replace(/<span class="section-title-meta" data-gallery-count><\/span>/, `<span class="section-title-meta" data-gallery-count>· ${data.gal.length}개</span>`);
-    html = html.replace(/<div data-gallery-list><\/div>/, `<div data-gallery-list>${galHtml}</div>`);
+    const { html: galHtml, groupCount } = buildGallery(data.gal);
+    if (galHtml) {
+      html = html.replace(/<div class="section-card" data-gallery-section style="display:none;">/, `<div class="section-card" data-gallery-section>`);
+      html = html.replace(/<span class="section-title-meta" data-gallery-count><\/span>/, `<span class="section-title-meta" data-gallery-count>· ${groupCount}개</span>`);
+      html = html.replace(/<div data-gallery-list><\/div>/, `<div data-gallery-list>${galHtml}</div>`);
+    }
   }
 
   // 외부 후기

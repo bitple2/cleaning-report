@@ -436,7 +436,7 @@
         }
       }
 
-      // 4-pre) 갤러리 (company_gallery)
+      // 4-pre) 갤러리 (company_gallery) — 카테고리별 그룹화
       const galResp = await fetch(
         SB_URL + '/rest/v1/company_gallery?' + new URLSearchParams({
           company_id: 'eq.' + company.id,
@@ -455,20 +455,33 @@
       if (galResp.ok) {
         const gal = await galResp.json();
         if (Array.isArray(gal) && gal.length > 0) {
+          const groups = {};
+          const groupOrder = [];
+          gal.forEach(function(g) {
+            const cat = (g.category || '').trim() || '기타';
+            if (!groups[cat]) { groups[cat] = []; groupOrder.push(cat); }
+            groups[cat].push(g);
+          });
           const listEl = doc.querySelector('[data-gallery-list]');
           const sectionEl = doc.querySelector('[data-gallery-section]');
           doc.querySelectorAll('[data-gallery-count]').forEach(function(el) {
-            el.textContent = '· ' + gal.length + '개';
+            el.textContent = '· ' + groupOrder.length + '개';
           });
           if (listEl) {
             listEl.innerHTML = '<div class="ext-list">' +
-              gal.map(function(g) {
-                const cat = (g.category || '').trim();
-                const cap = (g.caption || '').trim();
-                return '<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="' + escHtml(g.image_url) + '" data-source="' + escHtml(cat) + '" data-caption="' + escHtml(cap) + '">' +
-                  '<div class="ext-card-img"><img src="' + escHtml(g.image_url) + '" alt="" loading="lazy"></div>' +
+              groupOrder.map(function(cat) {
+                const items = groups[cat];
+                const first = items[0];
+                const cap = (first.caption || '').trim();
+                const images = items.map(function(it) { return it.image_url; });
+                const imagesJson = escHtml(JSON.stringify(images));
+                const countBadge = items.length > 1 ? '<div class="ext-card-count">' + items.length + '장</div>' : '';
+                return '<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="' + escHtml(first.image_url) + '" data-images="' + imagesJson + '" data-source="' + escHtml(cat) + '" data-caption="' + escHtml(cap) + '">' +
+                  '<div class="ext-card-img">' + countBadge +
+                    '<img src="' + escHtml(first.image_url) + '" alt="" loading="lazy">' +
+                  '</div>' +
                   '<div class="ext-card-body">' +
-                    (cat ? '<div class="ext-card-source">' + escHtml(cat) + '</div>' : '') +
+                    '<div class="ext-card-source">' + escHtml(cat) + '</div>' +
                     (cap ? '<div class="ext-card-caption">' + escHtml(cap) + '</div>' : '') +
                   '</div></div>';
               }).join('') +
