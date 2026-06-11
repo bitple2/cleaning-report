@@ -557,6 +557,53 @@
     font-weight: 500;
     letter-spacing: -0.02em;
   }
+  .ext-modal-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    z-index: 2;
+  }
+  .ext-modal-nav.prev { left: 12px; }
+  .ext-modal-nav.next { right: 12px; }
+  .ext-modal-counter {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    display: none;
+    letter-spacing: -0.02em;
+  }
+  .ext-card-count {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 3px 8px;
+    background: rgba(15, 23, 42, 0.78);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    z-index: 1;
+  }
   .ext-card-img {
     flex: 1;
     width: 100%;
@@ -1209,7 +1256,7 @@
 
   <div data-badges-wrap class="badges-wrap">
     <div class="badges-head">🛡 신뢰 배지</div>
-    <div class="badge-list" data-badges-list><div class="badge-card"><div class="badge-emoji">🥉</div><div class="badge-label">30건 달성</div><div class="badge-sub">누적 작업 31건</div></div><div class="badge-card"><div class="badge-emoji">⭐</div><div class="badge-label">평점 4.9</div><div class="badge-sub">고객 만족 우수 업체</div></div><div class="badge-card"><div class="badge-emoji">🔐</div><div class="badge-label">인증 후기 21건</div><div class="badge-sub">실제 고객 검증</div></div><div class="badge-card"><div class="badge-emoji">🔁</div><div class="badge-label">3개월 연속 활동</div><div class="badge-sub">꾸준한 운영</div></div><div class="badge-card"><div class="badge-emoji">📸</div><div class="badge-label">작업 과정 공개</div><div class="badge-sub">실시간 리포트 제공 중</div></div></div>
+    <div class="badge-list" data-badges-list><div class="badge-card"><div class="badge-emoji">🥉</div><div class="badge-label">30건 달성</div><div class="badge-sub">누적 작업 32건</div></div><div class="badge-card"><div class="badge-emoji">⭐</div><div class="badge-label">평점 4.9</div><div class="badge-sub">고객 만족 우수 업체</div></div><div class="badge-card"><div class="badge-emoji">🔐</div><div class="badge-label">인증 후기 21건</div><div class="badge-sub">실제 고객 검증</div></div><div class="badge-card"><div class="badge-emoji">🔁</div><div class="badge-label">3개월 연속 활동</div><div class="badge-sub">꾸준한 운영</div></div><div class="badge-card"><div class="badge-emoji">📸</div><div class="badge-label">작업 과정 공개</div><div class="badge-sub">실시간 리포트 제공 중</div></div></div>
   </div>
 
   <div data-info-card-wrap><div class="info-card"><div class="info-row"><div class="info-icon">🕐</div><div class="info-value">평일 09:00-21:00 · 주말 예약제</div></div><div class="info-row"><div class="info-icon">📍</div><div class="info-value">서울,경기,인천</div></div></div></div>
@@ -1246,12 +1293,12 @@
     <section class="section">
       <div class="section-head">
         <div class="section-title">
-          최근 작업 기록<span class="section-title-meta" data-last-work-inline>· 최근 작업 1주 전</span>
+          최근 작업 기록<span class="section-title-meta" data-last-work-inline>· 최근 작업 1일 전</span>
         </div>
         <a href="works/" class="section-more">전체 보기 ›</a>
       </div>
     </section>
-    <div data-recent-work-list><div class="work-list"><a class="work-card" href="/?id=fd2a47e4-e522-4790-8c15-a7ecabc33cdc&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/fd2a47e4-e522-4790-8c15-a7ecabc33cdc/entrance/before_1780288105859_0.jpg" alt=""><span class="work-date-badge">6월 1일</span></div><div class="work-meta"><div class="work-region">시글로</div><div class="work-spec">25평 · 입주청소</div><div class="work-photo-count">사진 7장</div><div class="work-report-btn">리포트 보기 ›</div></div></a><a class="work-card" href="/?id=0e3e03aa-0dbb-4403-8476-3d9708dae014&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/0e3e03aa-0dbb-4403-8476-3d9708dae014/entrance/before_1779953623264_0.jpg" alt=""><span class="work-date-badge">5월 28일</span></div><div class="work-meta"><div class="work-region">123동</div><div class="work-spec">20평 · 입주청소</div><div class="work-photo-count">사진 10장</div><div class="work-report-btn">리포트 보기 ›</div></div></a><a class="work-card" href="/?id=7f13a01e-27a5-4741-bb70-604212aaccd3&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/7f13a01e-27a5-4741-bb70-604212aaccd3/entrance/before_1779952053860_0.jpg" alt=""><span class="work-date-badge">5월 28일</span></div><div class="work-meta"><div class="work-region">펜테이룸</div><div class="work-spec">25평 · 입주청소</div><div class="work-photo-count">사진 9장</div><div class="work-report-btn">리포트 보기 ›</div></div></a><a class="work-card" href="/?id=9c5effcc-eae6-445e-9538-73d1fcac4e88&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/9c5effcc-eae6-445e-9538-73d1fcac4e88/entrance/before_1778171058383_0.jpg" alt=""><span class="work-date-badge">5월 8일</span></div><div class="work-meta"><div class="work-region">시글로</div><div class="work-spec">20평 · 입주청소</div><div class="work-photo-count">사진 6장</div><div class="work-report-btn">리포트 보기 ›</div></div></a><a class="work-card" href="/?id=743f96dc-c0ca-4d14-81d7-11a702cced5a&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/743f96dc-c0ca-4d14-81d7-11a702cced5a/entrance/before_1778165902578_0.jpg" alt=""><span class="work-date-badge">5월 5일</span></div><div class="work-meta"><div class="work-region">123</div><div class="work-spec">20평 · 입주청소</div><div class="work-photo-count">사진 6장</div><div class="work-report-btn">리포트 보기 ›</div></div></a><a class="work-card" href="/?id=fdbb9e6c-acca-4ce4-ac50-125f5573a7e1&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/fdbb9e6c-acca-4ce4-ac50-125f5573a7e1/entrance/before_1777804053611_0.jpg" alt=""><span class="work-date-badge">5월 5일</span></div><div class="work-meta"><div class="work-region">테스트</div><div class="work-spec">20평 · 입주청소</div><div class="work-photo-count">사진 6장</div><div class="work-report-btn">리포트 보기 ›</div></div></a></div></div>
+    <div data-recent-work-list><div class="work-list"><a class="work-card" href="/?id=bf50f074-012b-4c4d-ae3a-8d13405d2eee&public=1"><div class="work-photo"><div class="work-photo-empty">📷</div><span class="work-date-badge">6월 10일</span></div><div class="work-meta"><div class="work-region">123동</div><div class="work-spec">25평 · 입주청소</div><div class="work-photo-count">사진 0장</div><div class="work-report-btn">리포트 보기 ›</div></div></a><a class="work-card" href="/?id=fd2a47e4-e522-4790-8c15-a7ecabc33cdc&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/fd2a47e4-e522-4790-8c15-a7ecabc33cdc/entrance/before_1780288105859_0.jpg" alt=""><span class="work-date-badge">6월 1일</span></div><div class="work-meta"><div class="work-region">시글로</div><div class="work-spec">25평 · 입주청소</div><div class="work-photo-count">사진 7장</div><div class="work-report-btn">리포트 보기 ›</div></div></a><a class="work-card" href="/?id=7f13a01e-27a5-4741-bb70-604212aaccd3&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/7f13a01e-27a5-4741-bb70-604212aaccd3/entrance/before_1779952053860_0.jpg" alt=""><span class="work-date-badge">5월 28일</span></div><div class="work-meta"><div class="work-region">펜테이룸</div><div class="work-spec">25평 · 입주청소</div><div class="work-photo-count">사진 9장</div><div class="work-report-btn">리포트 보기 ›</div></div></a><a class="work-card" href="/?id=0e3e03aa-0dbb-4403-8476-3d9708dae014&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/0e3e03aa-0dbb-4403-8476-3d9708dae014/entrance/before_1779953623264_0.jpg" alt=""><span class="work-date-badge">5월 28일</span></div><div class="work-meta"><div class="work-region">123동</div><div class="work-spec">20평 · 입주청소</div><div class="work-photo-count">사진 10장</div><div class="work-report-btn">리포트 보기 ›</div></div></a><a class="work-card" href="/?id=9c5effcc-eae6-445e-9538-73d1fcac4e88&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/9c5effcc-eae6-445e-9538-73d1fcac4e88/entrance/before_1778171058383_0.jpg" alt=""><span class="work-date-badge">5월 8일</span></div><div class="work-meta"><div class="work-region">시글로</div><div class="work-spec">20평 · 입주청소</div><div class="work-photo-count">사진 6장</div><div class="work-report-btn">리포트 보기 ›</div></div></a><a class="work-card" href="/?id=743f96dc-c0ca-4d14-81d7-11a702cced5a&public=1"><div class="work-photo"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/report-photos/743f96dc-c0ca-4d14-81d7-11a702cced5a/entrance/before_1778165902578_0.jpg" alt=""><span class="work-date-badge">5월 5일</span></div><div class="work-meta"><div class="work-region">123</div><div class="work-spec">20평 · 입주청소</div><div class="work-photo-count">사진 6장</div><div class="work-report-btn">리포트 보기 ›</div></div></a></div></div>
   </div>
 
   <div class="section-card">
@@ -1266,15 +1313,15 @@
     <div data-reviews-list><div class="rev-list"><a class="rev-card" href="/verify/GRFD" target="_blank" rel="noopener"><div class="rev-header"><div class="rev-rating-row"><div class="rev-rating"><span class="rev-rating-stars">★★★★★</span> 5.0</div><div class="rev-date">6월 1일</div></div><div class="rev-verify"><img class="rev-qr" alt="" src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&margin=0&data=https%3A%2F%2Fcleaningmanager.kr%2Fverify%2FGRFD"><span class="rev-verify-text"><span class="rev-verify-label">✓ 검증</span><span class="rev-cert-code">#GRFD</span></span></div></div><p class="rev-content">오랜만에 만족스러운 청소 받아거 기분 좋습니다 <br>꼼꼼허게 너무 잘 해주셨어요</p><div class="rev-meta">천* · 010-****-**22 · 입주청소</div></a><a class="rev-card" href="/verify/NEXN" target="_blank" rel="noopener"><div class="rev-header"><div class="rev-rating-row"><div class="rev-rating"><span class="rev-rating-stars">★★★★★</span> 5.0</div><div class="rev-date">5월 28일</div></div><div class="rev-verify"><img class="rev-qr" alt="" src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&margin=0&data=https%3A%2F%2Fcleaningmanager.kr%2Fverify%2FNEXN"><span class="rev-verify-text"><span class="rev-verify-label">✓ 검증</span><span class="rev-cert-code">#NEXN</span></span></div></div><p class="rev-content">청소 업체 찾기 어려웠는데 새로클린은 청소 리포트도 보내주고 <br>뭔가 체계적인 느낌이 들어서 믿고 예약했어요ㅎㅎ 최고입니다 너무 깨끗하게 잘 해주셨어요 믿고 맡기셔도 됩니다 여러분</p><div class="rev-meta">김* · 010-****-**22 · 입주청소</div></a><a class="rev-card" href="/verify/DZ6C" target="_blank" rel="noopener"><div class="rev-header"><div class="rev-rating-row"><div class="rev-rating"><span class="rev-rating-stars">★★★★★</span> 5.0</div><div class="rev-date">5월 28일</div></div><div class="rev-verify"><img class="rev-qr" alt="" src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&margin=0&data=https%3A%2F%2Fcleaningmanager.kr%2Fverify%2FDZ6C"><span class="rev-verify-text"><span class="rev-verify-label">✓ 검증</span><span class="rev-cert-code">#DZ6C</span></span></div></div><p class="rev-content">리포트 제공하는 업체라길래 예약했는데 대만족이에요! 꼼꼼하게 잘 해주셨어요 <br>조금 비싸다고 느꼈었는데 다 이유가 있네요 감사합니다 주변에 소개 많이 할게요!</p><div class="rev-meta">민* · 010-****-**22 · 입주청소</div></a></div></div>
   </div>
 
-  <div class="section-card" data-gallery-section style="display:none;">
+  <div class="section-card" data-gallery-section>
     <section class="section">
       <div class="section-head">
         <div class="section-title">
-          갤러리<span class="section-title-meta" data-gallery-count></span>
+          갤러리<span class="section-title-meta" data-gallery-count>· 1개</span>
         </div>
       </div>
     </section>
-    <div data-gallery-list></div>
+    <div data-gallery-list><div class="ext-list"><div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/7057b85f-1c17-436e-98a4-66e857959efc/gallery/1781167495202.jpg" data-images="[&quot;https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/7057b85f-1c17-436e-98a4-66e857959efc/gallery/1781167495202.jpg&quot;]" data-source="청소장비" data-caption="친환경 세제 사용"><div class="ext-card-img"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/7057b85f-1c17-436e-98a4-66e857959efc/gallery/1781167495202.jpg" alt="" loading="lazy"></div><div class="ext-card-body"><div class="ext-card-source">청소장비</div><div class="ext-card-caption">친환경 세제 사용</div></div></div></div></div>
   </div>
 
   <div class="section-card" data-external-reviews-section>
@@ -1301,7 +1348,10 @@
 <!-- ─── 외부 후기 이미지 모달 ─── -->
 <div class="ext-modal" data-ext-modal>
   <button class="ext-modal-close" onclick="closeExtModal()" aria-label="닫기">✕</button>
+  <div class="ext-modal-counter" data-ext-modal-counter></div>
+  <button class="ext-modal-nav prev" data-ext-modal-prev onclick="extModalPrev(event)" aria-label="이전">‹</button>
   <img class="ext-modal-img" data-ext-modal-img alt="">
+  <button class="ext-modal-nav next" data-ext-modal-next onclick="extModalNext(event)" aria-label="다음">›</button>
   <div class="ext-modal-meta">
     <div class="ext-modal-source" data-ext-modal-source style="display:none"></div>
     <div class="ext-modal-caption" data-ext-modal-caption style="display:none"></div>
@@ -1623,7 +1673,7 @@
           }
         } catch (_) {}
 
-        // 갤러리 (장비·청소 범위·현장 등)
+        // 갤러리 (카테고리별 그룹화)
         try {
           const galResp = await fetch(
             SB_URL + '/rest/v1/company_gallery?' + new URLSearchParams({
@@ -1636,19 +1686,33 @@
           if (galResp.ok) {
             const gal = await galResp.json();
             if (Array.isArray(gal) && gal.length > 0) {
+              // 카테고리별 그룹화 (빈 카테고리는 '기타')
+              const groups = {};
+              const groupOrder = [];
+              gal.forEach(function(g) {
+                const cat = (g.category || '').trim() || '기타';
+                if (!groups[cat]) { groups[cat] = []; groupOrder.push(cat); }
+                groups[cat].push(g);
+              });
               const listEl = document.querySelector('[data-gallery-list]');
               const sectionEl = document.querySelector('[data-gallery-section]');
               document.querySelectorAll('[data-gallery-count]').forEach(function(el) {
-                el.textContent = '· ' + gal.length + '개';
+                el.textContent = '· ' + groupOrder.length + '개';
               });
               if (listEl) {
-                listEl.innerHTML = '<div class="ext-list">' + gal.map(function(g) {
-                  const cat = (g.category || '').trim();
-                  const cap = (g.caption || '').trim();
-                  return '<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="' + escHtml(g.image_url) + '" data-source="' + escHtml(cat) + '" data-caption="' + escHtml(cap) + '">' +
-                    '<div class="ext-card-img"><img src="' + escHtml(g.image_url) + '" alt="" loading="lazy"></div>' +
+                listEl.innerHTML = '<div class="ext-list">' + groupOrder.map(function(cat) {
+                  const items = groups[cat];
+                  const first = items[0];
+                  const cap = (first.caption || '').trim();
+                  const images = items.map(function(it) { return it.image_url; });
+                  const imagesJson = escHtml(JSON.stringify(images));
+                  const countBadge = items.length > 1 ? '<div class="ext-card-count">' + items.length + '장</div>' : '';
+                  return '<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="' + escHtml(first.image_url) + '" data-images="' + imagesJson + '" data-source="' + escHtml(cat) + '" data-caption="' + escHtml(cap) + '">' +
+                    '<div class="ext-card-img">' + countBadge +
+                      '<img src="' + escHtml(first.image_url) + '" alt="" loading="lazy">' +
+                    '</div>' +
                     '<div class="ext-card-body">' +
-                      (cat ? '<div class="ext-card-source">' + escHtml(cat) + '</div>' : '') +
+                      '<div class="ext-card-source">' + escHtml(cat) + '</div>' +
                       (cap ? '<div class="ext-card-caption">' + escHtml(cap) + '</div>' : '') +
                     '</div></div>';
                 }).join('') + '</div>';
@@ -1760,14 +1824,20 @@
     }
   })();
 
-  // 외부 후기 이미지 모달
+  // 외부 후기 / 갤러리 이미지 모달 (단일 + 그룹 슬라이드 지원)
+  let _extModalImages = [];
+  let _extModalIndex = 0;
+
   function openExtModalFromEl(el) {
-    const modal = document.querySelector('[data-ext-modal]');
-    const img = document.querySelector('[data-ext-modal-img]');
+    let images = [];
+    try { images = JSON.parse(el.dataset.images || '[]'); } catch (_) {}
+    if (!Array.isArray(images) || images.length === 0) {
+      images = [el.dataset.imgUrl || ''];
+    }
+    _extModalImages = images.filter(Boolean);
+    _extModalIndex = 0;
     const sourceEl = document.querySelector('[data-ext-modal-source]');
     const captionEl = document.querySelector('[data-ext-modal-caption]');
-    if (!modal || !img) return;
-    img.src = el.dataset.imgUrl || '';
     if (sourceEl) {
       sourceEl.textContent = el.dataset.source || '';
       sourceEl.style.display = el.dataset.source ? 'inline-block' : 'none';
@@ -1776,8 +1846,36 @@
       captionEl.textContent = el.dataset.caption || '';
       captionEl.style.display = el.dataset.caption ? 'block' : 'none';
     }
-    modal.classList.add('open');
+    _renderExtModal();
+    const modal = document.querySelector('[data-ext-modal]');
+    if (modal) modal.classList.add('open');
     document.body.style.overflow = 'hidden';
+  }
+  function _renderExtModal() {
+    const img = document.querySelector('[data-ext-modal-img]');
+    const counter = document.querySelector('[data-ext-modal-counter]');
+    const prev = document.querySelector('[data-ext-modal-prev]');
+    const next = document.querySelector('[data-ext-modal-next]');
+    if (img) img.src = _extModalImages[_extModalIndex] || '';
+    const multi = _extModalImages.length > 1;
+    if (counter) {
+      counter.textContent = (_extModalIndex + 1) + ' / ' + _extModalImages.length;
+      counter.style.display = multi ? 'block' : 'none';
+    }
+    if (prev) prev.style.display = multi ? 'inline-flex' : 'none';
+    if (next) next.style.display = multi ? 'inline-flex' : 'none';
+  }
+  function extModalPrev(e) {
+    if (e) e.stopPropagation();
+    if (_extModalImages.length <= 1) return;
+    _extModalIndex = (_extModalIndex - 1 + _extModalImages.length) % _extModalImages.length;
+    _renderExtModal();
+  }
+  function extModalNext(e) {
+    if (e) e.stopPropagation();
+    if (_extModalImages.length <= 1) return;
+    _extModalIndex = (_extModalIndex + 1) % _extModalImages.length;
+    _renderExtModal();
   }
   function closeExtModal() {
     const modal = document.querySelector('[data-ext-modal]');
@@ -1785,7 +1883,11 @@
     document.body.style.overflow = '';
   }
   document.addEventListener('keydown', function(e) {
+    const modal = document.querySelector('[data-ext-modal]');
+    if (!modal || !modal.classList.contains('open')) return;
     if (e.key === 'Escape') closeExtModal();
+    else if (e.key === 'ArrowLeft') extModalPrev();
+    else if (e.key === 'ArrowRight') extModalNext();
   });
   document.addEventListener('click', function(e) {
     if (e.target && e.target.matches && e.target.matches('[data-ext-modal]')) closeExtModal();
