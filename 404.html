@@ -603,18 +603,23 @@
         if (Array.isArray(sns) && sns.length > 0) {
           const PLATFORM_NAMES = {
             instagram: 'Instagram', threads: 'Threads', blog: 'Blog',
-            naver_blog: '네이버 블로그', youtube: 'YouTube',
-            facebook: 'Facebook', kakao_view: '카카오 채널', etc: '기타'
+            naver_blog: 'Naver Blog', youtube: 'YouTube'
+          };
+          const PLATFORM_SLUGS = {
+            instagram: 'instagram', threads: 'threads',
+            naver_blog: 'naver', youtube: 'youtube'
           };
           const listEl = doc.querySelector('[data-sns-list]');
           if (listEl) {
             listEl.innerHTML = sns.map(function(s) {
-              const key = s.platform || 'etc';
+              const key = s.platform || '';
               const customLabel = (s.label || '').trim();
-              const name = (key === 'etc' && customLabel)
-                  ? customLabel
-                  : (PLATFORM_NAMES[key] || '기타');
-              return '<a href="' + escHtml(s.url) + '" target="_blank" rel="noopener">' + escHtml(name) + '</a>';
+              const name = customLabel || PLATFORM_NAMES[key] || 'Link';
+              const slug = PLATFORM_SLUGS[key];
+              const icon = slug
+                  ? '<img class="cta-sns-icon" src="https://cdn.simpleicons.org/' + slug + '/ffffff" alt="" />'
+                  : '<span class="cta-sns-icon-fallback">●</span>';
+              return '<a href="' + escHtml(s.url) + '" target="_blank" rel="noopener">' + icon + escHtml(name) + '</a>';
             }).join('');
           }
         }
