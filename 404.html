@@ -580,6 +580,49 @@
       if (wrap) wrap.setAttribute('style', '');
     }
 
+    // 하단 CTA 카드의 CONTACT 영역 (영업시간 + 지역)
+    {
+      const hoursEl = doc.querySelector('[data-cta-hours]');
+      const areasEl = doc.querySelector('[data-cta-areas]');
+      if (hoursEl) hoursEl.textContent = (row.business_hours || '').trim();
+      if (areasEl) areasEl.textContent = (row.service_areas || '').trim();
+    }
+
+    // 외부 채널 (SNS) — 하단 CTA 카드 CHANNELS
+    try {
+      const snsResp = await fetch(
+        SB_URL + '/rest/v1/company_sns_links?' + new URLSearchParams({
+          company_id: 'eq.' + company.id,
+          select: 'platform,url,label,sort_order',
+          order: 'sort_order.asc,created_at.desc'
+        }).toString(),
+        { cache: 'no-store', headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Accept': 'application/json' } }
+      );
+      if (snsResp.ok) {
+        const sns = await snsResp.json();
+        if (Array.isArray(sns) && sns.length > 0) {
+          const PLATFORM_NAMES = {
+            instagram: 'Instagram', threads: 'Threads', blog: 'Blog',
+            naver_blog: '네이버 블로그', youtube: 'YouTube',
+            facebook: 'Facebook', kakao_view: '카카오 채널', etc: '기타'
+          };
+          const listEl = doc.querySelector('[data-sns-list]');
+          if (listEl) {
+            listEl.innerHTML = sns.map(function(s) {
+              const key = s.platform || 'etc';
+              const customLabel = (s.label || '').trim();
+              const name = (key === 'etc' && customLabel)
+                  ? customLabel
+                  : (PLATFORM_NAMES[key] || '기타');
+              return '<a href="' + escHtml(s.url) + '" target="_blank" rel="noopener">' + escHtml(name) + '</a>';
+            }).join('');
+          }
+        }
+      }
+    } catch (e) {
+      console.error('sns links fetch error:', e);
+    }
+
     // 정보 카드: 영업시간 · 서비스 지역 · 사업자 정보 (컴팩트, 푸터 직전)
     const businessHours = (row.business_hours || '').trim();
     const serviceAreas = (row.service_areas || '').trim();

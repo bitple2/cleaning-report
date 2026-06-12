@@ -1191,13 +1191,94 @@
     margin-bottom: 24px;
   }
 
+  /* ─── 하단 CTA + 채널 카드 ─── */
+  .cta-footer {
+    margin-top: 24px;
+    padding: 32px 22px 28px;
+    background: var(--primary);
+    color: #fff;
+  }
+  .cta-footer-headline {
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin: 0 0 10px;
+  }
+  .cta-footer-sub {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+  }
+  .cta-footer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 22px;
+    background: #fff;
+    color: var(--primary);
+    border: none;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .cta-footer-btn:active { transform: scale(0.98); }
+  .cta-footer-btn:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2); }
+  .cta-footer-btn-arrow {
+    font-size: 14px;
+    transition: transform 0.15s;
+  }
+  .cta-footer-btn:hover .cta-footer-btn-arrow { transform: translateX(2px); }
+  .cta-footer-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 26px 0 20px;
+  }
+  .cta-footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .cta-footer-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 10px;
+  }
+  .cta-footer-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.88);
+    letter-spacing: -0.02em;
+  }
+  .cta-footer-items a {
+    color: rgba(255, 255, 255, 0.88);
+    transition: color 0.15s;
+  }
+  .cta-footer-items a:hover { color: #fff; }
+  .cta-footer-empty {
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: -0.02em;
+  }
+
   /* ─── Footer ─── */
   .foot {
-    margin-top: 28px;
-    padding: 24px 18px 40px;
+    margin-top: 0;
+    padding: 18px 18px 32px;
     text-align: center;
-    border-top: 1px solid var(--line-2);
-    background: var(--line-2);
+    background: var(--paper);
   }
   .foot-link {
     display: inline-flex;
@@ -1338,6 +1419,35 @@
     </section>
     <div data-external-reviews-list></div>
   </div>
+
+  <!-- 하단 CTA + 채널 카드 -->
+  <section class="cta-footer">
+    <p class="cta-footer-headline">
+      클린로그를 통해<br>
+      실제 작업 기록과 후기를<br>
+      확인하셨나요?
+    </p>
+    <p class="cta-footer-sub">이제 직접 문의해보세요</p>
+    <button type="button" class="cta-footer-btn" onclick="openQuoteForm()">
+      견적 요청하기  <span class="cta-footer-btn-arrow">→</span>
+    </button>
+    <div class="cta-footer-divider"></div>
+    <div class="cta-footer-grid">
+      <div class="cta-footer-col">
+        <div class="cta-footer-label">CHANNELS</div>
+        <div class="cta-footer-items" data-sns-list>
+          <div class="cta-footer-empty">등록된 채널이 없습니다</div>
+        </div>
+      </div>
+      <div class="cta-footer-col">
+        <div class="cta-footer-label">CONTACT</div>
+        <div class="cta-footer-items">
+          <div data-cta-hours></div>
+          <div data-cta-areas></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <footer class="foot">
     <a href="/" class="foot-link">
@@ -1816,6 +1926,48 @@
             wrap.setAttribute('style', '');
           }
         }
+
+        // 하단 CTA 카드의 CONTACT 영역 (영업시간 + 지역)
+        const hoursEl = document.querySelector('[data-cta-hours]');
+        const areasEl = document.querySelector('[data-cta-areas]');
+        if (hoursEl) hoursEl.textContent = businessHours || '';
+        if (areasEl) areasEl.textContent = serviceAreas || '';
+
+        // 외부 채널 (SNS)
+        try {
+          const snsResp = await fetch(
+            SB_URL + '/rest/v1/company_sns_links?' + new URLSearchParams({
+              company_id: 'eq.' + company.id,
+              select: 'platform,url,label,sort_order',
+              order: 'sort_order.asc,created_at.desc'
+            }).toString(),
+            { cache: 'no-store', headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Accept': 'application/json' } }
+          );
+          if (snsResp.ok) {
+            const sns = await snsResp.json();
+            const PLATFORM_NAMES = {
+              instagram: 'Instagram',
+              threads: 'Threads',
+              blog: 'Blog',
+              naver_blog: '네이버 블로그',
+              youtube: 'YouTube',
+              facebook: 'Facebook',
+              kakao_view: '카카오 채널',
+              etc: '기타'
+            };
+            const listEl = document.querySelector('[data-sns-list]');
+            if (listEl && Array.isArray(sns) && sns.length > 0) {
+              listEl.innerHTML = sns.map(function(s) {
+                const key = s.platform || 'etc';
+                const customLabel = (s.label || '').trim();
+                const name = (key === 'etc' && customLabel)
+                    ? customLabel
+                    : (PLATFORM_NAMES[key] || '기타');
+                return '<a href="' + escHtml(s.url) + '" target="_blank" rel="noopener">' + escHtml(name) + '</a>';
+              }).join('');
+            }
+          }
+        } catch (_) {}
       } catch (e) {
         console.error('profile data load error:', e);
       }

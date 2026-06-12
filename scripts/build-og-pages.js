@@ -291,9 +291,21 @@ async function fetchAllData(slug, companyId) {
       select: 'image_url,category,caption,sort_order',
       order: 'sort_order.asc,created_at.desc',
     }).toString()).catch(() => []),
+    fetchGet(`/rest/v1/company_sns_links?` + new URLSearchParams({
+      company_id: 'eq.' + companyId,
+      select: 'platform,url,label,sort_order',
+      order: 'sort_order.asc,created_at.desc',
+    }).toString()).catch(() => []),
   ];
-  const [stats, works, reviews, ext, gal] = await Promise.all(tasks);
-  return { stats, works: works || [], reviews: reviews || [], ext: ext || [], gal: gal || [] };
+  const [stats, works, reviews, ext, gal, sns] = await Promise.all(tasks);
+  return {
+    stats,
+    works: works || [],
+    reviews: reviews || [],
+    ext: ext || [],
+    gal: gal || [],
+    sns: sns || [],
+  };
 }
 
 function buildPageForCompany(template, row, data) {
@@ -421,6 +433,33 @@ function buildPageForCompany(template, row, data) {
     html = html.replace(/<div data-info-card-wrap style="display:none;"><\/div>/, `<div data-info-card-wrap>${infoHtml}</div>`);
   }
 
+  // 하단 CTA 카드의 CONTACT 영역
+  const ctaHours = (row.business_hours || '').trim();
+  const ctaAreas = (row.service_areas || '').trim();
+  html = html.replace(/<div data-cta-hours><\/div>/, `<div data-cta-hours>${escHtml(ctaHours)}</div>`);
+  html = html.replace(/<div data-cta-areas><\/div>/, `<div data-cta-areas>${escHtml(ctaAreas)}</div>`);
+
+  // 외부 채널 (SNS)
+  if (data.sns && data.sns.length > 0) {
+    const PLATFORM_NAMES = {
+      instagram: 'Instagram', threads: 'Threads', blog: 'Blog',
+      naver_blog: '네이버 블로그', youtube: 'YouTube',
+      facebook: 'Facebook', kakao_view: '카카오 채널', etc: '기타',
+    };
+    const snsHtml = data.sns.map(s => {
+      const key = s.platform || 'etc';
+      const customLabel = (s.label || '').trim();
+      const name = (key === 'etc' && customLabel)
+        ? customLabel
+        : (PLATFORM_NAMES[key] || '기타');
+      return `<a href="${escHtml(s.url)}" target="_blank" rel="noopener">${escHtml(name)}</a>`;
+    }).join('');
+    html = html.replace(
+      /<div class="cta-footer-items" data-sns-list>[\s\S]*?<\/div>/,
+      `<div class="cta-footer-items" data-sns-list>${snsHtml}</div>`
+    );
+  }
+
   // body 데이터 속성
   html = html.replace(/<body>/, `<body data-company-id="${escHtml(company.id || '')}" data-company-name="${escHtml(companyName)}" data-contact-phone="${escHtml((row.contact_phone || '').trim())}" data-kakao-url="${escHtml((row.kakao_channel_url || '').trim())}">`);
 
@@ -448,7 +487,7 @@ async function main() {
       const html = buildPageForCompany(template, row, data);
       fs.writeFileSync(path.join(dir, 'index.html'), html, 'utf8');
       built++;
-      console.log(`  + /profile/${slug}/  (작업${data.works.length}·후기${data.reviews.length}·외부${data.ext.length}·갤러리${data.gal.length})`);
+      console.log(`  + /profile/${slug}/  (작업${data.works.length}·후기${data.reviews.length}·외부${data.ext.length}·갤러리${data.gal.length}·SNS${data.sns.length})`);
     } catch (e) {
       console.error(`  ✗ /profile/${slug}/ 실패: ${e.message}`);
     }
