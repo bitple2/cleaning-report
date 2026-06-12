@@ -1266,8 +1266,22 @@
   .cta-footer-items a {
     color: rgba(255, 255, 255, 0.88);
     transition: color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
   .cta-footer-items a:hover { color: #fff; }
+  .cta-sns-icon {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    opacity: 0.9;
+  }
+  .cta-sns-icon-fallback {
+    font-size: 8px;
+    line-height: 1;
+    opacity: 0.7;
+  }
   .cta-footer-empty {
     font-size: 11.5px;
     color: rgba(255, 255, 255, 0.4);
@@ -1947,21 +1961,26 @@
               instagram: 'Instagram',
               threads: 'Threads',
               blog: 'Blog',
-              naver_blog: '네이버 블로그',
-              youtube: 'YouTube',
-              facebook: 'Facebook',
-              kakao_view: '카카오 채널',
-              etc: '기타'
+              naver_blog: 'Naver Blog',
+              youtube: 'YouTube'
+            };
+            const PLATFORM_SLUGS = {
+              instagram: 'instagram',
+              threads: 'threads',
+              naver_blog: 'naver',
+              youtube: 'youtube'
             };
             const listEl = document.querySelector('[data-sns-list]');
             if (listEl && Array.isArray(sns) && sns.length > 0) {
               listEl.innerHTML = sns.map(function(s) {
-                const key = s.platform || 'etc';
+                const key = s.platform || '';
                 const customLabel = (s.label || '').trim();
-                const name = (key === 'etc' && customLabel)
-                    ? customLabel
-                    : (PLATFORM_NAMES[key] || '기타');
-                return '<a href="' + escHtml(s.url) + '" target="_blank" rel="noopener">' + escHtml(name) + '</a>';
+                const name = customLabel || PLATFORM_NAMES[key] || 'Link';
+                const slug = PLATFORM_SLUGS[key];
+                const icon = slug
+                    ? '<img class="cta-sns-icon" src="https://cdn.simpleicons.org/' + slug + '/ffffff" alt="" />'
+                    : '<span class="cta-sns-icon-fallback">●</span>';
+                return '<a href="' + escHtml(s.url) + '" target="_blank" rel="noopener">' + icon + escHtml(name) + '</a>';
               }).join('');
             }
           }
