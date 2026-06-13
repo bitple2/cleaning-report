@@ -460,8 +460,8 @@ function buildPageForCompany(template, row, data) {
       return `<a href="${escHtml(s.url)}" target="_blank" rel="noopener">${icon}${escHtml(name)}</a>`;
     }).join('');
     html = html.replace(
-      /<div class="cta-footer-items" data-sns-list>[\s\S]*?<\/div>/,
-      `<div class="cta-footer-items" data-sns-list>${snsHtml}</div>`
+      /<div class="cta-footer-items" data-sns-list>[\s\S]*?<\/div>\s*<\/div>/,
+      `<div class="cta-footer-items" data-sns-list>${snsHtml}</div></div>`
     );
   }
 
