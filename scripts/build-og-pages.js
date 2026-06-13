@@ -313,6 +313,7 @@ function buildPageForCompany(template, row, data) {
   const companyName = company.name || '';
   const slug = row.slug;
   const heroSub = (row.hero_sub || '').trim();
+  const heroTag = (row.hero_tag || '').trim();
   const logoUrl = (company.logo_url || row.hero_poster_url || '').trim();
   const isPaid = !!company.is_paid;
   const imageUrl = logoUrl || (row.owner_intro_photo_url || '').trim()
@@ -343,6 +344,9 @@ function buildPageForCompany(template, row, data) {
   if (heroSub) {
     const heroSubHtml = escHtml(heroSub).replace(/\n/g, '<br>');
     html = html.replace(/<p class="hero-sub" data-hero-sub>[\s\S]*?<\/p>/, `<p class="hero-sub" data-hero-sub>${heroSubHtml}</p>`);
+  }
+  if (heroTag) {
+    html = html.replace(/<span class="hero-tag" data-hero-tag>[^<]*<\/span>/, `<span class="hero-tag" data-hero-tag>${escHtml(heroTag)}</span>`);
   }
   if (logoUrl) {
     html = html.replace(/<div class="avatar-fallback"[^>]*>[\s\S]*?<\/div>/, `<img src="${escHtml(logoUrl)}" alt="${escHtml(companyName)}">`);
