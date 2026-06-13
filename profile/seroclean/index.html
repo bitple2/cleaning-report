@@ -1607,6 +1607,12 @@
             el.innerHTML = escHtml(heroSub).replace(/\n/g, '<br>');
           });
         }
+        const heroTag = (row.hero_tag || '').trim();
+        if (heroTag) {
+          document.querySelectorAll('[data-hero-tag]').forEach(function(el) {
+            el.textContent = heroTag;
+          });
+        }
         // 아바타
         const avatarSrc = (company.logo_url || row.hero_poster_url || '').trim();
         if (avatarSrc) {
