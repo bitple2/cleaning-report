@@ -1523,15 +1523,6 @@
         <input type="date" class="field-input" id="q-date">
       </div>
       <div class="field">
-        <div class="field-label">희망 시간대 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
-        <div class="field-chips" id="q-time">
-          <button type="button" class="chip" data-value="오전">오전</button>
-          <button type="button" class="chip" data-value="오후">오후</button>
-          <button type="button" class="chip" data-value="저녁">저녁</button>
-          <button type="button" class="chip" data-value="협의">협의</button>
-        </div>
-      </div>
-      <div class="field">
         <div class="field-label">메모 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
         <textarea class="field-textarea" id="q-notes" placeholder="예) 친환경 세제 부탁드려요 / 베란다·창틀 중점" maxlength="300"></textarea>
       </div>
@@ -2105,7 +2096,6 @@
 
   // ─── 견적 폼 ───
   let _quoteService = null;
-  let _quoteTimeSlot = null;
   let _quoteSubmitting = false;
 
   function openQuoteForm() {
@@ -2118,7 +2108,7 @@
     document.body.style.overflow = '';
   }
 
-  // 칩 선택 (서비스 / 시간대)
+  // 칩 선택 (서비스)
   document.addEventListener('click', function(e) {
     const chip = e.target.closest('.chip');
     if (!chip) return;
@@ -2127,7 +2117,6 @@
     container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
     chip.classList.add('selected');
     if (container.id === 'q-service') _quoteService = chip.dataset.value;
-    if (container.id === 'q-time') _quoteTimeSlot = chip.dataset.value;
   });
 
   // 전화번호 자동 포맷팅
@@ -2162,7 +2151,6 @@
       size_pyeong: Number.isInteger(pyeongVal) ? pyeongVal : null,
       address_rough: document.getElementById('q-region').value.trim() || null,
       preferred_date: document.getElementById('q-date').value || null,
-      preferred_time_slot: _quoteTimeSlot,
       notes: document.getElementById('q-notes').value.trim() || null
     };
 
