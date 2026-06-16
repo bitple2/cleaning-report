@@ -42,13 +42,9 @@
 
   .lead { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
 
-  .security-box { margin-top: 14px; padding: 13px 14px; background: var(--primary); color: #fff;
-    border-radius: 10px; font-size: 11.5px; line-height: 1.6; letter-spacing: -0.1px;
-    display: flex; gap: 10px; }
-  .security-box-icon { font-size: 13px; flex-shrink: 0; opacity: 0.9; }
-  .security-box-text { flex: 1; }
-  .security-box-title { font-weight: 700; margin-bottom: 3px; opacity: 0.95; }
-  .security-box-sub { opacity: 0.78; }
+  .security-note { margin-top: 10px; padding: 0 2px; font-size: 11.5px; color: var(--muted);
+    line-height: 1.65; letter-spacing: -0.1px; }
+  .security-note strong { display: block; font-weight: 700; color: var(--ink-2); margin-bottom: 3px; }
 
   .submit-security-hint { margin-top: 12px; text-align: center; font-size: 11px; color: var(--muted);
     line-height: 1.5; }
@@ -141,12 +137,9 @@
         <input type="text" class="field-input" id="d-door" placeholder="예) #1234*" maxlength="30">
       </div>
 
-      <div class="security-box">
-        <span class="security-box-icon">🔒</span>
-        <div class="security-box-text">
-          <div class="security-box-title">현관 비밀번호는 <span data-pv="company_name">—</span> 사장님께만 전달돼요.</div>
-          <div class="security-box-sub">청소 완료 7일 뒤 자동으로 완전 삭제되고, 다른 곳에 절대 노출되지 않습니다.</div>
-        </div>
+      <div class="security-note">
+        <strong>🔒 현관 비밀번호는 <span data-pv="company_name">—</span> 사장님께만 전달돼요.</strong>
+        청소 완료 7일 뒤 자동으로 완전 삭제되고, 다른 곳에 절대 노출되지 않습니다.
       </div>
 
       <div class="submit-row">
