@@ -27,8 +27,31 @@
   .top { padding: 24px 0 18px; border-bottom: 1px solid var(--line-2); }
   .brand { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--primary); letter-spacing: 0.04em; }
   .brand img { width: 18px; height: 18px; }
-  h1 { margin: 12px 0 6px; font-size: 19px; font-weight: 800; letter-spacing: -0.4px; color: var(--ink-1); }
+
+  .company-row { display: flex; align-items: center; gap: 12px; margin: 14px 0 10px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800;
+    letter-spacing: -0.3px; flex-shrink: 0; }
+  .company-text { flex: 1; min-width: 0; font-size: 17px; font-weight: 800; color: var(--ink-1);
+    letter-spacing: -0.4px; line-height: 1.3; }
+  .title-suffix { font-weight: 700; color: var(--ink-2); }
+
+  .security-chip { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px;
+    background: rgba(27, 45, 79, 0.08); color: var(--primary); border-radius: 999px;
+    font-size: 11.5px; font-weight: 700; letter-spacing: -0.1px; margin-bottom: 12px; }
+
   .lead { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+
+  .security-box { margin-top: 14px; padding: 13px 14px; background: var(--primary); color: #fff;
+    border-radius: 10px; font-size: 11.5px; line-height: 1.6; letter-spacing: -0.1px;
+    display: flex; gap: 10px; }
+  .security-box-icon { font-size: 13px; flex-shrink: 0; opacity: 0.9; }
+  .security-box-text { flex: 1; }
+  .security-box-title { font-weight: 700; margin-bottom: 3px; opacity: 0.95; }
+  .security-box-sub { opacity: 0.78; }
+
+  .submit-security-hint { margin-top: 12px; text-align: center; font-size: 11px; color: var(--muted);
+    line-height: 1.5; }
 
   .state-loading, .state-error { padding: 80px 20px; text-align: center; color: var(--muted); font-size: 13px; }
   .state-error .icon { font-size: 28px; margin-bottom: 10px; }
@@ -75,7 +98,13 @@
     <div class="brand">
       <span>🔒</span><span>cleaningmanager.kr</span>
     </div>
-    <h1>예약 상세 작성</h1>
+    <div class="company-row">
+      <div class="avatar" data-company-avatar>?</div>
+      <div class="company-text">
+        <span data-pv="company_name">—</span> <span class="title-suffix">예약 상세 작성</span>
+      </div>
+    </div>
+    <div class="security-chip">🛡&nbsp; 클린로그로 안전하게 접수됩니다</div>
     <p class="lead">사장님과 통화하신 내용을 바탕으로<br>마지막 정보만 알려주세요 (30초)</p>
   </header>
 
@@ -101,10 +130,6 @@
       <div class="preview-row" data-pv-row="preferred_date"><span class="preview-key">희망일</span><span class="preview-val" data-pv="preferred_date">—</span></div>
     </div>
 
-    <div id="already-banner" class="already-banner" style="display:none">
-      이미 작성하신 정보가 있어요. 새로 입력하시면 덮어쓰기 됩니다.
-    </div>
-
     <form class="form" id="detail-form" autocomplete="off">
       <div class="field">
         <div class="field-label">상세 주소<span class="field-required">*</span></div>
@@ -114,11 +139,19 @@
       <div class="field">
         <div class="field-label">현관 비밀번호 <span style="color:var(--muted);font-weight:500;font-size:11px;">(선택)</span></div>
         <input type="text" class="field-input" id="d-door" placeholder="예) #1234*" maxlength="30">
-        <div class="field-hint">비밀번호가 있는 경우만 알려주세요.<br>🔒 청소 완료 7일 후 자동으로 데이터는 삭제됩니다.</div>
       </div>
+
+      <div class="security-box">
+        <span class="security-box-icon">🔒</span>
+        <div class="security-box-text">
+          <div class="security-box-title">현관 비밀번호는 <span data-pv="company_name">—</span> 사장님께만 전달돼요.</div>
+          <div class="security-box-sub">청소 완료 7일 뒤 자동으로 완전 삭제되고, 다른 곳에 절대 노출되지 않습니다.</div>
+        </div>
+      </div>
+
       <div class="submit-row">
         <button type="submit" class="submit-btn" id="submit-btn">제출하기</button>
-        <div class="footer-hint">사장님에게만 전달되며,<br>다른 곳에 노출되지 않아요.</div>
+        <div class="submit-security-hint">🛡 입력하신 정보는 <span data-pv="company_name">—</span> 사장님께만 전달됩니다</div>
       </div>
     </form>
   </main>
@@ -198,14 +231,23 @@
       setPv('customer_phone', formatPhone(data.customer_phone));
       setPv('service_type', data.service_type);
 
+      // 회사명 첫 글자(들) → 아바타 이니셜
+      const cn = (data.company_name || '').trim();
+      const initials = cn ? cn.substring(0, /^[a-zA-Z]/.test(cn) ? 2 : 1).toUpperCase() : '?';
+      document.querySelectorAll('[data-company-avatar]').forEach(function(el){
+        el.textContent = initials;
+      });
+
       if (data.size_pyeong) setPv('size_pyeong', data.size_pyeong + '평');
       else document.querySelector('[data-pv-row="size_pyeong"]').style.display = 'none';
 
       if (data.preferred_date) setPv('preferred_date', formatDate(data.preferred_date));
       else document.querySelector('[data-pv-row="preferred_date"]').style.display = 'none';
 
+      // 이미 제출된 상태면 입력 폼 안 보이고 성공 화면 즉시
       if (data.detail_filled_at) {
-        document.getElementById('already-banner').style.display = '';
+        show('state-success');
+        return;
       }
 
       show('state-form');
