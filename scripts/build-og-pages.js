@@ -276,6 +276,7 @@ async function fetchAllData(slug, companyId) {
     fetchGet(`/rest/v1/reviews?` + new URLSearchParams({
       company_id: 'eq.' + companyId,
       is_hidden: 'eq.false',
+      is_sample: 'eq.false',
       'cert_code': 'not.is.null',
       select: 'rating,content,name_display,customer_name_snapshot,customer_phone_snapshot,service_type_snapshot,created_at,cert_code',
       order: 'created_at.desc',
