@@ -107,12 +107,7 @@ function buildBadges(stats) {
   const recent30dN = s.recent_30d_reports || 0;
   const earned = [];
 
-  if (reportsN >= 1000) earned.push({ emoji: '💎', label: '1000건 달성', sub: '누적 작업 ' + reportsN + '건' });
-  else if (reportsN >= 300) earned.push({ emoji: '🥇', label: '300건 달성', sub: '누적 작업 ' + reportsN + '건' });
-  else if (reportsN >= 100) earned.push({ emoji: '🥈', label: '100건 달성', sub: '누적 작업 ' + reportsN + '건' });
-  else if (reportsN >= 30) earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 작업 ' + reportsN + '건' });
-  else earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 ' + reportsN + '건', locked: true });
-
+  // 순서: 평점 → 인증후기 → 작업과정공개 → 30건 달성 → 3개월 연속 활동
   if (reviewsN >= 1) {
     const rStr = avgRating.toFixed(1);
     const rFloat = parseFloat(rStr);
@@ -127,13 +122,19 @@ function buildBadges(stats) {
   if (certReviewN >= 1) earned.push({ emoji: '🔐', label: '인증 후기 ' + certReviewN + '건', sub: '실제 고객 검증' });
   else earned.push({ emoji: '🔐', label: '인증 후기', sub: '0건', locked: true });
 
+  if (recent30dN >= 3) earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '실시간 리포트 제공 중' });
+  else earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '최근 30일 ' + recent30dN + '건', locked: true });
+
+  if (reportsN >= 1000) earned.push({ emoji: '💎', label: '1000건 달성', sub: '누적 작업 ' + reportsN + '건' });
+  else if (reportsN >= 300) earned.push({ emoji: '🥇', label: '300건 달성', sub: '누적 작업 ' + reportsN + '건' });
+  else if (reportsN >= 100) earned.push({ emoji: '🥈', label: '100건 달성', sub: '누적 작업 ' + reportsN + '건' });
+  else if (reportsN >= 30) earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 작업 ' + reportsN + '건' });
+  else earned.push({ emoji: '🥉', label: '30건 달성', sub: '누적 ' + reportsN + '건', locked: true });
+
   if (consecMonths >= 12) earned.push({ emoji: '🔁', label: '1년 연속 활동', sub: '꾸준한 운영' });
   else if (consecMonths >= 6) earned.push({ emoji: '🔁', label: '6개월 연속 활동', sub: '꾸준한 운영' });
   else if (consecMonths >= 3) earned.push({ emoji: '🔁', label: '3개월 연속 활동', sub: '꾸준한 운영' });
   else earned.push({ emoji: '🔁', label: '3개월 연속', sub: consecMonths > 0 ? '현재 ' + consecMonths + '개월' : '이번 달 활동 없음', locked: true });
-
-  if (recent30dN >= 3) earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '실시간 리포트 제공 중' });
-  else earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '최근 30일 ' + recent30dN + '건', locked: true });
 
   return earned.map(b => {
     const cls = b.locked ? 'badge-card locked' : 'badge-card';
