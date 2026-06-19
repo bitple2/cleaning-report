@@ -1718,6 +1718,15 @@
             if (Array.isArray(works) && works.length > 0) {
               const listEl = document.querySelector('[data-recent-work-list]');
               if (listEl) {
+                // 정적 HTML과 동일하면 DOM 안 건드림 (깜빡임 회피)
+                const newIds = works.map(function(w){return w.report_id;}).sort().join(',');
+                const existingIds = Array.from(listEl.querySelectorAll('.work-card')).map(function(a){
+                  try { return new URLSearchParams((a.getAttribute('href') || '').split('?')[1] || '').get('id') || ''; }
+                  catch(_) { return ''; }
+                }).filter(Boolean).sort().join(',');
+                if (newIds === existingIds && newIds.length > 0) {
+                  // 동일 → skip
+                } else {
                 listEl.innerHTML = '<div class="work-list">' + works.map(function(w) {
                   const dt = new Date(w.date);
                   const dateStr = (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일';
@@ -1739,6 +1748,7 @@
                       '<div class="work-report-btn">리포트 보기 ›</div>' +
                     '</div></a>';
                 }).join('') + '</div>';
+                }
               }
             }
           }
@@ -1763,6 +1773,14 @@
             if (Array.isArray(reviews) && reviews.length > 0) {
               const listEl = document.querySelector('[data-reviews-list]');
               if (listEl) {
+                // 정적 HTML과 동일하면 DOM 안 건드림 (깜빡임 회피)
+                const newCerts = reviews.map(function(r){return (r.cert_code || '').replace(/^#/, '');}).filter(Boolean).sort().join(',');
+                const existingCerts = Array.from(listEl.querySelectorAll('.rev-cert-code')).map(function(el){
+                  return (el.textContent || '').replace(/^#/, '').trim();
+                }).filter(Boolean).sort().join(',');
+                if (newCerts === existingCerts && newCerts.length > 0) {
+                  // 동일 → skip
+                } else {
                 listEl.innerHTML = '<div class="rev-list">' + reviews.map(function(r) {
                   const rating = Number(r.rating || 0).toFixed(1);
                   const ratingStars = '★'.repeat(Math.round(r.rating || 0)) + '☆'.repeat(5 - Math.round(r.rating || 0));
@@ -1795,6 +1813,7 @@
                     '<div class="rev-meta">' + name + phoneMasked + service + '</div>' +
                     cardClose;
                 }).join('') + '</div>';
+                }
               }
             }
           }
