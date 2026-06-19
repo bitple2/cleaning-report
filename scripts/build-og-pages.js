@@ -122,8 +122,8 @@ function buildBadges(stats) {
   if (certReviewN >= 1) earned.push({ emoji: '🔐', label: '인증 후기 ' + certReviewN + '건', sub: '실제 고객 검증' });
   else earned.push({ emoji: '🔐', label: '인증 후기', sub: '0건', locked: true });
 
-  if (recent30dN >= 3) earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '실시간 리포트 제공 중' });
-  else earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '최근 30일 ' + recent30dN + '건', locked: true });
+  if (recent30dN >= 3) earned.push({ emoji: '📸', label: '청소 리포트 제공', sub: '작업 과정 공개' });
+  else earned.push({ emoji: '📸', label: '청소 리포트 제공', sub: '최근 30일 ' + recent30dN + '건', locked: true });
 
   if (reportsN >= 1000) earned.push({ emoji: '💎', label: '1000건 달성', sub: '누적 작업 ' + reportsN + '건' });
   else if (reportsN >= 300) earned.push({ emoji: '🥇', label: '300건 달성', sub: '누적 작업 ' + reportsN + '건' });
