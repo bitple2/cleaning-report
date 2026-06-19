@@ -1505,6 +1505,9 @@
           <button type="button" class="chip" data-value="상가청소">상가청소</button>
           <button type="button" class="chip" data-value="기타">기타</button>
         </div>
+        <input type="text" class="field-input" id="q-service-custom"
+               placeholder="직접 입력 (예: 곰팡이 제거)" maxlength="20"
+               style="display:none; margin-top:8px;">
       </div>
       <div class="field">
         <div class="field-label">희망 평수 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
@@ -2117,7 +2120,18 @@
     if (!container) return;
     container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
     chip.classList.add('selected');
-    if (container.id === 'q-service') _quoteService = chip.dataset.value;
+    if (container.id === 'q-service') {
+      _quoteService = chip.dataset.value;
+      // 기타 선택 시 직접 입력 칸 표시 (Flutter 앱 일정 등록의 직접 입력 필드와 매칭)
+      const customInput = document.getElementById('q-service-custom');
+      if (chip.dataset.value === '기타') {
+        customInput.style.display = '';
+        setTimeout(() => customInput.focus(), 50);
+      } else {
+        customInput.style.display = 'none';
+        customInput.value = '';
+      }
+    }
   });
 
   // 전화번호 자동 포맷팅
@@ -2140,6 +2154,14 @@
     }
     if (!_quoteService) { alert('청소 종류를 선택해주세요'); return; }
 
+    // 기타 선택 시 직접 입력값을 service_type으로 사용 (앱 일정 등록의 직접 입력과 매칭)
+    let serviceTypeToSave = _quoteService;
+    if (_quoteService === '기타') {
+      const customVal = document.getElementById('q-service-custom').value.trim();
+      if (!customVal) { alert('청소 종류를 입력해주세요'); return; }
+      serviceTypeToSave = customVal;
+    }
+
     const companyId = document.body.dataset.companyId;
     if (!companyId) { alert('업체 정보를 찾을 수 없습니다. 새로고침 후 다시 시도해주세요.'); return; }
 
@@ -2148,7 +2170,7 @@
       company_id: companyId,
       customer_name: name,
       customer_phone: phone,
-      service_type: _quoteService,
+      service_type: serviceTypeToSave,
       size_pyeong: Number.isInteger(pyeongVal) ? pyeongVal : null,
       address_rough: document.getElementById('q-region').value.trim() || null,
       preferred_date: document.getElementById('q-date').value || null,
