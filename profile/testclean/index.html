@@ -1352,7 +1352,7 @@
 
   <div data-badges-wrap class="badges-wrap">
     <div class="badges-head">🛡 신뢰 배지</div>
-    <div class="badge-list" data-badges-list><div class="badge-card"><div class="badge-emoji">⭐</div><div class="badge-label">평점 5.0 만점</div><div class="badge-sub">고객 만족 우수 업체</div></div><div class="badge-card"><div class="badge-emoji">🔐</div><div class="badge-label">인증 후기 1건</div><div class="badge-sub">실제 고객 검증</div></div><div class="badge-card locked"><div class="badge-emoji">📸</div><div class="badge-label">작업 과정 공개</div><div class="badge-sub">최근 30일 1건</div></div><div class="badge-card locked"><div class="badge-emoji">🥉</div><div class="badge-label">30건 달성</div><div class="badge-sub">누적 1건</div></div><div class="badge-card locked"><div class="badge-emoji">🔁</div><div class="badge-label">3개월 연속</div><div class="badge-sub">현재 1개월</div></div></div>
+    <div class="badge-list" data-badges-list><div class="badge-card"><div class="badge-emoji">⭐</div><div class="badge-label">평점 5.0 만점</div><div class="badge-sub">고객 만족 우수 업체</div></div><div class="badge-card"><div class="badge-emoji">🔐</div><div class="badge-label">인증 후기 1건</div><div class="badge-sub">실제 고객 검증</div></div><div class="badge-card locked"><div class="badge-emoji">📸</div><div class="badge-label">청소 리포트 제공</div><div class="badge-sub">최근 30일 1건</div></div><div class="badge-card locked"><div class="badge-emoji">🥉</div><div class="badge-label">30건 달성</div><div class="badge-sub">누적 1건</div></div><div class="badge-card locked"><div class="badge-emoji">🔁</div><div class="badge-label">3개월 연속</div><div class="badge-sub">현재 1개월</div></div></div>
   </div>
 
   <div data-info-card-wrap style="display:none;"></div>
@@ -1672,8 +1672,8 @@
         }
         if (certReviewN >= 1) earned.push({ emoji: '🔐', label: '인증 후기 ' + certReviewN + '건', sub: '실제 고객 검증' });
         else earned.push({ emoji: '🔐', label: '인증 후기', sub: '0건', locked: true });
-        if (recent30dN >= 3) earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '실시간 리포트 제공 중' });
-        else earned.push({ emoji: '📸', label: '작업 과정 공개', sub: '최근 30일 ' + recent30dN + '건', locked: true });
+        if (recent30dN >= 3) earned.push({ emoji: '📸', label: '청소 리포트 제공', sub: '작업 과정 공개' });
+        else earned.push({ emoji: '📸', label: '청소 리포트 제공', sub: '최근 30일 ' + recent30dN + '건', locked: true });
         if (reportsN >= 1000) earned.push({ emoji: '💎', label: '1000건 달성', sub: '누적 작업 ' + reportsN + '건' });
         else if (reportsN >= 300) earned.push({ emoji: '🥇', label: '300건 달성', sub: '누적 작업 ' + reportsN + '건' });
         else if (reportsN >= 100) earned.push({ emoji: '🥈', label: '100건 달성', sub: '누적 작업 ' + reportsN + '건' });
