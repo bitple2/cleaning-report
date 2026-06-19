@@ -802,7 +802,7 @@
   }
   .badge-list {
     display: flex;
-    gap: 8px;
+    gap: 7px;
     padding: 4px 4px 6px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -811,8 +811,8 @@
   .badge-list::-webkit-scrollbar { display: none; }
   .badge-card {
     flex-shrink: 0;
-    min-width: 100px;
-    padding: 10px 10px 9px;
+    min-width: 90px;
+    padding: 8px 8px 7px;
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 10px;
@@ -821,26 +821,28 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     text-align: center;
   }
   .badge-emoji {
-    font-size: 18px;
+    font-size: 17px;
     line-height: 1;
   }
   .badge-label {
-    font-size: 11.5px;
+    font-size: 10.5px;
     font-weight: 800;
     letter-spacing: -0.03em;
     color: var(--ink);
     line-height: 1.25;
+    white-space: nowrap;
   }
   .badge-sub {
-    font-size: 10px;
+    font-size: 9.5px;
     color: var(--muted);
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.25;
+    white-space: nowrap;
   }
   /* 비활성 (조건 미달) — 회색 + 흐림 */
   .badge-card.locked {
