@@ -1365,7 +1365,7 @@ async function init() {
       return;
     }
     reportData = report;
-    companyData = report.bookings?.companies || null;
+    companyData = report.bookings?.companies || (report.company_name_snapshot ? { name: report.company_name_snapshot, logo_url: report.company_logo_url_snapshot } : null);
 
     // 엔트리 + 사진
     const { data: entryData } = await sb
@@ -1451,7 +1451,7 @@ async function refreshData(reportId) {
     .single();
   if (freshReport) {
     reportData = freshReport;
-    companyData = freshReport.bookings?.companies || null;
+    companyData = freshReport.bookings?.companies || (freshReport.company_name_snapshot ? { name: freshReport.company_name_snapshot, logo_url: freshReport.company_logo_url_snapshot } : null);
   }
 
   const { data: entryData } = await sb
@@ -1581,13 +1581,13 @@ function render() {
                 <span style="font-size:10px;font-weight:600;color:#4A9D5B">현재 청소중</span>
               </div>`}
           ${!isCompleted ? `<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">실시간으로 업데이트됩니다</div>` : ''}
-          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px">${booking?.scheduled_date || ''}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px">${booking?.scheduled_date || reportData.scheduled_date_snapshot || ''}</div>
         </div>
       </div>
       <div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.5)">
         <span onclick="var f=this.parentNode.querySelector('.customer-full');var m=this.parentNode.querySelector('.customer-masked');if(f.style.display==='none'){f.style.display='inline';m.style.display='none'}else{f.style.display='none';m.style.display='inline'}" style="cursor:pointer">
-          <span class="customer-masked">${(booking?.customer_name || booking?.customers?.name || '고객').charAt(0)}*님 ▸</span>
-          <span class="customer-full" style="display:none;color:rgba(255,255,255,0.85);font-weight:600">${booking?.customer_name || booking?.customers?.name || '고객'}님 ◂</span>
+          <span class="customer-masked">${(booking?.customer_name || booking?.customers?.name || reportData.customer_name_snapshot || '고객').charAt(0)}*님 ▸</span>
+          <span class="customer-full" style="display:none;color:rgba(255,255,255,0.85);font-weight:600">${booking?.customer_name || booking?.customers?.name || reportData.customer_name_snapshot || '고객'}님 ◂</span>
         </span>
         ${reportData?.customer_phone_tail ? `<span style="margin-left:6px">010-****-**${reportData.customer_phone_tail}</span>` : ''}
       </div>

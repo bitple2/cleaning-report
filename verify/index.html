@@ -606,7 +606,7 @@ function renderCert(data) {
     ? `${customerName} 고객님${phoneTail ? ' ' + phoneTail : ''}`
     : '고객님';
 
-  const serviceDate = fmtDate(r.bookings?.scheduled_date);
+  const serviceDate = fmtDate(r.scheduled_date_snapshot || r.bookings?.scheduled_date);
   const createdDate = fmtDate(r.created_at);
   const wasEdited = r.updated_at && (new Date(r.updated_at) - new Date(r.created_at)) > 60000;
 
@@ -793,6 +793,7 @@ async function init() {
       .select(`
         rating, content, tags, created_at, updated_at, is_hidden,
         cert_code, customer_name_snapshot, customer_phone_snapshot, service_type_snapshot, name_display,
+        scheduled_date_snapshot, address_snapshot,
         report_id, booking_id,
         bookings ( scheduled_date, address ),
         companies ( name, logo_url )
