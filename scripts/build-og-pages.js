@@ -310,7 +310,42 @@ async function fetchAllData(slug, companyId) {
   };
 }
 
-function buildPageForCompany(template, row, data) {
+// 외부 og:image를 우리 도메인으로 다운로드해 호스팅 (Threads 캐시 우회 + 도메인 신뢰)
+// 실패 시 원본 URL을 그대로 반환 (안전 fallback)
+function downloadOgImage(sourceUrl, slug, ext) {
+  return new Promise((resolve, reject) => {
+    let parsed;
+    try { parsed = new URL(sourceUrl); } catch (e) { return reject(e); }
+    const lib = parsed.protocol === 'https:' ? https : require('http');
+    const req = lib.get(sourceUrl, (res) => {
+      // 리다이렉트 따라가기 (최대 1회)
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        downloadOgImage(res.headers.location, slug, ext).then(resolve).catch(reject);
+        return;
+      }
+      if (res.statusCode !== 200) {
+        reject(new Error(`HTTP ${res.statusCode}`));
+        return;
+      }
+      const outDir = path.join(__dirname, '..', 'og-images');
+      fs.mkdirSync(outDir, { recursive: true });
+      const outPath = path.join(outDir, `${slug}${ext}`);
+      const chunks = [];
+      res.on('data', (c) => chunks.push(c));
+      res.on('end', () => {
+        try {
+          fs.writeFileSync(outPath, Buffer.concat(chunks));
+          resolve(`https://cleaningmanager.kr/og-images/${slug}${ext}`);
+        } catch (e) { reject(e); }
+      });
+      res.on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, () => req.destroy(new Error('timeout')));
+  });
+}
+
+async function buildPageForCompany(template, row, data) {
   const company = row.company || {};
   const companyName = company.name || '';
   const slug = row.slug;
@@ -318,8 +353,23 @@ function buildPageForCompany(template, row, data) {
   const heroTag = (row.hero_tag || '').trim();
   const logoUrl = (company.logo_url || row.hero_poster_url || '').trim();
   const isPaid = !!company.is_paid;
-  const imageUrl = logoUrl || (row.owner_intro_photo_url || '').trim()
+  const rawImageUrl = logoUrl || (row.owner_intro_photo_url || '').trim()
     || 'https://cleaningmanager.kr/assets/cm_logo.png';
+
+  // 외부 도메인 og:image면 우리 도메인으로 다운로드 (Threads 캐시 우회)
+  let imageUrl = rawImageUrl;
+  try {
+    const parsed = new URL(rawImageUrl);
+    if (!parsed.hostname.includes('cleaningmanager.kr')) {
+      const m = parsed.pathname.match(/\.(jpe?g|png|webp)$/i);
+      const ext = m ? '.' + m[1].toLowerCase().replace('jpeg','jpg') : '.jpg';
+      imageUrl = await downloadOgImage(rawImageUrl, slug, ext);
+    }
+  } catch (e) {
+    console.warn(`  ⚠️  og:image 다운로드 실패 [${slug}] → 원본 URL 유지: ${e.message}`);
+    // imageUrl = rawImageUrl (원본 그대로, 안전 fallback)
+  }
+
   const ogTitle = companyName || '클리닝매니저 신뢰 프로필';
   const ogDescription = heroSub ? heroSub.replace(/\n/g, ' ')
     : '실제 작업 기록과 후기를 기반으로 고객이 직접 확인할 수 있습니다.';
@@ -495,7 +545,7 @@ async function main() {
       const data = await fetchAllData(slug, row.company.id);
       const dir = path.join(PROFILE_DIR, slug);
       fs.mkdirSync(dir, { recursive: true });
-      const html = buildPageForCompany(template, row, data);
+      const html = await buildPageForCompany(template, row, data);
       fs.writeFileSync(path.join(dir, 'index.html'), html, 'utf8');
       built++;
       console.log(`  + /profile/${slug}/  (작업${data.works.length}·후기${data.reviews.length}·외부${data.ext.length}·갤러리${data.gal.length}·SNS${data.sns.length})`);

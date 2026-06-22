@@ -37,7 +37,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add profile/
+          git add profile/ og-images/
           if git diff --staged --quiet; then
             echo "변경 없음 — 커밋 건너뜀"
           else
