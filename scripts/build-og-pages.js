@@ -203,10 +203,14 @@ function buildReviews(reviews) {
 }
 
 function buildGallery(gal) {
-  if (!Array.isArray(gal) || gal.length === 0) return { html: null, groupCount: 0 };
+  // image_url 빈/누락 row 필터링 (삭제된 사진 남은 row 처리)
+  const valid = Array.isArray(gal)
+    ? gal.filter(g => g && g.image_url && String(g.image_url).trim() !== '')
+    : [];
+  if (valid.length === 0) return { html: null, groupCount: 0 };
   const groups = {};
   const groupOrder = [];
-  gal.forEach(g => {
+  valid.forEach(g => {
     const cat = (g.category || '').trim() || '기타';
     if (!groups[cat]) { groups[cat] = []; groupOrder.push(cat); }
     groups[cat].push(g);
@@ -220,7 +224,7 @@ function buildGallery(gal) {
     const countBadge = items.length > 1 ? `<div class="ext-card-count">${items.length}장</div>` : '';
     return `<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="${escHtml(first.image_url)}" data-images="${imagesJson}" data-source="${escHtml(cat)}" data-caption="${escHtml(cap)}">` +
       `<div class="ext-card-img">${countBadge}` +
-        `<img src="${escHtml(first.image_url)}" alt="" loading="lazy">` +
+        `<img src="${escHtml(first.image_url)}" alt="" loading="lazy" onerror="var c=this.closest('.ext-card');if(c)c.style.display='none';">` +
       `</div>` +
       `<div class="ext-card-body">` +
         `<div class="ext-card-source">${escHtml(cat)}</div>` +
