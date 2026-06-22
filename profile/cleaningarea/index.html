@@ -1430,7 +1430,7 @@
         </div>
       </div>
     </section>
-    <div data-gallery-list><div class="ext-list"><div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097479264-0.jpg" data-images="[&quot;https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097479264-0.jpg&quot;]" data-source="약품" data-caption="친환경 약품 사용 합니다."><div class="ext-card-img"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097479264-0.jpg" alt="" loading="lazy"></div><div class="ext-card-body"><div class="ext-card-source">약품</div><div class="ext-card-caption">친환경 약품 사용 합니다.</div></div></div><div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097558678-0.jpg" data-images="[&quot;https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097558678-0.jpg&quot;,&quot;https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097558678-1.jpg&quot;]" data-source="현장" data-caption="샤워부스 물때 제거"><div class="ext-card-img"><div class="ext-card-count">2장</div><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097558678-0.jpg" alt="" loading="lazy"></div><div class="ext-card-body"><div class="ext-card-source">현장</div><div class="ext-card-caption">샤워부스 물때 제거</div></div></div></div></div>
+    <div data-gallery-list><div class="ext-list"><div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097479264-0.jpg" data-images="[&quot;https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097479264-0.jpg&quot;]" data-source="약품" data-caption="친환경 약품 사용 합니다."><div class="ext-card-img"><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097479264-0.jpg" alt="" loading="lazy" onerror="var c=this.closest('.ext-card');if(c)c.style.display='none';"></div><div class="ext-card-body"><div class="ext-card-source">약품</div><div class="ext-card-caption">친환경 약품 사용 합니다.</div></div></div><div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097558678-0.jpg" data-images="[&quot;https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097558678-0.jpg&quot;,&quot;https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097558678-1.jpg&quot;]" data-source="현장" data-caption="샤워부스 물때 제거"><div class="ext-card-img"><div class="ext-card-count">2장</div><img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/homepage/862cf463-76e9-4f05-b009-86c2aa936748/gallery/1782097558678-0.jpg" alt="" loading="lazy" onerror="var c=this.closest('.ext-card');if(c)c.style.display='none';"></div><div class="ext-card-body"><div class="ext-card-source">현장</div><div class="ext-card-caption">샤워부스 물때 제거</div></div></div></div></div>
   </div>
 
   <div class="section-card" data-external-reviews-section>
@@ -1841,8 +1841,12 @@
             { cache: 'no-store', headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Accept': 'application/json' } }
           );
           if (galResp.ok) {
-            const gal = await galResp.json();
-            if (Array.isArray(gal) && gal.length > 0) {
+            const galRaw = await galResp.json();
+            // image_url 빈/누락 row 필터링 (삭제된 사진 남은 row 처리)
+            const gal = Array.isArray(galRaw)
+              ? galRaw.filter(function(g) { return g && g.image_url && String(g.image_url).trim() !== ''; })
+              : [];
+            if (gal.length > 0) {
               // 카테고리별 그룹화 (빈 카테고리는 '기타')
               const groups = {};
               const groupOrder = [];
@@ -1866,7 +1870,7 @@
                   const countBadge = items.length > 1 ? '<div class="ext-card-count">' + items.length + '장</div>' : '';
                   return '<div class="ext-card" onclick="openExtModalFromEl(this)" data-img-url="' + escHtml(first.image_url) + '" data-images="' + imagesJson + '" data-source="' + escHtml(cat) + '" data-caption="' + escHtml(cap) + '">' +
                     '<div class="ext-card-img">' + countBadge +
-                      '<img src="' + escHtml(first.image_url) + '" alt="" loading="lazy">' +
+                      '<img src="' + escHtml(first.image_url) + '" alt="" loading="lazy" onerror="var c=this.closest(\'.ext-card\');if(c)c.style.display=\'none\';">' +
                     '</div>' +
                     '<div class="ext-card-body">' +
                       '<div class="ext-card-source">' + escHtml(cat) + '</div>' +
