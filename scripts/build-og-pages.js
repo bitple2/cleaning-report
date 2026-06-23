@@ -316,6 +316,8 @@ async function fetchAllData(slug, companyId) {
 
 // 외부 og:image를 우리 도메인으로 다운로드해 호스팅 (Threads 캐시 우회 + 도메인 신뢰)
 // 실패 시 원본 URL을 그대로 반환 (안전 fallback)
+// Threads에 영구 캐시된 슬러그는 ?v={n}으로 강제 새 URL 인식시킴
+const OG_CACHE_BUST_SLUGS = { 'gung': 2 };
 function downloadOgImage(sourceUrl, slug, ext) {
   return new Promise((resolve, reject) => {
     let parsed;
@@ -339,7 +341,8 @@ function downloadOgImage(sourceUrl, slug, ext) {
       res.on('end', () => {
         try {
           fs.writeFileSync(outPath, Buffer.concat(chunks));
-          resolve(`https://cleaningmanager.kr/og-images/${slug}${ext}`);
+          const v = OG_CACHE_BUST_SLUGS[slug] ? `?v=${OG_CACHE_BUST_SLUGS[slug]}` : '';
+          resolve(`https://cleaningmanager.kr/og-images/${slug}${ext}${v}`);
         } catch (e) { reject(e); }
       });
       res.on('error', reject);
