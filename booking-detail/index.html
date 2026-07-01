@@ -128,9 +128,21 @@
 
     <form class="form" id="detail-form" autocomplete="off">
       <div class="field">
+        <div class="field-label">시·도<span class="field-required">*</span></div>
+        <select class="field-input" id="d-sido">
+          <option value="">시·도를 선택해주세요</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">시·군·구<span class="field-required">*</span></div>
+        <select class="field-input" id="d-sigungu" disabled>
+          <option value="">먼저 시·도를 선택해주세요</option>
+        </select>
+      </div>
+      <div class="field">
         <div class="field-label">상세 주소<span class="field-required">*</span></div>
-        <input type="text" class="field-input" id="d-address" placeholder="예) 서울시 송파구 OO로 12 OO아파트 102동 1505호" maxlength="120">
-        <div class="field-hint">도로명·동·호수까지 정확히 알려주세요.</div>
+        <input type="text" class="field-input" id="d-address" placeholder="예) OO로 12 OO아파트 102동 1505호" maxlength="120">
+        <div class="field-hint">동·호수 또는 지번까지 정확히 알려주세요.</div>
       </div>
       <div class="field">
         <div class="field-label">현관 비밀번호 <span style="color:var(--muted);font-weight:500;font-size:11px;">(선택)</span></div>
@@ -164,6 +176,68 @@
 <script>
   const SB_URL = 'https://iucicugxihxilcqtzrbk.supabase.co';
   const SB_ANON = 'sb_publishable_-_GTb-cNnVnC1gcVHoKlWw_5FztAXMy';
+
+  // ─── 한국 행정구역 (17개 시·도 + 시·군·구) ───
+  const KR_REGIONS = {
+    '서울': ['강남구','강동구','강북구','강서구','관악구','광진구','구로구','금천구','노원구','도봉구','동대문구','동작구','마포구','서대문구','서초구','성동구','성북구','송파구','양천구','영등포구','용산구','은평구','종로구','중구','중랑구'],
+    '부산': ['강서구','금정구','기장군','남구','동구','동래구','부산진구','북구','사상구','사하구','서구','수영구','연제구','영도구','중구','해운대구'],
+    '대구': ['남구','달서구','달성군','동구','북구','서구','수성구','중구'],
+    '인천': ['강화군','계양구','남동구','동구','미추홀구','부평구','서구','연수구','옹진군','중구'],
+    '광주': ['광산구','남구','동구','북구','서구'],
+    '대전': ['대덕구','동구','서구','유성구','중구'],
+    '울산': ['남구','동구','북구','울주군','중구'],
+    '세종': ['세종특별자치시'],
+    '경기': ['가평군','고양시','과천시','광명시','광주시','구리시','군포시','김포시','남양주시','동두천시','부천시','성남시','수원시','시흥시','안산시','안성시','안양시','양주시','양평군','여주시','연천군','오산시','용인시','의왕시','의정부시','이천시','파주시','평택시','포천시','하남시','화성시'],
+    '강원': ['강릉시','고성군','동해시','삼척시','속초시','양구군','양양군','영월군','원주시','인제군','정선군','철원군','춘천시','태백시','평창군','홍천군','화천군','횡성군'],
+    '충북': ['괴산군','단양군','보은군','영동군','옥천군','음성군','제천시','증평군','진천군','청주시','충주시'],
+    '충남': ['계룡시','공주시','금산군','논산시','당진시','보령시','부여군','서산시','서천군','아산시','예산군','천안시','청양군','태안군','홍성군'],
+    '전북': ['고창군','군산시','김제시','남원시','무주군','부안군','순창군','완주군','익산시','임실군','장수군','전주시','정읍시','진안군'],
+    '전남': ['강진군','고흥군','곡성군','광양시','구례군','나주시','담양군','목포시','무안군','보성군','순천시','신안군','여수시','영광군','영암군','완도군','장성군','장흥군','진도군','함평군','해남군','화순군'],
+    '경북': ['경산시','경주시','고령군','구미시','군위군','김천시','문경시','봉화군','상주시','성주군','안동시','영덕군','영양군','영주시','영천시','예천군','울릉군','울진군','의성군','청도군','청송군','칠곡군','포항시'],
+    '경남': ['거제시','거창군','고성군','김해시','남해군','밀양시','사천시','산청군','양산시','의령군','진주시','창녕군','창원시','통영시','하동군','함안군','함양군','합천군'],
+    '제주': ['서귀포시','제주시']
+  };
+  const KR_SIDO_LIST = ['서울','경기','인천','부산','대구','광주','대전','울산','세종','강원','충북','충남','전북','전남','경북','경남','제주'];
+
+  // 시·도 드롭다운 초기화 (페이지 로드 즉시)
+  function initSidoDropdown() {
+    const sidoEl = document.getElementById('d-sido');
+    KR_SIDO_LIST.forEach(function(s){
+      const opt = document.createElement('option');
+      opt.value = s;
+      opt.textContent = s;
+      sidoEl.appendChild(opt);
+    });
+    sidoEl.addEventListener('change', function(){
+      populateSigunguDropdown(sidoEl.value);
+    });
+  }
+
+  // 시·군·구 드롭다운 채우기 (선택된 시·도에 따라)
+  function populateSigunguDropdown(sido, presetSigungu) {
+    const sigunguEl = document.getElementById('d-sigungu');
+    sigunguEl.innerHTML = '';
+    if (!sido || !KR_REGIONS[sido]) {
+      sigunguEl.disabled = true;
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = '먼저 시·도를 선택해주세요';
+      sigunguEl.appendChild(opt);
+      return;
+    }
+    sigunguEl.disabled = false;
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = '시·군·구를 선택해주세요';
+    sigunguEl.appendChild(placeholder);
+    KR_REGIONS[sido].forEach(function(sg){
+      const opt = document.createElement('option');
+      opt.value = sg;
+      opt.textContent = sg;
+      if (presetSigungu && sg === presetSigungu) opt.selected = true;
+      sigunguEl.appendChild(opt);
+    });
+  }
 
   function getToken() {
     const u = new URL(window.location.href);
@@ -243,6 +317,13 @@
         return;
       }
 
+      // 견적 폼에서 선택한 지역 pre-fill (고객이 수정 가능)
+      if (data.region_sido) {
+        const sidoEl = document.getElementById('d-sido');
+        sidoEl.value = data.region_sido;
+        populateSigunguDropdown(data.region_sido, data.region_sigungu || undefined);
+      }
+
       show('state-form');
     } catch (e) {
       console.error('load detail error', e);
@@ -257,7 +338,13 @@
     const token = getToken();
     const address = document.getElementById('d-address').value.trim();
     const door = document.getElementById('d-door').value.trim();
+    const sido = document.getElementById('d-sido').value;
+    const sigungu = document.getElementById('d-sigungu').value;
 
+    if (!sido || !sigungu) {
+      alert('시·도와 시·군·구를 선택해주세요');
+      return;
+    }
     if (address.length < 3) {
       alert('상세 주소를 입력해주세요');
       return;
@@ -279,7 +366,9 @@
         body: JSON.stringify({
           p_token: token,
           p_address: address,
-          p_door_password: door || null
+          p_door_password: door || null,
+          p_region_sido: sido,
+          p_region_sigungu: sigungu
         })
       });
       const data = await resp.json();
@@ -301,6 +390,7 @@
     }
   });
 
+  initSidoDropdown();
   loadDetail();
 </script>
 </body>
