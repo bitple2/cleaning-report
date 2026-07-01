@@ -1533,6 +1533,10 @@
         </select>
       </div>
       <div class="field">
+        <div class="field-label">세부 지역 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
+        <input type="text" class="field-input" id="q-region-extra" placeholder="예) 일산서구, 검단신도시" maxlength="50">
+      </div>
+      <div class="field">
         <div class="field-label">희망 일자 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
         <input type="date" class="field-input" id="q-date">
       </div>
@@ -2261,8 +2265,9 @@
     const pyeongVal = parseInt(document.getElementById('q-pyeong').value);
     const sido = document.getElementById('q-sido').value || null;
     const sigungu = document.getElementById('q-sigungu').value || null;
+    const regionExtra = document.getElementById('q-region-extra').value.trim() || null;
     // address_rough에도 합쳐서 저장 (앱 옛 버전 호환용)
-    const addressRough = [sido, sigungu].filter(function(v){ return v; }).join(' ') || null;
+    const addressRough = [sido, sigungu, regionExtra].filter(function(v){ return v; }).join(' ') || null;
     const data = {
       company_id: companyId,
       customer_name: name,
