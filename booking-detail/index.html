@@ -69,6 +69,8 @@
   .field-textarea { min-height: 78px; resize: vertical; }
   .field-input:focus, .field-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(27,45,79,0.08); }
   .field-hint { margin-top: 6px; font-size: 11.5px; color: var(--muted); }
+  .field-row-2col { display: flex; gap: 10px; margin-bottom: 16px; }
+  .field-row-2col > .field { flex: 1; margin-bottom: 0; min-width: 0; }
 
   .submit-row { margin-top: 26px; }
   .submit-btn { width: 100%; padding: 14px; font-size: 14.5px; font-weight: 800; background: var(--primary); color: #fff; border: 0; border-radius: 12px; cursor: pointer; letter-spacing: -0.2px; }
@@ -127,17 +129,19 @@
     </div>
 
     <form class="form" id="detail-form" autocomplete="off">
-      <div class="field">
-        <div class="field-label">시·도<span class="field-required">*</span></div>
-        <select class="field-input" id="d-sido">
-          <option value="">시·도를 선택해주세요</option>
-        </select>
-      </div>
-      <div class="field">
-        <div class="field-label">시·군·구<span class="field-required">*</span></div>
-        <select class="field-input" id="d-sigungu" disabled>
-          <option value="">먼저 시·도를 선택해주세요</option>
-        </select>
+      <div class="field-row-2col">
+        <div class="field">
+          <div class="field-label">지역<span class="field-required">*</span></div>
+          <select class="field-input" id="d-sido">
+            <option value="">지역 선택</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="field-label">구/시/군<span class="field-required">*</span></div>
+          <select class="field-input" id="d-sigungu" disabled>
+            <option value="">지역 먼저 선택</option>
+          </select>
+        </div>
       </div>
       <div class="field">
         <div class="field-label">상세 주소<span class="field-required">*</span></div>
@@ -221,14 +225,14 @@
       sigunguEl.disabled = true;
       const opt = document.createElement('option');
       opt.value = '';
-      opt.textContent = '먼저 시·도를 선택해주세요';
+      opt.textContent = '지역 먼저 선택';
       sigunguEl.appendChild(opt);
       return;
     }
     sigunguEl.disabled = false;
     const placeholder = document.createElement('option');
     placeholder.value = '';
-    placeholder.textContent = '시·군·구를 선택해주세요';
+    placeholder.textContent = '구/시/군 선택';
     sigunguEl.appendChild(placeholder);
     KR_REGIONS[sido].forEach(function(sg){
       const opt = document.createElement('option');
@@ -342,7 +346,7 @@
     const sigungu = document.getElementById('d-sigungu').value;
 
     if (!sido || !sigungu) {
-      alert('시·도와 시·군·구를 선택해주세요');
+      alert('지역과 구/시/군을 선택해주세요');
       return;
     }
     if (address.length < 3) {
