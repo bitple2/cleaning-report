@@ -1119,6 +1119,16 @@
     align-items: center;
   }
   .field-row .field-input { flex: 1; }
+  .field-row-2col {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .field-row-2col > .field {
+    flex: 1;
+    margin-bottom: 0;
+    min-width: 0;
+  }
   .field-row-suffix {
     font-size: 13px;
     color: var(--muted);
@@ -1520,17 +1530,19 @@
           <span class="field-row-suffix">평</span>
         </div>
       </div>
-      <div class="field">
-        <div class="field-label">시·도 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
-        <select class="field-input" id="q-sido">
-          <option value="">시·도를 선택해주세요</option>
-        </select>
-      </div>
-      <div class="field">
-        <div class="field-label">시·군·구 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
-        <select class="field-input" id="q-sigungu" disabled>
-          <option value="">먼저 시·도를 선택해주세요</option>
-        </select>
+      <div class="field-row-2col">
+        <div class="field">
+          <div class="field-label">지역 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
+          <select class="field-input" id="q-sido">
+            <option value="">지역 선택</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="field-label">구/시/군 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
+          <select class="field-input" id="q-sigungu" disabled>
+            <option value="">지역 먼저 선택</option>
+          </select>
+        </div>
       </div>
       <div class="field">
         <div class="field-label">세부 지역 <span style="color:var(--muted);font-weight:500">(선택)</span></div>
@@ -2180,14 +2192,14 @@
         sigunguEl.disabled = true;
         const opt = document.createElement('option');
         opt.value = '';
-        opt.textContent = '먼저 시·도를 선택해주세요';
+        opt.textContent = '지역 먼저 선택';
         sigunguEl.appendChild(opt);
         return;
       }
       sigunguEl.disabled = false;
       const placeholder = document.createElement('option');
       placeholder.value = '';
-      placeholder.textContent = '시·군·구를 선택해주세요';
+      placeholder.textContent = '구/시/군 선택';
       sigunguEl.appendChild(placeholder);
       KR_REGIONS[sidoEl.value].forEach(function(sg){
         const opt = document.createElement('option');
