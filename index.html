@@ -108,6 +108,33 @@
   .company-call:active {
     background: rgba(255,255,255,0.1);
   }
+  /* 업체 홈(클린로그) 이동 · 상단 프리미엄 배지 옆에 표시
+     리포트 → 클린로그 재진입 편의용 */
+  .header-home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 11px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .header-home-link:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+  .header-home-link:active {
+    background: rgba(255, 255, 255, 0.22);
+    transform: scale(0.96);
+  }
+  .header-home-link svg {
+    opacity: 0.9;
+  }
   .progress-bar-bg {
     background: rgba(255,255,255,0.15);
     border-radius: 6px;
@@ -652,7 +679,7 @@ async function init() {
     // 리포트 기본 정보 (bookings → customers, companies 조인)
     const { data: report } = await sb
       .from('cleaning_reports')
-      .select('*, bookings(*, customers(name), companies(name, logo_url))')
+      .select('*, bookings(*, customers(name), companies(name, logo_url, company_homepages(slug)))')
       .eq('id', reportId)
       .single();
 
@@ -746,7 +773,7 @@ async function refreshData(reportId) {
   // 리포트 기본 정보 갱신 (구역 순서/아이콘/숨김 등)
   const { data: freshReport } = await sb
     .from('cleaning_reports')
-    .select('*, bookings(*, customers(name), companies(name, logo_url))')
+    .select('*, bookings(*, customers(name), companies(name, logo_url, company_homepages(slug)))')
     .eq('id', reportId)
     .single();
   if (freshReport) {
@@ -796,6 +823,9 @@ function render() {
     : '';
   const companyName = companyData?.name || '청소 리포트';
   const contactPhone = reportData.contact_phone || '';
+  // 미니홈피(클린로그) slug — 있으면 헤더에 홈 링크 노출
+  const _hp = companyData?.company_homepages;
+  const profileSlug = Array.isArray(_hp) ? _hp[0]?.slug : _hp?.slug;
 
   // 숨긴 구역 필터링
   const hiddenSet = new Set(reportData.hidden_categories || []);
@@ -860,8 +890,17 @@ function render() {
   document.getElementById('app').innerHTML = `
     <!-- 헤더 -->
     <div class="header" style="position:static">
-      <div style="margin-bottom:16px">
-        <span style="display:inline-block;padding:4px 12px;border:1.5px solid rgba(255,255,255,0.25);border-radius:10px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:0.5px">✨ 프리미엄 청소 리포트</span>
+      <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px">
+        <div style="flex:1;text-align:left">
+          ${profileSlug ? `<a href="/profile/${profileSlug}/" class="header-home-link" aria-label="${companyName} 홈으로 이동">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 L12 3 L21 12"/><path d="M5 10 L5 21 L9 21 L9 14 L15 14 L15 21 L19 21 L19 10"/></svg>
+            <span>홈</span>
+          </a>` : ''}
+        </div>
+        <span style="flex-shrink:0;font-size:10px;font-weight:600;color:rgba(255,255,255,0.55);letter-spacing:0.5px;white-space:nowrap">✨ 프리미엄 청소 리포트</span>
+        <div style="flex:1;text-align:right">
+          ${booking?.scheduled_date ? `<div style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.5)">${booking.scheduled_date}</div>` : ''}
+        </div>
       </div>
       <div class="header-top">
         <div class="company-info">
@@ -870,28 +909,33 @@ function render() {
             <div class="company-name" style="font-size:17px">${companyName}${contactPhone ? `<a href="tel:${contactPhone}" class="company-call">문의</a>` : ''}</div>
           </div>
         </div>
-        <div style="text-align:right">
-          ${isCompleted
-            ? `<div class="live-badge completed-badge" style="display:inline-flex">✓ 완료</div>`
-            : `<div style="display:inline-flex;align-items:center;gap:5px">
-                <div style="position:relative;width:7px;height:7px">
-                  <div style="position:absolute;inset:0;background:#4A9D5B;border-radius:50%"></div>
-                  <div style="position:absolute;inset:-3px;border:2px solid #4A9D5B;border-radius:50%;animation:pulse-ring 1.5s infinite;opacity:0"></div>
-                </div>
-                <span style="font-size:10px;font-weight:600;color:#4A9D5B">현재 청소중</span>
-              </div>`}
-          ${!isCompleted ? `<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">실시간으로 업데이트됩니다</div>` : ''}
-          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px">${booking?.scheduled_date || ''}</div>
-        </div>
+        <div style="text-align:right"></div>
       </div>
-      <div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.5)">
-        ${(new URLSearchParams(location.search).get('public') === '1')
-          ? `<span>${(booking?.customer_name || booking?.customers?.name || '고객').charAt(0)}*님</span>`
-          : `<span onclick="var f=this.parentNode.querySelector('.customer-full');var m=this.parentNode.querySelector('.customer-masked');if(f.style.display==='none'){f.style.display='inline';m.style.display='none'}else{f.style.display='none';m.style.display='inline'}" style="cursor:pointer">
-              <span class="customer-masked">${(booking?.customer_name || booking?.customers?.name || '고객').charAt(0)}*님 ▸</span>
-              <span class="customer-full" style="display:none;color:rgba(255,255,255,0.85);font-weight:600">${booking?.customer_name || booking?.customers?.name || '고객'}님 ◂</span>
-            </span>`}
-        ${reportData?.customer_phone_tail ? `<span style="margin-left:6px">010-****-**${reportData.customer_phone_tail}</span>` : ''}
+      <div style="height:1px;margin-top:14px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.14) 20%,rgba(255,255,255,0.14) 80%,transparent 100%)"></div>
+      <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:rgba(255,255,255,0.5)">
+        <div style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+          ${(new URLSearchParams(location.search).get('public') === '1')
+            ? `<span>${(booking?.customer_name || booking?.customers?.name || '고객').charAt(0)}*님</span>`
+            : `<span onclick="var f=this.parentNode.querySelector('.customer-full');var m=this.parentNode.querySelector('.customer-masked');if(f.style.display==='none'){f.style.display='inline';m.style.display='none'}else{f.style.display='none';m.style.display='inline'}" style="cursor:pointer">
+                <span class="customer-masked">${(booking?.customer_name || booking?.customers?.name || '고객').charAt(0)}*님 ▸</span>
+                <span class="customer-full" style="display:none;color:rgba(255,255,255,0.85);font-weight:600">${booking?.customer_name || booking?.customers?.name || '고객'}님 ◂</span>
+              </span>`}
+          ${reportData?.customer_phone_tail ? `<span style="margin-left:6px">· 010-****-**${reportData.customer_phone_tail}</span>` : ''}
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="display:inline-flex;flex-direction:column;align-items:flex-end;gap:2px">
+            ${isCompleted
+              ? `<div class="live-badge completed-badge" style="display:inline-flex">✓ 완료</div>`
+              : `<div style="display:inline-flex;align-items:center;gap:5px">
+                  <div style="position:relative;width:7px;height:7px">
+                    <div style="position:absolute;inset:0;background:#4A9D5B;border-radius:50%"></div>
+                    <div style="position:absolute;inset:-3px;border:2px solid #4A9D5B;border-radius:50%;animation:pulse-ring 1.5s infinite;opacity:0"></div>
+                  </div>
+                  <span style="font-size:10px;font-weight:600;color:#4A9D5B">청소중</span>
+                </div>
+                <div style="font-size:9.5px;color:rgba(255,255,255,0.35);letter-spacing:-0.1px">실시간으로 업데이트됩니다</div>`}
+          </div>
+        </div>
       </div>
     </div>
 
