@@ -1641,7 +1641,7 @@
             el.textContent = heroTag;
           });
         }
-        // 아바타
+        // 아바타 — 앱에서 로고 변경 시 즉시 반영 (기존 img도 최신 src로 업데이트)
         const avatarSrc = (company.logo_url || row.hero_poster_url || '').trim();
         if (avatarSrc) {
           document.querySelectorAll('.avatar').forEach(function(el) {
