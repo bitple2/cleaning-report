@@ -1652,7 +1652,12 @@
             const fb = el.querySelector('[data-avatar-fallback]');
             if (fb) fb.remove();
             const existing = el.querySelector('img');
-            if (!existing) {
+            if (existing) {
+              // 기존 하드코딩 img가 있으면 최신 로고 URL로 교체
+              existing.src = avatarSrc;
+              existing.alt = company.name || '';
+            } else {
+              // 없으면 새로 생성
               const img = document.createElement('img');
               img.src = avatarSrc;
               img.alt = company.name || '';
