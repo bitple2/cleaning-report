@@ -868,6 +868,7 @@
     gap: 10px;
   }
   .rev-card {
+    position: relative;
     display: block;
     background: var(--paper);
     border: 1px solid var(--line);
@@ -920,13 +921,18 @@
     letter-spacing: -0.03em;
   }
   .rev-verify {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     display: flex;
     align-items: center;
     gap: 7px;
     text-decoration: none;
     padding: 4px 8px 4px 4px;
     border-radius: 8px;
+    background: var(--paper);
     transition: background 0.15s;
+    z-index: 1;
   }
   .rev-verify:hover { background: var(--line-2); }
   .rev-qr {
@@ -969,6 +975,85 @@
     letter-spacing: -0.02em;
     padding-top: 10px;
     border-top: 1px solid var(--line-2);
+  }
+
+  /* ─── 고객 정보 배지 (토스 스타일 · 네이비 신뢰) ─── */
+  .rev-customer-pill {
+    display: inline-block;
+    max-width: calc(100% - 100px);
+    margin: 0 0 14px;
+    padding: 5px 10px;
+    background: rgba(15, 36, 66, 0.05);
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink-1, #0F2442);
+    letter-spacing: -0.02em;
+    text-align: left;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ─── 사장님 답변 (토글 · 신뢰·소명 UI) ─── */
+  .rev-response-toggle-wrap {
+    margin-top: 12px;
+  }
+  .rev-response-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 12px;
+    background: var(--bg);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-1, #0F2442);
+    letter-spacing: -0.02em;
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .rev-response-toggle:hover {
+    background: var(--line-2);
+  }
+  .rev-response-caret {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .rev-response-body {
+    padding: 12px 14px;
+    margin-top: 8px;
+    background: var(--bg);
+    border-left: 3px solid var(--ink-1, #0F2442);
+    border-radius: 4px 10px 10px 4px;
+  }
+  .rev-response-text {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+    word-break: keep-all;
+    white-space: pre-wrap;
+  }
+  .rev-response-text:last-child {
+    margin-bottom: 0;
+  }
+  .rev-response-photos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .rev-response-photo {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 6px;
+    background: var(--line-2);
   }
 
   /* ─── Coming soon notice ─── */
@@ -1791,10 +1876,10 @@
           const rvResp = await fetch(
             SB_URL + '/rest/v1/reviews?' + new URLSearchParams({
               company_id: 'eq.' + company.id,
-              is_hidden: 'eq.false',
               is_sample: 'eq.false',
+              is_published: 'eq.true',
               'cert_code': 'not.is.null',
-              select: 'rating,content,name_display,customer_name_snapshot,customer_phone_snapshot,service_type_snapshot,created_at,cert_code',
+              select: 'rating,content,name_display,customer_name_snapshot,customer_phone_snapshot,service_type_snapshot,created_at,cert_code,owner_response,owner_response_photos,owner_response_at',
               order: 'created_at.desc',
               limit: '3'
             }).toString(),
@@ -1805,14 +1890,8 @@
             if (Array.isArray(reviews) && reviews.length > 0) {
               const listEl = document.querySelector('[data-reviews-list]');
               if (listEl) {
-                // 정적 HTML과 동일하면 DOM 안 건드림 (깜빡임 회피)
-                const newCerts = reviews.map(function(r){return (r.cert_code || '').replace(/^#/, '');}).filter(Boolean).sort().join(',');
-                const existingCerts = Array.from(listEl.querySelectorAll('.rev-cert-code')).map(function(el){
-                  return (el.textContent || '').replace(/^#/, '').trim();
-                }).filter(Boolean).sort().join(',');
-                if (newCerts === existingCerts && newCerts.length > 0) {
-                  // 동일 → skip
-                } else {
+                // 답변 상태 반영 위해 매번 재렌더 (기존 cert diff 스킵 로직 제거)
+                {
                 listEl.innerHTML = '<div class="rev-list">' + reviews.map(function(r) {
                   const rating = Number(r.rating || 0).toFixed(1);
                   const ratingStars = '★'.repeat(Math.round(r.rating || 0)) + '☆'.repeat(5 - Math.round(r.rating || 0));
@@ -1835,16 +1914,61 @@
                   const verifyBlock = certCode
                     ? '<div class="rev-verify">' + qrImg + '<span class="rev-verify-text"><span class="rev-verify-label">✓ 검증</span><span class="rev-cert-code">#' + escHtml(certCode) + '</span></span></div>'
                     : '';
+                  // 사장님 답변 블록 (footer 우측 토글 · 클릭 시 아래에 body 펼침)
+                  const ownerResponse = (r.owner_response || '').trim();
+                  const ownerPhotos = Array.isArray(r.owner_response_photos) ? r.owner_response_photos.filter(Boolean) : [];
+                  const hasOwner = ownerResponse || ownerPhotos.length > 0;
+                  const toggleBtn = hasOwner
+                    ? '<div class="rev-response-toggle" role="button" tabindex="0">' +
+                        '<span class="rev-response-toggle-label">💬 답변 보기</span>' +
+                        '<span class="rev-response-caret">▼</span>' +
+                      '</div>'
+                    : '';
+                  let bodyHtml = '';
+                  if (hasOwner) {
+                    const respText = ownerResponse ? '<p class="rev-response-text">' + escHtml(ownerResponse).replace(/\n/g, '<br>') + '</p>' : '';
+                    const respPhotos = ownerPhotos.length > 0
+                      ? '<div class="rev-response-photos">' + ownerPhotos.map(function(u) {
+                          return '<img class="rev-response-photo" src="' + escHtml(u) + '" alt="사장님 답변 사진" loading="lazy">';
+                        }).join('') + '</div>'
+                      : '';
+                    bodyHtml = '<div class="rev-response-body" hidden>' + respText + respPhotos + '</div>';
+                  }
                   const cardOpen = certCode
                     ? '<a class="rev-card" href="' + verifyUrl + '" target="_blank" rel="noopener">'
                     : '<div class="rev-card">';
                   const cardClose = certCode ? '</a>' : '</div>';
                   return cardOpen +
+                    '<div class="rev-customer-pill">' + name + phoneMasked + service + '</div>' +
                     '<div class="rev-header"><div class="rev-rating-row"><div class="rev-rating"><span class="rev-rating-stars">' + ratingStars + '</span> ' + rating + '</div><div class="rev-date">' + dateStr + '</div></div>' + verifyBlock + '</div>' +
                     '<p class="rev-content">' + content + '</p>' +
-                    '<div class="rev-meta">' + name + phoneMasked + service + '</div>' +
+                    (hasOwner ? '<div class="rev-response-toggle-wrap">' + toggleBtn + '</div>' : '') +
+                    bodyHtml +
                     cardClose;
                 }).join('') + '</div>';
+
+                // 사장님 답변 토글 이벤트 · 카드 링크 이동 방지 · body는 wrap 다음 sibling
+                listEl.querySelectorAll('.rev-response-toggle').forEach(function(toggle) {
+                  toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var wrap = toggle.closest('.rev-response-toggle-wrap');
+                    var body = wrap ? wrap.nextElementSibling : null;
+                    if (!body || !body.classList.contains('rev-response-body')) return;
+                    var label = toggle.querySelector('.rev-response-toggle-label');
+                    var caret = toggle.querySelector('.rev-response-caret');
+                    var isOpen = !body.hasAttribute('hidden');
+                    if (isOpen) {
+                      body.setAttribute('hidden', '');
+                      label.textContent = '💬 답변 보기';
+                      caret.textContent = '▼';
+                    } else {
+                      body.removeAttribute('hidden');
+                      label.textContent = '💬 답변 접기';
+                      caret.textContent = '▲';
+                    }
+                  });
+                });
                 }
               }
             }

@@ -1231,6 +1231,8 @@ async function submitReview() {
       return;
     }
 
+    // 48시간 검토 정책: 등록 시 hold_until 세팅 · is_published=false · pg_cron이 48h 후 자동 published=true
+    const holdUntil = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
     const payload = {
       report_id: reportId,
       booking_id: bookingId,
@@ -1243,6 +1245,8 @@ async function submitReview() {
       customer_phone_snapshot: customerPhone || null,
       service_type_snapshot: serviceType,
       marketing_consent: reviewState.marketingConsent,
+      hold_until: holdUntil,
+      is_published: false,
     };
 
     const result = await sb.from('reviews').insert(payload);
