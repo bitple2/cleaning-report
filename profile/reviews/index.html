@@ -259,6 +259,66 @@
     color: var(--muted);
     line-height: 1.6;
   }
+
+  /* ─── 사장님 답변 (토글 · 신뢰·소명 UI) · profile/index.html과 동일 스펙 ─── */
+  .rev-response-toggle-wrap {
+    margin-top: 12px;
+  }
+  .rev-response-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 12px;
+    background: var(--bg);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .rev-response-toggle:hover {
+    background: var(--line-2);
+  }
+  .rev-response-caret {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .rev-response-body {
+    padding: 12px 14px;
+    margin-top: 8px;
+    background: var(--bg);
+    border-left: 3px solid var(--primary);
+    border-radius: 4px 10px 10px 4px;
+  }
+  .rev-response-text {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+    word-break: keep-all;
+    white-space: pre-wrap;
+  }
+  .rev-response-text:last-child {
+    margin-bottom: 0;
+  }
+  .rev-response-photos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .rev-response-photo {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 6px;
+    background: var(--line-2);
+  }
 </style>
 </head>
 <body>
@@ -319,8 +379,30 @@
     _currentPage = page;
     const start = (page - 1) * PER_PAGE;
     const items = _allReviews.slice(start, start + PER_PAGE);
-    document.querySelector('[data-reviews-list]').innerHTML =
-      items.map(reviewCard).join('');
+    const listEl = document.querySelector('[data-reviews-list]');
+    listEl.innerHTML = items.map(reviewCard).join('');
+    // 사장님 답변 토글 이벤트 · 카드 링크 이동 방지 · body는 wrap 다음 sibling
+    listEl.querySelectorAll('.rev-response-toggle').forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var wrap = toggle.closest('.rev-response-toggle-wrap');
+        var body = wrap ? wrap.nextElementSibling : null;
+        if (!body || !body.classList.contains('rev-response-body')) return;
+        var label = toggle.querySelector('.rev-response-toggle-label');
+        var caret = toggle.querySelector('.rev-response-caret');
+        var isOpen = !body.hasAttribute('hidden');
+        if (isOpen) {
+          body.setAttribute('hidden', '');
+          label.textContent = '💬 답변 보기';
+          caret.textContent = '▼';
+        } else {
+          body.removeAttribute('hidden');
+          label.textContent = '💬 답변 접기';
+          caret.textContent = '▲';
+        }
+      });
+    });
     renderPagination();
     const url = new URL(location.href);
     if (page === 1) url.searchParams.delete('p');
@@ -363,6 +445,31 @@
             '</span>' +
           '</div>'
         : '';
+    // 사장님 답변 블록 (profile/index.html과 동일 스펙 · 토글 · 클릭 시 아래 body 펼침)
+    const ownerResponse = (r.owner_response || '').trim();
+    const ownerPhotos = Array.isArray(r.owner_response_photos)
+        ? r.owner_response_photos.filter(Boolean)
+        : [];
+    const hasOwner = ownerResponse || ownerPhotos.length > 0;
+    const toggleBtn = hasOwner
+        ? '<div class="rev-response-toggle" role="button" tabindex="0">' +
+            '<span class="rev-response-toggle-label">💬 답변 보기</span>' +
+            '<span class="rev-response-caret">▼</span>' +
+          '</div>'
+        : '';
+    let bodyHtml = '';
+    if (hasOwner) {
+      const respText = ownerResponse
+          ? '<p class="rev-response-text">' + esc(ownerResponse).replace(/\n/g, '<br>') + '</p>'
+          : '';
+      const respPhotos = ownerPhotos.length > 0
+          ? '<div class="rev-response-photos">' + ownerPhotos.map(function(u) {
+              return '<img class="rev-response-photo" src="' + esc(u) + '" alt="사장님 답변 사진" loading="lazy">';
+            }).join('') + '</div>'
+          : '';
+      bodyHtml = '<div class="rev-response-body" hidden>' + respText + respPhotos + '</div>';
+    }
+
     const cardOpen = certCode
         ? '<a class="rev-card" href="' + verifyUrl + '" target="_blank" rel="noopener">'
         : '<div class="rev-card">';
@@ -378,6 +485,8 @@
       '</div>' +
       '<p class="rev-content">' + content + '</p>' +
       '<div class="rev-meta">' + name + phoneMasked + service + '</div>' +
+      (hasOwner ? '<div class="rev-response-toggle-wrap">' + toggleBtn + '</div>' : '') +
+      bodyHtml +
       cardClose;
   }
 
