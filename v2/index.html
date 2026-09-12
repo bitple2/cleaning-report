@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>청소 리포트</title>
 <meta property="og:title" content="프리미엄 리포트">
-<meta property="og:description" content="실시간 청소 현황을 확인하세요">
+<meta property="og:description" content="실시간 작업 현황을 확인하세요">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -1600,14 +1600,14 @@ function render() {
     <!-- 메인 탭 -->
     <div class="main-tabs">
       <div class="main-tab ${currentTab === 'status' ? 'active' : ''}" onclick="switchTab('status')">
-        청소 현황
+        작업 현황
       </div>
       <div class="main-tab ${currentTab === 'defects' ? 'active' : ''}" onclick="switchTab('defects')">
         하자 체크 <span class="tab-count defect-count">${defects.length}</span>
       </div>
     </div>
 
-    <!-- 청소 현황 탭 -->
+    <!-- 작업 현황 탭 -->
     <div class="tab-content ${currentTab === 'status' ? 'active' : ''}" id="statusTab">
       <div class="accordion-list">
         ${categoriesWithData.map((cat, i) => renderAccordion(cat, i)).join('')}
@@ -1670,10 +1670,10 @@ function renderAccordion(cat, index) {
       <div class="accordion-body">
         <div class="sub-tabs">
           <div class="sub-tab ${cat.status !== 'done' ? 'active' : ''}" id="sub-before-${index}" onclick="switchSubTab(${index}, 'before')">
-            청소 전 <span class="count before">${cat.beforeCount}</span>
+            작업 전 <span class="count before">${cat.beforeCount}</span>
           </div>
           <div class="sub-tab ${cat.status === 'done' ? 'after-active' : ''}" id="sub-after-${index}" onclick="switchSubTab(${index}, 'after')">
-            청소 후 <span class="count after">${cat.afterCount}</span>
+            작업 후 <span class="count after">${cat.afterCount}</span>
           </div>
         </div>
         <div class="sub-content ${cat.status !== 'done' ? 'active' : ''}" id="sub-content-before-${index}">
