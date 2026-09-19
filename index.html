@@ -698,7 +698,7 @@ async function init() {
     // 리포트 기본 정보 (bookings → customers, companies 조인)
     const { data: report } = await sb
       .from('cleaning_reports')
-      .select('*, bookings(*, customers(name), companies(name, logo_url, company_homepages(slug)))')
+      .select('*, bookings(*, customers(name), companies(name, logo_url, company_homepages(slug))), company_direct:companies!cleaning_reports_company_id_fkey(name, logo_url, company_homepages(slug))')
       .eq('id', reportId)
       .single();
 
@@ -712,7 +712,8 @@ async function init() {
       return;
     }
     reportData = report;
-    companyData = report.bookings?.companies || null;
+    // booking 삭제된 경우에도 회사 정보 표시 · 리포트에서 직접 조회한 폴백 사용
+    companyData = report.bookings?.companies || report.company_direct || null;
 
     // 엔트리 + 사진
     const { data: entryData } = await sb
@@ -792,12 +793,12 @@ async function refreshData(reportId) {
   // 리포트 기본 정보 갱신 (구역 순서/아이콘/숨김 등)
   const { data: freshReport } = await sb
     .from('cleaning_reports')
-    .select('*, bookings(*, customers(name), companies(name, logo_url, company_homepages(slug)))')
+    .select('*, bookings(*, customers(name), companies(name, logo_url, company_homepages(slug))), company_direct:companies!cleaning_reports_company_id_fkey(name, logo_url, company_homepages(slug))')
     .eq('id', reportId)
     .single();
   if (freshReport) {
     reportData = freshReport;
-    companyData = freshReport.bookings?.companies || null;
+    companyData = freshReport.bookings?.companies || freshReport.company_direct || null;
   }
 
   const { data: entryData } = await sb
