@@ -1522,11 +1522,13 @@ function render() {
 
   // 숨긴 구역 필터링
   const hiddenSet = new Set(reportData.hidden_categories || []);
-  const visibleCategories = CATEGORIES.filter(c => !hiddenSet.has(c.key));
-
-  // 커스텀 구역 자동 감지 + 아이콘 맵
   const categoryIcons = reportData.category_icons || {};
   const categoryOrder = reportData.category_order || [];
+  // 기본 구역이 삭제(hidden) 되었다가 재추가된 경우 · category_icons에 있으면 다시 표시
+  // (앱에서 기본 구역 삭제 → 커스텀 재추가 시 이중 상태 발생 · 웹에서 방어)
+  const visibleCategories = CATEGORIES.filter(c =>
+    !hiddenSet.has(c.key) || Object.prototype.hasOwnProperty.call(categoryIcons, c.key)
+  );
   const defaultKeys = new Set(CATEGORIES.map(c => c.key));
   const customCats = [];
   // entries에서 커스텀 구역 감지
@@ -1537,6 +1539,13 @@ function render() {
   }
   // category_order에 있지만 entries에 없는 커스텀 구역도 추가
   for (const key of categoryOrder) {
+    if (!defaultKeys.has(key) && !hiddenSet.has(key) && !customCats.find(c => c.key === key)) {
+      customCats.push({ key: key, icon: categoryIcons[key] || '📁' });
+    }
+  }
+  // category_icons에 있지만 entries·category_order에 없는 커스텀 구역도 추가
+  // (사장님이 구역 추가만 하고 사진 안 올리고 드래그 재정렬 안 한 경우 · 신 앱 v1.2.0+에서 발생)
+  for (const key of Object.keys(categoryIcons)) {
     if (!defaultKeys.has(key) && !hiddenSet.has(key) && !customCats.find(c => c.key === key)) {
       customCats.push({ key: key, icon: categoryIcons[key] || '📁' });
     }
@@ -1560,6 +1569,14 @@ function render() {
     allCategories = ordered;
   }
 
+  // 완료 판별 로직 분기
+  // - explicit_completion=TRUE (신 앱 v1.2.0+): completed_categories 배열 기반 (사장님이 명시적으로 완료 처리한 것만)
+  // - FALSE / 필드 없음 (구 앱 · 하위 호환): 옛 로직 (청소 후 사진 있으면 자동 완료)
+  const explicitMode = reportData?.explicit_completion === true;
+  const completedList = Array.isArray(reportData?.completed_categories)
+    ? reportData.completed_categories.map(s => String(s))
+    : [];
+
   categoriesWithData = allCategories.map(cat => {
     const catEntries = entries.filter(e => e.category === cat.key);
     const beforeEntries = catEntries.filter(e => e.photo_type === 'before');
@@ -1568,9 +1585,26 @@ function render() {
     const afterCount = afterEntries.reduce((s, e) => s + (e.report_photos?.length || 0), 0);
     const totalCount = beforeCount + afterCount;
 
-    let status = 'waiting';
-    if (afterCount > 0) status = 'done';
-    else if (beforeCount > 0) status = 'progress';
+    let status;
+    if (explicitMode) {
+      // 신 로직 · 명시적으로 completed_categories에 있어야 완료
+      if (completedList.includes(cat.key)) {
+        status = 'done';
+      } else if (totalCount > 0) {
+        status = 'progress';
+      } else {
+        status = 'waiting';
+      }
+    } else {
+      // 폴백 · 옛 자동 완료 로직 (구 앱 하위 호환)
+      if (afterCount > 0) {
+        status = 'done';
+      } else if (beforeCount > 0) {
+        status = 'progress';
+      } else {
+        status = 'waiting';
+      }
+    }
 
     return { ...cat, beforeEntries, afterEntries, beforeCount, afterCount, totalCount, status };
   });
