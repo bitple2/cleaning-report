@@ -108,6 +108,33 @@
   .company-call:active {
     background: rgba(255,255,255,0.1);
   }
+  /* 업체 홈(클린로그) 이동 · 상단 프리미엄 배지 옆에 표시
+     리포트 → 클린로그 재진입 편의용 */
+  .header-home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 11px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .header-home-link:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+  .header-home-link:active {
+    background: rgba(255, 255, 255, 0.22);
+    transform: scale(0.96);
+  }
+  .header-home-link svg {
+    opacity: 0.9;
+  }
   .progress-bar-bg {
     background: rgba(255,255,255,0.15);
     border-radius: 6px;
@@ -427,10 +454,16 @@
     object-fit: contain;
   }
   .viewer-footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px 16px calc(24px + env(safe-area-inset-bottom, 0px));
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 12px 16px 24px;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0));
+    z-index: 2;
   }
   .viewer-download {
     display: flex;
@@ -522,378 +555,28 @@
   }
   .pdf-save-btn:active { opacity: 0.8; }
 
-  /* 후기 작성 */
-  .review-section {
-    background: white;
-    margin-top: 8px;
-    padding: 28px 20px 20px;
-    border-top: 8px solid #F0EAD9;
-  }
-  .review-title {
-    text-align: center;
-    font-size: 18px;
-    font-weight: 800;
-    color: #0F2442;
-    letter-spacing: -0.3px;
-    margin-bottom: 6px;
-  }
-  .review-sub {
-    text-align: center;
-    font-size: 12px;
-    color: #5A6478;
-    margin-bottom: 22px;
-  }
-  .star-rating {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-bottom: 22px;
-  }
-  .star {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    color: #E5E5DC;
-    cursor: pointer;
-    transition: all 0.15s;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-  .star.filled { color: #E8A33D; }
-  .review-label {
-    font-size: 11px;
-    font-weight: 700;
-    color: #0F2442;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .optional {
-    color: #C5C9D1;
-    font-weight: 400;
-    font-size: 9px;
-    margin-left: 4px;
-    text-transform: none;
-    letter-spacing: 0;
-  }
-  .tag-category-label {
-    font-size: 11px;
-    color: #8A8E9A;
-    font-weight: 500;
-    margin-top: 4px;
-    margin-bottom: 8px;
-    letter-spacing: -0.1px;
-  }
-  .tag-category-label:first-of-type {
-    margin-top: 0;
-  }
-  .tags-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 14px;
-  }
-  .tags-grid:last-of-type {
-    margin-bottom: 22px;
-  }
-  .tag-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 8px 13px;
-    background: white;
-    border: 1px solid #E5E7EB;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #4A5568;
-    cursor: pointer;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    transition: all 0.15s ease;
-  }
-  .tag-chip .tag-emoji {
-    font-size: 13px;
-    line-height: 1;
-  }
-  .tag-chip:hover {
-    background: #F9FAFB;
-    border-color: #D1D5DB;
-  }
-  .tag-chip.selected {
-    background: #0D1B2E;
-    color: white;
-    border-color: #0D1B2E;
-    font-weight: 600;
-  }
-  .tag-chip.selected .tag-emoji {
-    filter: none;
-  }
-  .review-textarea {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #E5E5DC;
-    border-radius: 10px;
-    font-size: 14px;
-    color: #0D1B2E;
-    font-family: inherit;
-    font-weight: 500;
-    min-height: 140px;
-    margin-bottom: 6px;
-    resize: vertical;
-    box-sizing: border-box;
-    line-height: 1.6;
-  }
-  .review-textarea::placeholder { color: #8A8E9A; }
-  .review-length-hint {
-    font-size: 11px;
-    color: #C5C9D1;
-    text-align: right;
-    margin-bottom: 22px;
-    min-height: 14px;
-  }
-  .review-length-hint.warn {
-    color: #E8A33D;
-  }
-  .name-options {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 18px;
-  }
-  .name-option {
-    flex: 1;
-    padding: 11px;
-    background: white;
-    border: 1px solid #E5E5DC;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 700;
-    color: #5A6478;
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .name-option.selected {
-    background: #0D1B2E;
-    color: white;
-    border-color: #0D1B2E;
-  }
-  .consent-row {
-    background: #F5F0E4;
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 22px;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    cursor: pointer;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .consent-checkbox {
-    width: 18px;
-    height: 18px;
-    border: 1.5px solid #8A8E9A;
-    border-radius: 4px;
-    flex-shrink: 0;
-    position: relative;
-    background: white;
-    margin-top: 1px;
-  }
-  .consent-checkbox.checked {
-    background: #0D1B2E;
-    border-color: #0D1B2E;
-  }
-  .consent-checkbox.checked::after {
-    content: '✓';
-    position: absolute;
-    color: #C9A961;
-    font-size: 13px;
-    font-weight: 900;
-    top: -2px;
-    left: 2px;
-  }
-  .consent-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: #0D1B2E;
-    line-height: 1.5;
-  }
-  .consent-sub {
-    font-size: 10px;
-    color: #8A8E9A;
-    margin-top: 3px;
-    line-height: 1.5;
-  }
-  .review-submit-btn {
-    width: 100%;
-    padding: 16px;
-    background: #0D1B2E;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 800;
-    cursor: pointer;
-    font-family: inherit;
-    letter-spacing: -0.01em;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .review-submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-  .review-submit-btn:active:not(:disabled) { opacity: 0.85; }
-
-  /* 작성 완료 상태 */
-  .review-done {
-    background: white;
-    margin-top: 8px;
-    padding: 28px 20px 24px;
-    border-top: 8px solid #F0EAD9;
-    text-align: center;
-  }
-  .review-done-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: #E0F9ED;
-    color: #00A65A;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
-    margin-bottom: 14px;
-  }
-  .review-done-stars {
-    font-size: 22px;
-    color: #E8A33D;
-    letter-spacing: 4px;
-    margin-bottom: 14px;
-  }
-  .review-done-content {
-    font-size: 14px;
-    color: #0D1B2E;
-    line-height: 1.6;
-    font-weight: 500;
-    margin-bottom: 14px;
-    padding: 14px;
-    background: #F8F8F0;
-    border-radius: 10px;
-    text-align: left;
-  }
-  .review-done-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    justify-content: center;
-    margin-bottom: 14px;
-  }
-  .review-done-tag {
-    padding: 4px 10px;
-    background: #F0EAD9;
-    border-radius: 14px;
-    font-size: 10px;
-    font-weight: 600;
-    color: #5A6478;
-  }
-  .review-done-meta {
-    font-size: 11px;
-    color: #8A8E9A;
-  }
-  .review-edit-btn {
-    margin-top: 14px;
-    padding: 10px 18px;
-    background: white;
-    border: 1px solid #E8E4D9;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #0D1B2E;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .review-edit-btn:hover {
-    background: #F5F1E8;
-    border-color: #C9A961;
-  }
-  .review-edit-locked {
-    margin-top: 14px;
-    font-size: 11px;
-    color: #9CA3AF;
-    text-align: center;
-    font-weight: 500;
-  }
-  .edit-mode-banner {
-    background: #FFF8E5;
-    border: 1px solid #F0E0A6;
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 12.5px;
-    color: #6B5B1F;
-    font-weight: 500;
-    margin-bottom: 16px;
-    line-height: 1.5;
-  }
-  .review-cancel-btn {
-    margin-top: 8px;
-    width: 100%;
-    padding: 12px;
-    background: transparent;
-    border: none;
-    font-size: 13px;
-    color: #8A8E9A;
-    cursor: pointer;
-    text-decoration: underline;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* 감사 메시지 토스트 */
-  .review-thank-you {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -40%);
-    background: rgba(13, 27, 46, 0.95);
-    color: white;
-    padding: 28px 32px;
-    border-radius: 18px;
-    text-align: center;
-    z-index: 9999;
-    box-shadow: 0 20px 60px rgba(13, 27, 46, 0.4);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    min-width: 240px;
-  }
-  .review-thank-you.show {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-  .review-thank-you-icon {
-    font-size: 32px;
-    margin-bottom: 10px;
-  }
-  .review-thank-you-title {
-    font-size: 16px;
-    font-weight: 800;
-    margin-bottom: 6px;
-    letter-spacing: -0.3px;
-  }
-  .review-thank-you-sub {
-    font-size: 13px;
-    color: rgba(255,255,255,0.8);
-    font-weight: 500;
-  }
-
-  /* 하단 안내 + 푸터 */
+  /* 소개하기 */
   .share-bar {
     padding: 12px 12px 32px;
     text-align: center;
   }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: white;
+    color: #1a1a1a;
+    border: 1.5px solid #E5E5DC;
+    padding: 12px 28px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: -0.3px;
+  }
+  .share-btn:active { background: #f5f5f0; }
 
   /* PDF 전용 헤더 · 화면에서는 숨김 · 프린트에서만 표시 */
   .pdf-only-header { display: none; }
@@ -955,7 +638,11 @@
     ontouchend="handleTouchEnd(event)">
   </div>
   <div class="viewer-footer">
-    <div style="color:rgba(255,255,255,0.5);font-size:11px">사진을 길게 눌러 저장하세요</div>
+    <button class="viewer-download" onclick="downloadPhoto()" aria-label="저장">
+      <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+      <span id="viewerDownloadLabel">저장</span>
+    </button>
+    <div style="color:rgba(255,255,255,0.5);font-size:11px;margin-top:8px">사진은 길게 눌러도 저장 가능</div>
   </div>
 </div>
 <div class="viewer-toast" id="viewerToast">저장되었습니다</div>
@@ -968,368 +655,6 @@ const SUPABASE_URL = 'https://iucicugxihxilcqtzrbk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1Y2ljdWd4aWh4aWxjcXR6cmJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2OTc0ODAsImV4cCI6MjA4NjI3MzQ4MH0.5_7_vNc7x2kU68ynssGhf2jPCevkE-OMfSfgmyrkZDA';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// ===== 리뷰 상태 =====
-let existingReview = null;
-let editMode = false; // 편집 모드 활성 여부
-let reviewState = {
-  rating: 0,
-  tags: new Set(),
-  nameDisplay: 'masked',
-  marketingConsent: false,
-};
-
-// 편집 모드 진입 — 기존 후기 값으로 폼 채움
-function enterEditMode() {
-  if (!existingReview) return;
-  reviewState.rating = existingReview.rating || 0;
-  reviewState.tags = new Set(existingReview.tags || []);
-  reviewState.marketingConsent = !!existingReview.marketing_consent;
-  editMode = true;
-  render();
-}
-
-// 편집 취소 — 변경 사항 폐기, done 뷰로 복귀
-function cancelEditMode() {
-  editMode = false;
-  reviewState = { rating: 0, tags: new Set(), nameDisplay: 'masked', marketingConsent: false };
-  render();
-}
-
-// 30일 이내 수정 가능 여부
-function isEditable(review) {
-  if (!review || review.is_hidden) return false;
-  const days = (Date.now() - new Date(review.created_at)) / (1000 * 60 * 60 * 24);
-  return days <= 30;
-}
-const REVIEW_TAGS = {
-  '청소 품질': [
-    { tag: '꼼꼼함', emoji: '🔍' },
-    { tag: '깔끔한 마무리', emoji: '✨' },
-    { tag: '친환경 자재', emoji: '🌿' },
-  ],
-  '서비스': [
-    { tag: '친절함', emoji: '😊' },
-    { tag: '시간 엄수', emoji: '⏰' },
-    { tag: '실시간 리포트', emoji: '📱' },
-    { tag: '꼼꼼한 설명', emoji: '💬' },
-    { tag: '재예약 의사', emoji: '❤️' },
-  ],
-};
-
-async function fetchExistingReview() {
-  try {
-    const { data } = await sb.from('reviews')
-      .select('*')
-      .eq('report_id', reportId)
-      .maybeSingle();
-    existingReview = data;
-  } catch (e) {
-    console.error('review fetch error', e);
-    existingReview = null;
-  }
-}
-
-function maskCustomerName(name) {
-  if (!name) return '고객';
-  if (name.length === 1) return name;
-  return name[0] + '○'.repeat(Math.max(1, name.length - 1));
-}
-
-function renderReviewDone() {
-  const r = existingReview;
-  const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-  const name = r.name_display === 'anonymous' ? '익명' : maskCustomerName(r.customer_name_snapshot);
-  const fmt = (iso) => new Date(iso).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
-  const createdDate = fmt(r.created_at);
-  // 수정 후 1분 이상 차이 나면 "수정됨" 표시
-  const wasEdited = r.updated_at && (new Date(r.updated_at) - new Date(r.created_at)) > 60000;
-  const updatedDate = wasEdited ? fmt(r.updated_at) : null;
-  const tagsHtml = Array.isArray(r.tags) && r.tags.length > 0
-    ? `<div class="review-done-tags">${r.tags.map(t => `<div class="review-done-tag">#${escapeHtml(t)}</div>`).join('')}</div>`
-    : '';
-  const contentHtml = r.content ? `<div class="review-done-content">${escapeHtml(r.content)}</div>` : '';
-  const editable = isEditable(r);
-  return `
-    <div class="review-done">
-      <div class="review-done-badge">✓ 후기가 등록되었어요</div>
-      <div class="review-done-stars">${stars}</div>
-      ${contentHtml}
-      ${tagsHtml}
-      <div class="review-done-meta">
-        ${escapeHtml(name)} 고객님 · ${createdDate}${wasEdited ? ` · 수정 ${updatedDate}` : ''}
-      </div>
-      ${editable
-        ? `<button class="review-edit-btn" onclick="enterEditMode()">✏️ 후기 수정하기</button>`
-        : `<div class="review-edit-locked">수정 가능 기간(30일)이 지났습니다</div>`}
-    </div>
-  `;
-}
-
-function renderReviewForm() {
-  const isEdit = editMode && !!existingReview;
-  const initialContent = isEdit ? (existingReview.content || '') : '';
-  const submitDisabled = reviewState.rating === 0;
-
-  return `
-    <div class="review-section">
-      ${isEdit ? `
-        <div class="edit-mode-banner">
-          ✏️ 이미 작성하신 후기를 불러왔어요. 자유롭게 수정 가능합니다.
-        </div>
-      ` : ''}
-
-      <div class="review-title">${isEdit ? '✏️ 후기 수정하기' : '✨ 청소 어떠셨어요?'}</div>
-      <div class="review-sub">${isEdit ? '내용을 변경하신 후 저장해주세요' : '사장님께 소중한 후기를 남겨주세요'}</div>
-
-      <div class="star-rating" id="starRating">
-        ${[1,2,3,4,5].map(i => `<span class="star ${reviewState.rating >= i ? 'selected' : ''}" onclick="selectStar(${i})">★</span>`).join('')}
-      </div>
-
-      <div class="review-label">좋았던 점 <span class="optional">(선택)</span></div>
-      ${Object.entries(REVIEW_TAGS).map(([category, tags]) => `
-        <div class="tag-category-label">${category}</div>
-        <div class="tags-grid">
-          ${tags.map(t => `<div class="tag-chip ${reviewState.tags.has(t.tag) ? 'selected' : ''}" onclick="toggleReviewTag(this, '${t.tag}')"><span class="tag-emoji">${t.emoji}</span>${t.tag}</div>`).join('')}
-        </div>
-      `).join('')}
-
-      <div class="review-label">후기 작성란 <span class="optional">(선택)</span></div>
-      <textarea class="review-textarea" id="reviewContent" placeholder="청소 받은 경험을 들려주세요. 자세히 적어주실수록 사장님께 큰 힘이 됩니다 🙏" maxlength="500" oninput="updateReviewLength()">${escapeHtml(initialContent)}</textarea>
-      <div class="review-length-hint" id="reviewLengthHint"></div>
-
-
-      <div class="consent-row" onclick="toggleConsent()">
-        <div class="consent-checkbox ${reviewState.marketingConsent ? 'checked' : ''}" id="consentCheckbox"></div>
-        <div>
-          <div class="consent-label">사장님 마케팅에 공개 동의 <span class="optional">(선택)</span></div>
-          <div class="consent-sub">미니 홈페이지·SNS 콘텐츠에 활용될 수 있습니다</div>
-        </div>
-      </div>
-
-      <button class="review-submit-btn" id="reviewSubmitBtn" ${submitDisabled ? 'disabled' : ''} onclick="submitReview()">
-        ${submitDisabled ? '별점을 선택해주세요' : (isEdit ? '수정하기 →' : '후기 남기기 →')}
-      </button>
-
-      ${isEdit ? `
-        <button class="review-cancel-btn" onclick="cancelEditMode()">취소</button>
-      ` : ''}
-    </div>
-  `;
-}
-
-function selectStar(n) {
-  reviewState.rating = n;
-  const stars = document.querySelectorAll('#starRating .star');
-  stars.forEach((s, i) => s.classList.toggle('filled', i < n));
-  updateReviewLength();
-}
-
-// 후기 길이 + 별점 상태에 따라 버튼 텍스트·활성 상태 갱신
-function updateReviewLength() {
-  const content = (document.getElementById('reviewContent')?.value || '').trim();
-  const len = content.length;
-  const hint = document.getElementById('reviewLengthHint');
-  const btn = document.getElementById('reviewSubmitBtn');
-  const isEdit = editMode && !!existingReview;
-
-  // 길이 안내 — 1~9자일 때만 안내 표시 (0자 또는 10자+ 는 OK)
-  if (hint) {
-    if (len === 0) {
-      hint.textContent = '';
-      hint.classList.remove('warn');
-    } else if (len < 10) {
-      hint.textContent = `최소 10자 이상 작성해주세요 (${len}/10)`;
-      hint.classList.add('warn');
-    } else {
-      hint.textContent = `${len}자`;
-      hint.classList.remove('warn');
-    }
-  }
-
-  // 등록 가능 조건: 별점 1+ AND (후기 비어있거나 10자 이상)
-  const ratingOk = reviewState.rating > 0;
-  const contentOk = len === 0 || len >= 10;
-  const canSubmit = ratingOk && contentOk;
-
-  if (btn) {
-    btn.disabled = !canSubmit;
-    if (!ratingOk) {
-      btn.textContent = '별점을 선택해주세요';
-    } else if (!contentOk) {
-      btn.textContent = '10자 이상 작성해주세요';
-    } else {
-      btn.textContent = isEdit ? '수정하기 →' : '후기 남기기 →';
-    }
-  }
-}
-
-function toggleReviewTag(el, tag) {
-  if (reviewState.tags.has(tag)) {
-    reviewState.tags.delete(tag);
-    el.classList.remove('selected');
-  } else {
-    reviewState.tags.add(tag);
-    el.classList.add('selected');
-  }
-}
-
-function toggleConsent() {
-  reviewState.marketingConsent = !reviewState.marketingConsent;
-  document.getElementById('consentCheckbox').classList.toggle('checked', reviewState.marketingConsent);
-}
-
-async function submitReview() {
-  if (!reviewState.rating) return;
-  const content = (document.getElementById('reviewContent')?.value || '').trim();
-  // 빈 후기는 OK, 작성했다면 10자 이상 (안전장치)
-  if (content.length > 0 && content.length < 10) {
-    alert('후기는 10자 이상 작성해주세요.');
-    return;
-  }
-  const btn = document.getElementById('reviewSubmitBtn');
-  btn.disabled = true;
-  const originalText = btn.textContent;
-  const isEdit = editMode && !!existingReview;
-  btn.textContent = isEdit ? '수정 중...' : '등록 중...';
-
-  try {
-
-    if (isEdit) {
-      // === 수정 모드: UPDATE ===
-      const updateFields = {
-        rating: reviewState.rating,
-        content: content || null,
-        tags: Array.from(reviewState.tags),
-        marketing_consent: reviewState.marketingConsent,
-      };
-
-      const result = await sb.from('reviews')
-        .update(updateFields)
-        .eq('report_id', reportId);
-
-      if (result.error) {
-        console.error('review update error', result.error);
-        const isOutOfWindow = /policy|permission|denied/i.test(result.error.message || '');
-        alert(isOutOfWindow
-          ? '수정 가능 기간(30일)이 지났거나 권한이 없습니다.'
-          : '후기 수정에 실패했습니다. 잠시 후 다시 시도해주세요.');
-        btn.disabled = false;
-        btn.textContent = originalText;
-        return;
-      }
-
-      // 로컬 상태 갱신
-      existingReview = {
-        ...existingReview,
-        ...updateFields,
-        updated_at: new Date().toISOString(),
-      };
-      editMode = false;
-      render();
-
-      showReviewThankYou('✓ 후기가 수정되었어요');
-      setTimeout(() => {
-        const doneEl = document.querySelector('.review-done');
-        if (doneEl) doneEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 200);
-      return;
-    }
-
-    // === 신규 모드: INSERT (기존 로직) ===
-    const customerName = reportData?.bookings?.customer_name || reportData?.bookings?.customers?.name || '';
-    const customerPhone = reportData?.bookings?.customer_phone || reportData?.bookings?.customers?.phone || '';
-    const serviceType = reportData?.bookings?.service_type || '';
-    const bookingId = reportData?.booking_id || null;
-    const companyId = reportData?.bookings?.company_id || reportData?.company_id || null;
-
-    if (!bookingId || !companyId) {
-      alert('리포트 정보를 불러올 수 없습니다. 새로고침 후 다시 시도해주세요.');
-      btn.disabled = false;
-      btn.textContent = originalText;
-      return;
-    }
-
-    // 48시간 검토 정책: 등록 시 hold_until 세팅 · is_published=false · pg_cron이 48h 후 자동 published=true
-    const holdUntil = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
-    const payload = {
-      report_id: reportId,
-      booking_id: bookingId,
-      company_id: companyId,
-      rating: reviewState.rating,
-      content: content || null,
-      tags: Array.from(reviewState.tags),
-      name_display: reviewState.nameDisplay,
-      customer_name_snapshot: customerName,
-      customer_phone_snapshot: customerPhone || null,
-      service_type_snapshot: serviceType,
-      marketing_consent: reviewState.marketingConsent,
-      hold_until: holdUntil,
-      is_published: false,
-    };
-
-    const result = await sb.from('reviews').insert(payload);
-
-    if (result.error) {
-      const isDuplicate = result.error.code === '23505'
-        || /duplicate|already exists|reviews_report_id/i.test(result.error.message || '');
-      if (isDuplicate) {
-        alert('이미 이 리포트에 후기가 등록되어 있어요.\n중복 작성은 불가능합니다.');
-      } else {
-        alert('후기 등록에 실패했습니다. 잠시 후 다시 시도해주세요.');
-      }
-      btn.disabled = false;
-      btn.textContent = originalText;
-      return;
-    }
-
-    // RLS로 익명 SELECT 불가 → 로컬 payload로 상태 구성
-    existingReview = {
-      ...payload,
-      created_at: new Date().toISOString(),
-    };
-    render();
-
-    showReviewThankYou();
-    setTimeout(() => {
-      const doneEl = document.querySelector('.review-done');
-      if (doneEl) doneEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 200);
-  } catch (err) {
-    console.error('review submit error', err);
-    alert('잠시 후 다시 시도해주세요.');
-    btn.disabled = false;
-    btn.textContent = originalText;
-  }
-}
-
-function escapeHtml(s) {
-  if (!s) return '';
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-function showReviewThankYou(customTitle) {
-  const existing = document.getElementById('reviewThankYou');
-  if (existing) existing.remove();
-  const el = document.createElement('div');
-  el.id = 'reviewThankYou';
-  el.className = 'review-thank-you';
-  const title = customTitle || '후기가 등록되었습니다';
-  const sub = customTitle ? '변경 사항이 저장됐어요' : '소중한 후기 감사드립니다 🙏';
-  el.innerHTML = `
-    <div class="review-thank-you-icon">✨</div>
-    <div class="review-thank-you-title">${escapeHtml(title)}</div>
-    <div class="review-thank-you-sub">${escapeHtml(sub)}</div>
-  `;
-  document.body.appendChild(el);
-  // 진입 애니메이션
-  requestAnimationFrame(() => el.classList.add('show'));
-  // 2.8초 후 자동 제거
-  setTimeout(() => {
-    el.classList.remove('show');
-    setTimeout(() => el.remove(), 300);
-  }, 2800);
-}
 
 const CATEGORIES = [
   { key: '현관', icon: '🚪' },
@@ -1354,12 +679,11 @@ let entries = [];
 let defects = [];
 let currentTab = 'status'; // status | defects
 let categoriesWithData = [];
-let reportId = null; // 전역으로 승격 (다른 함수에서 접근 필요)
 
 // ===== 초기화 =====
 async function init() {
   const params = new URLSearchParams(window.location.search);
-  reportId = params.get('id');
+  const reportId = params.get('id');
 
   if (!reportId) {
     document.getElementById('app').innerHTML = `
@@ -1374,7 +698,7 @@ async function init() {
     // 리포트 기본 정보 (bookings → customers, companies 조인)
     const { data: report } = await sb
       .from('cleaning_reports')
-      .select('*, bookings(*, customers(name, phone), companies(name, logo_url))')
+      .select('*, bookings(*, customers(name), companies(name, logo_url, company_homepages(slug))), company_direct:companies!cleaning_reports_company_id_fkey(name, logo_url, company_homepages(slug))')
       .eq('id', reportId)
       .single();
 
@@ -1388,7 +712,8 @@ async function init() {
       return;
     }
     reportData = report;
-    companyData = report.bookings?.companies || (report.company_name_snapshot ? { name: report.company_name_snapshot, logo_url: report.company_logo_url_snapshot } : null);
+    // booking 삭제된 경우에도 회사 정보 표시 · 리포트에서 직접 조회한 폴백 사용
+    companyData = report.bookings?.companies || report.company_direct || null;
 
     // 엔트리 + 사진
     const { data: entryData } = await sb
@@ -1422,7 +747,6 @@ async function init() {
       }
     }
 
-    await fetchExistingReview();
     render();
     setupRealtime(reportId);
 
@@ -1469,12 +793,12 @@ async function refreshData(reportId) {
   // 리포트 기본 정보 갱신 (구역 순서/아이콘/숨김 등)
   const { data: freshReport } = await sb
     .from('cleaning_reports')
-    .select('*, bookings(*, customers(name), companies(name, logo_url))')
+    .select('*, bookings(*, customers(name), companies(name, logo_url, company_homepages(slug))), company_direct:companies!cleaning_reports_company_id_fkey(name, logo_url, company_homepages(slug))')
     .eq('id', reportId)
     .single();
   if (freshReport) {
     reportData = freshReport;
-    companyData = freshReport.bookings?.companies || (freshReport.company_name_snapshot ? { name: freshReport.company_name_snapshot, logo_url: freshReport.company_logo_url_snapshot } : null);
+    companyData = freshReport.bookings?.companies || freshReport.company_direct || null;
   }
 
   const { data: entryData } = await sb
@@ -1519,16 +843,17 @@ function render() {
     : '';
   const companyName = companyData?.name || '청소 리포트';
   const contactPhone = reportData.contact_phone || '';
+  // 미니홈피(클린로그) slug — 있으면 헤더에 홈 링크 노출
+  const _hp = companyData?.company_homepages;
+  const profileSlug = Array.isArray(_hp) ? _hp[0]?.slug : _hp?.slug;
 
   // 숨긴 구역 필터링
   const hiddenSet = new Set(reportData.hidden_categories || []);
+  const visibleCategories = CATEGORIES.filter(c => !hiddenSet.has(c.key));
+
+  // 커스텀 구역 자동 감지 + 아이콘 맵
   const categoryIcons = reportData.category_icons || {};
   const categoryOrder = reportData.category_order || [];
-  // 기본 구역이 삭제(hidden) 되었다가 재추가된 경우 · category_icons에 있으면 다시 표시
-  // (앱에서 기본 구역 삭제 → 커스텀 재추가 시 이중 상태 발생 · 웹에서 방어)
-  const visibleCategories = CATEGORIES.filter(c =>
-    !hiddenSet.has(c.key) || Object.prototype.hasOwnProperty.call(categoryIcons, c.key)
-  );
   const defaultKeys = new Set(CATEGORIES.map(c => c.key));
   const customCats = [];
   // entries에서 커스텀 구역 감지
@@ -1539,13 +864,6 @@ function render() {
   }
   // category_order에 있지만 entries에 없는 커스텀 구역도 추가
   for (const key of categoryOrder) {
-    if (!defaultKeys.has(key) && !hiddenSet.has(key) && !customCats.find(c => c.key === key)) {
-      customCats.push({ key: key, icon: categoryIcons[key] || '📁' });
-    }
-  }
-  // category_icons에 있지만 entries·category_order에 없는 커스텀 구역도 추가
-  // (사장님이 구역 추가만 하고 사진 안 올리고 드래그 재정렬 안 한 경우 · 신 앱 v1.2.0+에서 발생)
-  for (const key of Object.keys(categoryIcons)) {
     if (!defaultKeys.has(key) && !hiddenSet.has(key) && !customCats.find(c => c.key === key)) {
       customCats.push({ key: key, icon: categoryIcons[key] || '📁' });
     }
@@ -1569,14 +887,6 @@ function render() {
     allCategories = ordered;
   }
 
-  // 완료 판별 로직 분기
-  // - explicit_completion=TRUE (신 앱 v1.2.0+): completed_categories 배열 기반 (사장님이 명시적으로 완료 처리한 것만)
-  // - FALSE / 필드 없음 (구 앱 · 하위 호환): 옛 로직 (청소 후 사진 있으면 자동 완료)
-  const explicitMode = reportData?.explicit_completion === true;
-  const completedList = Array.isArray(reportData?.completed_categories)
-    ? reportData.completed_categories.map(s => String(s))
-    : [];
-
   categoriesWithData = allCategories.map(cat => {
     const catEntries = entries.filter(e => e.category === cat.key);
     const beforeEntries = catEntries.filter(e => e.photo_type === 'before');
@@ -1585,26 +895,9 @@ function render() {
     const afterCount = afterEntries.reduce((s, e) => s + (e.report_photos?.length || 0), 0);
     const totalCount = beforeCount + afterCount;
 
-    let status;
-    if (explicitMode) {
-      // 신 로직 · 명시적으로 completed_categories에 있어야 완료
-      if (completedList.includes(cat.key)) {
-        status = 'done';
-      } else if (totalCount > 0) {
-        status = 'progress';
-      } else {
-        status = 'waiting';
-      }
-    } else {
-      // 폴백 · 옛 자동 완료 로직 (구 앱 하위 호환)
-      if (afterCount > 0) {
-        status = 'done';
-      } else if (beforeCount > 0) {
-        status = 'progress';
-      } else {
-        status = 'waiting';
-      }
-    }
+    let status = 'waiting';
+    if (afterCount > 0) status = 'done';
+    else if (beforeCount > 0) status = 'progress';
 
     return { ...cat, beforeEntries, afterEntries, beforeCount, afterCount, totalCount, status };
   });
@@ -1617,8 +910,17 @@ function render() {
   document.getElementById('app').innerHTML = `
     <!-- 헤더 -->
     <div class="header" style="position:static">
-      <div style="margin-bottom:16px">
-        <span style="display:inline-block;padding:4px 12px;border:1.5px solid rgba(255,255,255,0.25);border-radius:10px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:0.5px">✨ 프리미엄 리포트</span>
+      <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px">
+        <div style="flex:1;text-align:left">
+          ${profileSlug ? `<a href="/profile/${profileSlug}/" class="header-home-link" aria-label="${companyName} 홈으로 이동">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 L12 3 L21 12"/><path d="M5 10 L5 21 L9 21 L9 14 L15 14 L15 21 L19 21 L19 10"/></svg>
+            <span>홈</span>
+          </a>` : ''}
+        </div>
+        <span style="flex-shrink:0;font-size:10px;font-weight:600;color:rgba(255,255,255,0.55);letter-spacing:0.5px;white-space:nowrap">✨ 프리미엄 리포트</span>
+        <div style="flex:1;text-align:right">
+          ${booking?.scheduled_date ? `<div style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.5)">${booking.scheduled_date}</div>` : ''}
+        </div>
       </div>
       <div class="header-top">
         <div class="company-info">
@@ -1627,26 +929,33 @@ function render() {
             <div class="company-name" style="font-size:17px">${companyName}${contactPhone ? `<a href="tel:${contactPhone}" class="company-call">문의</a>` : ''}</div>
           </div>
         </div>
-        <div style="text-align:right">
-          ${isCompleted
-            ? `<div class="live-badge completed-badge" style="display:inline-flex">✓ 완료</div>`
-            : `<div style="display:inline-flex;align-items:center;gap:5px">
-                <div style="position:relative;width:7px;height:7px">
-                  <div style="position:absolute;inset:0;background:#4A9D5B;border-radius:50%"></div>
-                  <div style="position:absolute;inset:-3px;border:2px solid #4A9D5B;border-radius:50%;animation:pulse-ring 1.5s infinite;opacity:0"></div>
-                </div>
-                <span style="font-size:10px;font-weight:600;color:#4A9D5B">현재 청소중</span>
-              </div>`}
-          ${!isCompleted ? `<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">실시간으로 업데이트됩니다</div>` : ''}
-          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px">${booking?.scheduled_date || reportData.scheduled_date_snapshot || ''}</div>
-        </div>
+        <div style="text-align:right"></div>
       </div>
-      <div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.5)">
-        <span onclick="var f=this.parentNode.querySelector('.customer-full');var m=this.parentNode.querySelector('.customer-masked');if(f.style.display==='none'){f.style.display='inline';m.style.display='none'}else{f.style.display='none';m.style.display='inline'}" style="cursor:pointer">
-          <span class="customer-masked">${(booking?.customer_name || booking?.customers?.name || reportData.customer_name_snapshot || '고객').charAt(0)}*님 ▸</span>
-          <span class="customer-full" style="display:none;color:rgba(255,255,255,0.85);font-weight:600">${booking?.customer_name || booking?.customers?.name || reportData.customer_name_snapshot || '고객'}님 ◂</span>
-        </span>
-        ${reportData?.customer_phone_tail ? `<span style="margin-left:6px">010-****-**${reportData.customer_phone_tail}</span>` : ''}
+      <div style="height:1px;margin-top:14px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.14) 20%,rgba(255,255,255,0.14) 80%,transparent 100%)"></div>
+      <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:rgba(255,255,255,0.5)">
+        <div style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+          ${(new URLSearchParams(location.search).get('public') === '1')
+            ? `<span>${(booking?.customer_name || booking?.customers?.name || '고객').charAt(0)}*님</span>`
+            : `<span onclick="var f=this.parentNode.querySelector('.customer-full');var m=this.parentNode.querySelector('.customer-masked');if(f.style.display==='none'){f.style.display='inline';m.style.display='none'}else{f.style.display='none';m.style.display='inline'}" style="cursor:pointer">
+                <span class="customer-masked">${(booking?.customer_name || booking?.customers?.name || '고객').charAt(0)}*님 ▸</span>
+                <span class="customer-full" style="display:none;color:rgba(255,255,255,0.85);font-weight:600">${booking?.customer_name || booking?.customers?.name || '고객'}님 ◂</span>
+              </span>`}
+          ${reportData?.customer_phone_tail ? `<span style="margin-left:6px">· 010-****-**${reportData.customer_phone_tail}</span>` : ''}
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="display:inline-flex;flex-direction:column;align-items:flex-end;gap:2px">
+            ${isCompleted
+              ? `<div class="live-badge completed-badge" style="display:inline-flex">✓ 완료</div>`
+              : `<div style="display:inline-flex;align-items:center;gap:5px">
+                  <div style="position:relative;width:7px;height:7px">
+                    <div style="position:absolute;inset:0;background:#4A9D5B;border-radius:50%"></div>
+                    <div style="position:absolute;inset:-3px;border:2px solid #4A9D5B;border-radius:50%;animation:pulse-ring 1.5s infinite;opacity:0"></div>
+                  </div>
+                  <span style="font-size:10px;font-weight:600;color:#4A9D5B">청소중</span>
+                </div>
+                <div style="font-size:9.5px;color:rgba(255,255,255,0.35);letter-spacing:-0.1px">실시간으로 업데이트됩니다</div>`}
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1689,15 +998,14 @@ function render() {
       ` : ''}
     </div>
 
-    <!-- 후기 작성/조회 (완료된 리포트에서만 노출) -->
-    ${reportData?.status === 'completed' && totalPhotos > 0
-      ? ((existingReview && !editMode) ? renderReviewDone() : renderReviewForm())
-      : ''}
-
-    <!-- 하단 안내 + 푸터 -->
+    <!-- 소개하기 -->
     ${totalPhotos > 0 ? `
       <div class="share-bar">
-        <div style="text-align:center;font-size:12px;color:#94a3b8;line-height:1.7">사진은 꾹 눌러 저장, 리포트 화면은 캡쳐하여<br>기타 SNS 후기 작성에 활용해주셔도 좋습니다</div>
+        <div style="text-align:center;font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px">✨ 청소가 마음에 드셨나요?</div>
+        <button class="share-btn" onclick="shareReportLink()">
+          🔗 지인에게 소개하기
+        </button>
+        <div style="text-align:center;font-size:11px;color:#94a3b8;margin-top:12px;line-height:1.6">사진은 꾹 눌러 저장, 리포트 화면은 캡쳐하여<br>후기에 활용해주시면 사장님에게 큰 힘이 됩니다</div>
         <div style="text-align:right;font-size:9px;color:#c4c4c4;margin-top:8px;padding-right:4px">Powered by 클리닝매니저</div>
       </div>
     ` : ''}
@@ -1980,6 +1288,7 @@ function updateViewer() {
   document.getElementById('viewerCounter').textContent =
     `${viewerIndex + 1} / ${viewerPhotos.length}`;
   const videoUrl = viewerVideoUrls[viewerIndex];
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   if (videoUrl) {
     document.getElementById('viewerBody').innerHTML =
       `<video src="${videoUrl}" controls playsinline preload="metadata" style="max-width:100%;max-height:80vh"></video>`;
@@ -1987,31 +1296,65 @@ function updateViewer() {
     document.getElementById('viewerBody').innerHTML =
       `<img src="${viewerPhotos[viewerIndex]}" style="max-width:100%;max-height:100%;object-fit:contain;-webkit-touch-callout:default">`;
   }
+  // 저장 버튼: iOS 영상일 때만 노출 (그 외엔 OS 기본 길게 누르기/3단 메뉴 사용)
+  const showSave = !!videoUrl && isIOS;
+  const footer = document.querySelector('.viewer-footer');
+  const body = document.querySelector('.viewer-body');
+  if (footer) footer.style.display = showSave ? 'flex' : 'none';
+  if (body) body.style.paddingBottom = showSave ? '90px' : '0';
 }
 
 async function downloadPhoto() {
   const url = viewerVideoUrls[viewerIndex] || viewerPhotos[viewerIndex];
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isVid = !!viewerVideoUrls[viewerIndex] || isVideoUrl(url);
 
+  // 영상: Web Share API(files) 우선 — iOS 공유 시트로 "비디오 저장" 가능
+  if (isVid) {
+    try {
+      showToast('영상 준비 중...');
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const fileName = 'cleanops_video_' + (viewerIndex + 1) + '.mp4';
+      const file = new File([blob], fileName, { type: blob.type || 'video/mp4' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        return;
+      }
+      // fallback: blob download (Android Chrome 등)
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('저장되었습니다');
+      return;
+    } catch (e) {
+      // share 거부(AbortError)는 무시, 그 외엔 새 창 fallback
+      if (e && e.name === 'AbortError') return;
+      window.open(url, '_blank');
+      showToast('영상 재생 후 공유 → 비디오 저장 하세요');
+      return;
+    }
+  }
+
+  // 사진: 기존 흐름
   if (isIOS) {
     window.open(url, '_blank');
     showToast('사진을 길게 눌러 저장하세요');
     return;
   }
-
   if (isInAppBrowser()) {
     window.open(url, '_blank');
     showToast('사진을 길게 눌러 저장하세요');
     return;
   }
-
   try {
     const res = await fetch(url);
     const blob = await res.blob();
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    const isVid = isVideoUrl(url);
-    a.download = isVid ? 'cleanops_video_' + (viewerIndex + 1) + '.mp4' : 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
+    a.download = 'cleanops_photo_' + (viewerIndex + 1) + '.jpg';
     a.click();
     URL.revokeObjectURL(a.href);
     showToast('저장되었습니다');
@@ -2081,6 +1424,17 @@ window.addEventListener('popstate', function(e) {
 if (isInAppBrowser()) {
   const hint = document.getElementById('inAppHint');
   if (hint) hint.style.display = 'block';
+}
+
+function shareReportLink() {
+  const url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('리포트가 복사되었습니다');
+    });
+  } else {
+    showToast('링크 복사에 실패했습니다');
+  }
 }
 
 // 시작
