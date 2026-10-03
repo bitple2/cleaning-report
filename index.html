@@ -887,6 +887,14 @@ function render() {
     allCategories = ordered;
   }
 
+  // 완료 판별 로직 분기
+  // - explicit_completion=TRUE (신 앱 v1.1.21+): completed_categories 배열 기반
+  // - FALSE / 필드 없음 (구 리포트 · 하위 호환): 폴백 (사진 있으면 자동 완료)
+  const explicitMode = reportData?.explicit_completion === true;
+  const completedList = Array.isArray(reportData?.completed_categories)
+    ? reportData.completed_categories.map(s => String(s))
+    : [];
+
   categoriesWithData = allCategories.map(cat => {
     const catEntries = entries.filter(e => e.category === cat.key);
     const beforeEntries = catEntries.filter(e => e.photo_type === 'before');
@@ -896,8 +904,15 @@ function render() {
     const totalCount = beforeCount + afterCount;
 
     let status = 'waiting';
-    if (afterCount > 0) status = 'done';
-    else if (beforeCount > 0) status = 'progress';
+    if (explicitMode) {
+      // 신 로직 · 명시적으로 completed_categories에 있어야 완료
+      if (completedList.includes(cat.key)) status = 'done';
+      else if (totalCount > 0) status = 'progress';
+    } else {
+      // 폴백 · 옛 자동 완료 로직 (하위 호환)
+      if (afterCount > 0) status = 'done';
+      else if (beforeCount > 0) status = 'progress';
+    }
 
     return { ...cat, beforeEntries, afterEntries, beforeCount, afterCount, totalCount, status };
   });
