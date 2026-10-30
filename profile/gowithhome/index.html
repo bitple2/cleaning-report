@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="클리닝매니저">
 <meta property="og:title" content="동행홈케어">
-<meta property="og:description" content="실제 작업 기록과 후기를 기반으로 고객이 직접 확인할 수 있습니다.">
+<meta property="og:description" content="MBC, OBS 방송출연">
 <meta property="og:image" content="https://cleaningmanager.kr/og-images/gowithhome.jpg">
 <meta property="og:url" content="https://cleaningmanager.kr/profile/gowithhome/">
 <meta name="twitter:card" content="summary_large_image">
@@ -1432,7 +1432,7 @@
         <img src="https://iucicugxihxilcqtzrbk.supabase.co/storage/v1/object/public/company-logos/91deb053-b86f-42b2-a8fd-b14df4f63768/logo_1788414387086.jpg" alt="동행홈케어">
       </div>
       <div class="hero-info">
-        <span class="hero-tag" data-hero-tag>대표 직접 시공</span>
+        <span class="hero-tag" data-hero-tag>대표 직접시공</span>
         <h1 class="hero-name">
           <span data-company-name>동행홈케어</span>
           <svg class="verified" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="인증 업체">
@@ -1440,8 +1440,8 @@
             <path class="verified-check" d="M9.5 13.7l-2.4-2.4-1.4 1.4 3.8 3.8 7-7-1.4-1.4z"/>
           </svg>
         </h1>
-        <p class="hero-sub" data-hero-sub>하루 한 집, 대표가 직접 청소합니다.</p>
-        <div class="hero-verified" data-verified-hero style="display:none;">
+        <p class="hero-sub" data-hero-sub>MBC, OBS 방송출연</p>
+        <div class="hero-verified" data-verified-hero>
           <span class="hero-verified-icon">✓</span>
           <span>사업자 인증 완료</span>
         </div>
@@ -1598,12 +1598,13 @@
         <input type="tel" class="field-input" id="q-phone" placeholder="010-1234-5678" inputmode="numeric" maxlength="13" autocomplete="tel">
       </div>
       <div class="field">
-        <div class="field-label">청소 종류<span class="req">*</span></div>
+        <div class="field-label">작업 종류<span class="req">*</span></div>
         <div class="field-chips" id="q-service">
           <button type="button" class="chip" data-value="입주청소">입주청소</button>
           <button type="button" class="chip" data-value="이사청소">이사청소</button>
           <button type="button" class="chip" data-value="거주청소">거주청소</button>
           <button type="button" class="chip" data-value="상가청소">상가청소</button>
+          <button type="button" class="chip" data-value="줄눈 시공">줄눈 시공</button>
           <button type="button" class="chip" data-value="기타">기타</button>
         </div>
         <input type="text" class="field-input" id="q-service-custom"
@@ -2392,13 +2393,13 @@
       alert('연락처를 정확히 입력해주세요');
       return;
     }
-    if (!_quoteService) { alert('청소 종류를 선택해주세요'); return; }
+    if (!_quoteService) { alert('작업 종류를 선택해주세요'); return; }
 
     // 기타 선택 시 직접 입력값을 service_type으로 사용 (앱 일정 등록의 직접 입력과 매칭)
     let serviceTypeToSave = _quoteService;
     if (_quoteService === '기타') {
       const customVal = document.getElementById('q-service-custom').value.trim();
-      if (!customVal) { alert('청소 종류를 입력해주세요'); return; }
+      if (!customVal) { alert('작업 종류를 입력해주세요'); return; }
       serviceTypeToSave = customVal;
     }
 
